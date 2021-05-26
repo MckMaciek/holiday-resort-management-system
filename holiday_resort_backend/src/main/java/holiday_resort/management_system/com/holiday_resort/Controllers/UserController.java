@@ -44,36 +44,44 @@ public class UserController extends Throwable{
     }
 
     @RequestMapping(value = "/user/add", method = RequestMethod.POST)
-    public ResponseEntity<ResponseStatus> addUser(@RequestBody(required = true) User user){
+    public ResponseEntity<UserResponseStatus> addUser(@RequestBody(required = true) User user){
 
         if(userService.validate(user)){
             userService.add(user);
-            return ResponseEntity.ok(ResponseStatus.getInstance(user.getId().toString(),"CREATED"));
+            return ResponseEntity.ok(new UserResponseStatus.UserLoginResponseBuilder()
+                    .setId(user.getId())
+                    .setResponse("CREATED")
+                    .build());
         }
-
 
         return ResponseEntity.badRequest().build();
     }
 
     @RequestMapping(value = "/user/delete", method = RequestMethod.DELETE)
-    public ResponseEntity<ResponseStatus> deleteUser(@RequestParam(required = true) Long id) {
+    public ResponseEntity<UserResponseStatus> deleteUser(@RequestParam(required = true) Long id) {
         if(!userService.delete(id)){
             throw new UserControllerExceptions.UserNotFoundException();
         }
 
-        return ResponseEntity.ok(ResponseStatus.getInstance("", "DELETED"));
+        return ResponseEntity.ok(new UserResponseStatus.UserLoginResponseBuilder()
+                .setId(Long.valueOf(-1))
+                .setResponse("DELETED")
+                .build());
     }
 
-    public static class ResponseStatus {
 
+
+
+    private static class UserResponseStatus {
+        // FRONTEND RESPONSE IN BODY
         private final String id;
         private final String response;
 
-        public static ResponseStatus getInstance(String _id, String _response){
-            return new ResponseStatus(_id, _response);
+        private static UserResponseStatus getInstance(String _id, String _response){
+            return new UserResponseStatus(_id, _response);
         }
 
-        private ResponseStatus(String _id, String _response){
+        private UserResponseStatus(String _id, String _response){
             this.response = _response;
             this.id = _id;
         }
@@ -93,7 +101,31 @@ public class UserController extends Throwable{
                     ", response='" + response + '\'' +
                     '}';
         }
-    }
+
+        private static class UserLoginResponseBuilder{
+            private String id;
+            private String response;
+
+            public UserResponseStatus.UserLoginResponseBuilder setId(Long _id){
+                this.id = _id.toString();
+                return this;
+            }
+            public UserResponseStatus.UserLoginResponseBuilder setResponse(String _response){
+                this.response = _response;
+                return this;
+            }
+            public UserResponseStatus build(){
+                return UserResponseStatus.getInstance(
+                        this.id,
+                        this.response
+                );
+            }
+
+
+        }
+
+
+    }//UserResponseStatusEND
 
 }
 

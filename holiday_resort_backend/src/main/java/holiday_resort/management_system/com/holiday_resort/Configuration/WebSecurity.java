@@ -2,7 +2,6 @@ package holiday_resort.management_system.com.holiday_resort.Configuration;
 
 import holiday_resort.management_system.com.holiday_resort.Enums.Roles;
 import holiday_resort.management_system.com.holiday_resort.Services.UserLoginService;
-import org.h2.engine.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

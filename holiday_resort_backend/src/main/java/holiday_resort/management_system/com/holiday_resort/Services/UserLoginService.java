@@ -22,7 +22,7 @@ import java.util.Optional;
 public class UserLoginService implements UserDetailsService, CrudOperations<LoginUser, Long>, Validate<LoginUser> {
 
     private final LoginUserRepository loginUserRepository;
-    private final PasswordEncoder passwordEncoderR;
+    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
 
     @Autowired
@@ -31,7 +31,7 @@ public class UserLoginService implements UserDetailsService, CrudOperations<Logi
                             UserService _userService)
     {
 
-        this.passwordEncoderR = _passwordEncoder;
+        this.passwordEncoder = _passwordEncoder;
         this.loginUserRepository = _loginUserRepository;
         this.userService = _userService;
     }
@@ -69,7 +69,7 @@ public class UserLoginService implements UserDetailsService, CrudOperations<Logi
     @Override
     public void add(LoginUser loginUser) {
 
-        loginUser.setPassword(passwordEncoderR.encode(loginUser.getPassword()));
+        loginUser.setPassword(passwordEncoder.encode(loginUser.getPassword()));
         loginUserRepository.save(loginUser);
     }
 
