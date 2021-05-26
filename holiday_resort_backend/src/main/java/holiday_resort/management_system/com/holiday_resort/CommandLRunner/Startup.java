@@ -8,9 +8,9 @@ import holiday_resort.management_system.com.holiday_resort.Repositories.UserRepo
 import org.h2.engine.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 
 
@@ -22,7 +22,10 @@ public class Startup implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public Startup(UserRepository _userRepository, LoginUserRepository _loginUserRepository, PasswordEncoder _passwordEncoder){
+    public Startup(UserRepository _userRepository,
+                   LoginUserRepository _loginUserRepository,
+                   @Lazy PasswordEncoder _passwordEncoder){
+
         userRepository = _userRepository;
         loginUserRepository = _loginUserRepository;
         passwordEncoder = _passwordEncoder;
@@ -30,7 +33,7 @@ public class Startup implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("RUNNING");
+//       System.out.println("RUNNING");
 
 //        User user  = new User();
 //            user.setEmail("testowe123@gmail.com");

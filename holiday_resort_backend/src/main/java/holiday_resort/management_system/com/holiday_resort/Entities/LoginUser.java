@@ -26,7 +26,7 @@ public class LoginUser implements UserDetails {
     @Column(name="password")
     private String password;
 
-    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @NotNull
     private User user;
 

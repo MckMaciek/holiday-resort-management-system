@@ -8,5 +8,6 @@ public interface CrudOperations<T, ID> {
     List<T> getAll();
     Optional<T> findById(ID id);
     void add(T t);
+    Boolean delete(ID id);
 
 }

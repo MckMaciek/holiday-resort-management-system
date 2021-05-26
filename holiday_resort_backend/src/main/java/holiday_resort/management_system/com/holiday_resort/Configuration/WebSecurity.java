@@ -4,14 +4,15 @@ import holiday_resort.management_system.com.holiday_resort.Enums.Roles;
 import holiday_resort.management_system.com.holiday_resort.Services.UserLoginService;
 import org.h2.engine.Role;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
-@Service
+
+@Configuration
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     private final UserLoginService userLoginService;
@@ -21,7 +22,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -35,6 +36,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers("/api/v1/**").permitAll()
                 .antMatchers("/console/**").hasRole(Roles.USER.toString())
                 .anyRequest().authenticated()
                 .and()
