@@ -2,7 +2,7 @@ package holiday_resort.management_system.com.holiday_resort.Entities;
 
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -15,15 +15,15 @@ public class User {
     private Long id;
 
     @Column(name="email")
-    @NotEmpty
+    @NotBlank
     private String email;
 
     @Column(name="first_name")
-    @NotEmpty
+    @NotBlank
     private String firstName;
 
     @Column(name="last_name")
-    @NotEmpty
+    @NotBlank
     private String lastName;
 
     @Column(name="user_creation_date")
@@ -83,4 +83,42 @@ public class User {
                 ", userCreationDate=" + userCreationDate +
                 '}';
     }
+
+    public static UserBuilder getInstanceOfBuilder(){
+        return new UserBuilder();
+    }
+
+    public static class UserBuilder{
+        private String email;
+        private String firstName;
+        private String lastName;
+
+        public UserBuilder setEmail(String email){
+            this.email = email;
+            return this;
+        }
+        public UserBuilder setFirstName(String firstName){
+            this.firstName = firstName;
+            return this;
+        }
+        public UserBuilder setLastName(String lastName){
+            this.lastName = lastName;
+            return this;
+        }
+
+        public User build(){
+            User user = new User();
+
+            user.setFirstName(this.firstName);
+            user.setLastName(this.lastName);
+            user.setEmail(this.email);
+
+            return user;
+        }
+
+
+    }
+
+
+
 }

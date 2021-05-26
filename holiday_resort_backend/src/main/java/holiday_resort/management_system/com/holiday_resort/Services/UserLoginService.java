@@ -1,10 +1,13 @@
 package holiday_resort.management_system.com.holiday_resort.Services;
 
+import holiday_resort.management_system.com.holiday_resort.Controllers.Exceptions.UserControllerExceptions;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginUser;
 import holiday_resort.management_system.com.holiday_resort.Entities.User;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.CrudOperations;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.Validate;
 import holiday_resort.management_system.com.holiday_resort.Repositories.LoginUserRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +27,8 @@ public class UserLoginService implements UserDetailsService, CrudOperations<Logi
     private final LoginUserRepository loginUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
+
+    private static final Logger logger = LogManager.getLogger(UserControllerExceptions.class);
 
     @Autowired
     public UserLoginService(LoginUserRepository _loginUserRepository,
@@ -75,7 +80,12 @@ public class UserLoginService implements UserDetailsService, CrudOperations<Logi
 
     @Override
     public Boolean delete(Long aLong) {
-        loginUserRepository.deleteById(aLong);
+
+        try {
+            loginUserRepository.deleteById(aLong);
+        }catch (org.springframework.dao.EmptyResultDataAccessException exc){
+            return Boolean.FALSE;
+        }
 
         return Boolean.TRUE;
     }

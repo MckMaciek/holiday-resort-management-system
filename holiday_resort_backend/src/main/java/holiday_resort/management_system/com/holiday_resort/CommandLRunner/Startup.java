@@ -33,6 +33,20 @@ public class Startup implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+        User user = User.getInstanceOfBuilder()
+                .setEmail("dsadas")
+                .setFirstName("dsadsa")
+                .setLastName("dsaa")
+                .build();
+
+//        LoginUser loginUser = LoginUser.getInstanceOfBuilder()
+//                .setUser(user)
+//                .setUsername("Mac")
+//                .setPassword("das")
+//                .build();
+
+
 //       System.out.println("RUNNING");
 
 //        User user  = new User();

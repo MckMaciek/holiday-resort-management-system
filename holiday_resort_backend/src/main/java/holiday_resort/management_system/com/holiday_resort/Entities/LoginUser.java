@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,11 +19,11 @@ public class LoginUser implements UserDetails {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @NotNull
+    @NotBlank
     @Column(name="username")
     private String username;
 
-    @NotNull
+    @NotBlank
     @Column(name="password")
     private String password;
 
@@ -127,4 +128,39 @@ public class LoginUser implements UserDetails {
                 ", role=" + role +
                 '}';
     }
+
+    public static UserLoginBuilder getInstanceOfBuilder(){
+        return new UserLoginBuilder();
+    }
+
+    public static class UserLoginBuilder{
+        private String username;
+        private String password;
+        private User user;
+
+        public UserLoginBuilder setUsername(String username){
+            this.username = username;
+            return this;
+        }
+        public UserLoginBuilder setPassword(String password){
+            this.password = password;
+            return this;
+        }
+        public UserLoginBuilder setUser(User user){
+            this.user = user;
+            return this;
+        }
+
+        public LoginUser build(){
+            LoginUser loginUser = new LoginUser();
+            loginUser.setUser(this.user);
+            loginUser.setUsername(this.username);
+            loginUser.setPassword(this.password);
+
+            return loginUser;
+        }
+
+
+    }
+
 }

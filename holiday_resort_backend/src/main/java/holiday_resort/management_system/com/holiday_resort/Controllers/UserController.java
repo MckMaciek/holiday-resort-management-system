@@ -57,20 +57,6 @@ public class UserController extends Throwable{
         return ResponseEntity.badRequest().build();
     }
 
-    @RequestMapping(value = "/user/delete", method = RequestMethod.DELETE)
-    public ResponseEntity<UserResponseStatus> deleteUser(@RequestParam(required = true) Long id) {
-        if(!userService.delete(id)){
-            throw new UserControllerExceptions.UserNotFoundException();
-        }
-
-        return ResponseEntity.ok(new UserResponseStatus.UserLoginResponseBuilder()
-                .setId(Long.valueOf(-1))
-                .setResponse("DELETED")
-                .build());
-    }
-
-
-
 
     private static class UserResponseStatus {
         // FRONTEND RESPONSE IN BODY

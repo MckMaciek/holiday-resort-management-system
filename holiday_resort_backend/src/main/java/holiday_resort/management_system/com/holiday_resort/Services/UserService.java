@@ -44,7 +44,7 @@ public class UserService implements CrudOperations<User,Long>, Validate<User> {
     @Override
     public Boolean delete(Long aLong) {
 
-        if(!userRepository.findById(aLong).isPresent()){
+        if(userRepository.findById(aLong).isEmpty()){
             return Boolean.FALSE;
         }
         userRepository.deleteById(aLong);
@@ -54,6 +54,7 @@ public class UserService implements CrudOperations<User,Long>, Validate<User> {
     @Override
     public boolean validate(User user) {
         boolean userValidated = true;
+
 
         if(Objects.isNull(user.getEmail())) userValidated = false;
         if(Objects.isNull(user.getFirstName())) userValidated = false;
