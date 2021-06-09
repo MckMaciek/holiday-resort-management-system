@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="893ef85b-d3a3-4e75-98f6-03dd95ea4e87" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Configuration/AuthEntryPoint.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Configuration/AuthTokenFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Configuration/JsonObjectAuthFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Configuration/JwtAuthFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Configuration/JwtUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Configuration/RestAuthFailureHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Configuration/RestAuthSuccessHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Controllers/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/holiday_resort_backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/holiday_resort_backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/CommandLRunner/Startup.java" beforeDir="false" afterPath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/CommandLRunner/Startup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Configuration/WebSecurity.java" beforeDir="false" afterPath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Configuration/WebSecurity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Entities/LoginUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Entities/LoginUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Entities/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Entities/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Repositories/LoginUserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Repositories/LoginUserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Repositories/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Services/UserLoginService.java" beforeDir="false" afterPath="$PROJECT_DIR$/holiday_resort_backend/src/main/java/holiday_resort/management_system/com/holiday_resort/Services/UserLoginService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/holiday_resort_backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/holiday_resort_backend/src/main/resources/application.properties" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1tJlGDd021CFZrXukjZ8CfloLjS" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/holiday_resort_backend" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="893ef85b-d3a3-4e75-98f6-03dd95ea4e87" name="Default Changelist" comment="" />
+      <created>1622494975173</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1622494975173</updated>
+    </task>
+    <servers />
+  </component>
+</project>

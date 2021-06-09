@@ -6,6 +6,7 @@ import holiday_resort.management_system.com.holiday_resort.Entities.User;
 import holiday_resort.management_system.com.holiday_resort.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.InvalidParameterException;
@@ -24,6 +25,7 @@ public class UserController extends Throwable{
         this.userService = _userService;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value = "/users/all", method = RequestMethod.GET)
     public ResponseEntity<List<UserDTO>> getUsers() {
         List<User> users = userService.getAll();
@@ -32,6 +34,7 @@ public class UserController extends Throwable{
         return ResponseEntity.ok(users.stream().map(UserDTO::new).collect(Collectors.toList()));
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
     public ResponseEntity<UserDTO> getUser(@PathVariable(name = "id", required = true) Long id)
             throws InvalidParameterException {
@@ -43,6 +46,7 @@ public class UserController extends Throwable{
 
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value = "/user/add", method = RequestMethod.POST)
     public ResponseEntity<UserResponseStatus> addUser(@RequestBody(required = true) User user){
 

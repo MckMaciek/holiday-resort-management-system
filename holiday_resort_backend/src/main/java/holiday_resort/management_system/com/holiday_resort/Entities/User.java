@@ -2,12 +2,17 @@ package holiday_resort.management_system.com.holiday_resort.Entities;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="users_tb")
+@Table(name="users_tb",
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames = "email")
+        })
 public class User {
 
     @Id
@@ -16,14 +21,18 @@ public class User {
 
     @Column(name="email")
     @NotBlank
+    @Size(max = 50)
+    @Email
     private String email;
 
     @Column(name="first_name")
     @NotBlank
+    @Size(max = 20)
     private String firstName;
 
     @Column(name="last_name")
     @NotBlank
+    @Size(max = 20)
     private String lastName;
 
     @Column(name="user_creation_date")

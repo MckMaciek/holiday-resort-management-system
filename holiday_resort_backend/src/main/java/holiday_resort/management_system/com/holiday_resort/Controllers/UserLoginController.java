@@ -6,6 +6,7 @@ import holiday_resort.management_system.com.holiday_resort.Services.UserLoginSer
 import holiday_resort.management_system.com.holiday_resort.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -25,6 +26,7 @@ public class UserLoginController {
         this.userLoginService = _useLoginService;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value = "/login-user/add", method = RequestMethod.POST)
     public ResponseEntity<UserLoginResponse> addUser(@RequestBody(required = true) LoginUser loginUser){
 
@@ -40,6 +42,7 @@ public class UserLoginController {
         return ResponseEntity.badRequest().build();
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value = "/login-user/delete", method = RequestMethod.DELETE)
     public ResponseEntity<UserLoginResponse> deleteUser(@RequestParam(required = true) Long id) {
         if(!userLoginService.delete(id)){

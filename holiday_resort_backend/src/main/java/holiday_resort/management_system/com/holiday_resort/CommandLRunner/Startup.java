@@ -1,5 +1,6 @@
 package holiday_resort.management_system.com.holiday_resort.CommandLRunner;
 
+
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginUser;
 import holiday_resort.management_system.com.holiday_resort.Entities.User;
 import holiday_resort.management_system.com.holiday_resort.Enums.Roles;
@@ -33,6 +34,7 @@ public class Startup implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
 
         User user = User.getInstanceOfBuilder()
                 .setEmail("dsadas")

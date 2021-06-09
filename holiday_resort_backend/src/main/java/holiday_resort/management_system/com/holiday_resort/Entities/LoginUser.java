@@ -8,11 +8,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-@Table(name="users_login_tb")
+@Table(name="users_login_tb",
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames = "username")
+        })
 public class LoginUser implements UserDetails {
 
     @Id
@@ -20,10 +24,12 @@ public class LoginUser implements UserDetails {
     private Long id;
 
     @NotBlank
+    @Size(max = 20)
     @Column(name="username")
     private String username;
 
     @NotBlank
+    @Size(max = 20)
     @Column(name="password")
     private String password;
 
