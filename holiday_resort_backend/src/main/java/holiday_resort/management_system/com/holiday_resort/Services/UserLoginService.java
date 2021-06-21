@@ -51,13 +51,10 @@ public class UserLoginService implements UserDetailsService, CrudOperations<Logi
 
     @Override
     public UserDetails loadUserByUsername(String username){
-        LoginUser loginUser = loginUserRepository.findByUsername(username).get();
-        System.out.println("[DEBUG] " + loginUser);
+        LoginUser loginUser = loginUserRepository.findByUsername(username)
+                .orElseThrow(() -> {throw new UsernameNotFoundException(username);});
 
-        if(loginUser == null){
-            throw new UsernameNotFoundException(username);
-        }
-
+        System.out.println("[DEBUG-USER-FOUND]-> " + loginUser);
         return loginUser;
     }
 
