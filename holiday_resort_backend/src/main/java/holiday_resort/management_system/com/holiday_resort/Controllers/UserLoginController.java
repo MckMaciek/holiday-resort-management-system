@@ -26,7 +26,7 @@ public class UserLoginController {
         this.userLoginService = _useLoginService;
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/login-user/add", method = RequestMethod.POST)
     public ResponseEntity<UserLoginResponse> addUser(@RequestBody(required = true) LoginUser loginUser){
 
@@ -42,7 +42,7 @@ public class UserLoginController {
         return ResponseEntity.badRequest().build();
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/login-user/delete", method = RequestMethod.DELETE)
     public ResponseEntity<UserLoginResponse> deleteUser(@RequestParam(required = true) Long id) {
         if(!userLoginService.delete(id)){
