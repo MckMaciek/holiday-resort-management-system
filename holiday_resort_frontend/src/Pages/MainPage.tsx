@@ -1,4 +1,6 @@
-const MainPage = () =>{
+
+
+const MainPage = () : JSX.Element =>{
 
     return(
         <>
