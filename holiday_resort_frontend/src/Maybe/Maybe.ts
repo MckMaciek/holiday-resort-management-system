@@ -19,7 +19,6 @@ const Just = (x : any) => ({
   isSomething : true,
 });
 
-
-const Maybe = (x : any)  => (x === null || x === undefined ) ? Nothing() : Just(x);
+const Maybe = (x : any)  => (x === null || x === undefined || x.isNothing) ? Nothing() : Just(x);
 
 export default Maybe;
