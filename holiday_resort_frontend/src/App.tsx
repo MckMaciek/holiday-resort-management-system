@@ -6,10 +6,10 @@ import { applyMiddleware, createStore } from 'redux';
 
 import CombinedReducers from './Stores/Reducers/CombinedReducers';
 
-
 const App = () : JSX.Element =>  {
 
   const globalStore = createStore(CombinedReducers, applyMiddleware(thunk));
+
 
   return (
     <Provider store={globalStore}>

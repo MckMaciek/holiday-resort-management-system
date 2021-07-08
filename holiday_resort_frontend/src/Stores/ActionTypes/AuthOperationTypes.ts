@@ -1,6 +1,17 @@
 
-enum AuthOperationTypes {
-    LOGIN,
-    REGISTER,
+export enum AuthOperationLoginTypes {
+    LOGIN_ACTION = "LOGIN_ACTION",
+    LOGIN_FETCHING = "LOGIN_FETCHING",
+    LOGIN_PROCESS_ERROR = "LOGIN_PROCESS_ERROR",
+    LOGIN_SET_IN_REDUCER = "LOGIN_SET_IN_REDUCER",
 }
-export default AuthOperationTypes;
+
+export enum AuthOperationRegisterTypes {
+    REGISTER_ACTION = "REGISTER_ACTION",
+    REGISTER_FETCHING = "REGISTER_FETCHING",
+    REGISTER_PROCESS_ERROR = "REGISTER_PROCESS_ERROR",
+    REGISTER_SET_IN_REDUCER = "REGISTER_SET_IN_REDUCER",
+}
+
+
+
