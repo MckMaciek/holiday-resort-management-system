@@ -6,6 +6,8 @@ const Nothing = () => ({
   flatMap : (_ : any) => Nothing(),
   emit : () => Nothing(),
   inspect : () => 'Nothing',
+  isNothing : true,
+  isSomething : false,
 });
 
 const Just = (x : any) => ({
@@ -13,6 +15,8 @@ const Just = (x : any) => ({
   flatMap : (fn : any)  => fn(x),
   emit : () => x,
   inspect : () => 'Just($x)',
+  isNothing : false,
+  isSomething : true,
 });
 
 
