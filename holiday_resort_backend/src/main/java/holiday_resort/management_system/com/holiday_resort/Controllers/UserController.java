@@ -4,6 +4,7 @@ import holiday_resort.management_system.com.holiday_resort.Controllers.Exception
 import holiday_resort.management_system.com.holiday_resort.Dto.UserDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.User;
 import holiday_resort.management_system.com.holiday_resort.Services.UserService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,9 +15,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@Api(tags="[ADMIN] - Manage users")
 @RequestMapping("/api/v1")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController extends Throwable{
+
+    private static final String ROLE_ADMIN = "hasRole('ROLE_ADMIN')";
 
     private final UserService userService;
 
@@ -25,7 +29,7 @@ public class UserController extends Throwable{
         this.userService = _userService;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize(ROLE_ADMIN)
     @RequestMapping(value = "/users/all", method = RequestMethod.GET)
     public ResponseEntity<List<UserDTO>> getUsers() {
         List<User> users = userService.getAll();
@@ -34,7 +38,7 @@ public class UserController extends Throwable{
         return ResponseEntity.ok(users.stream().map(UserDTO::new).collect(Collectors.toList()));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize(ROLE_ADMIN)
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
     public ResponseEntity<UserDTO> getUser(@PathVariable(name = "id", required = true) Long id)
             throws InvalidParameterException {
@@ -46,7 +50,7 @@ public class UserController extends Throwable{
 
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize(ROLE_ADMIN)
     @RequestMapping(value = "/user/add", method = RequestMethod.POST)
     public ResponseEntity<UserResponseStatus> addUser(@RequestBody(required = true) User user){
 

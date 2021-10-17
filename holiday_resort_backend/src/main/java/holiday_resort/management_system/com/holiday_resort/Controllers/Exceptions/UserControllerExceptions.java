@@ -22,5 +22,13 @@ public class UserControllerExceptions {
         }
     }
 
+    @ResponseStatus(value= HttpStatus.NOT_FOUND, reason="No such event!")
+    public static class EventNotFoundException extends RuntimeException{
+        public EventNotFoundException(){
+            logger.error("HTTP_STATUS.NOT_FOUND - NO SUCH EVENT!");
+
+        }
+    }
+
 
 }

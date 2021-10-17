@@ -44,8 +44,10 @@ public class UserLoginService implements UserDetailsService, CrudOperations<Logi
     @Transactional
     public void saveUserAndUserLoginObject(LoginUser loginUser){
         User userFromJSON = loginUser.getUser();
+        userFromJSON.setLoginUser(loginUser);
 
         userService.add(userFromJSON);
+        System.out.println(loginUser.getAuthorities());
         this.add(loginUser);
     }
 
@@ -81,10 +83,10 @@ public class UserLoginService implements UserDetailsService, CrudOperations<Logi
         try {
             loginUserRepository.deleteById(aLong);
         }catch (org.springframework.dao.EmptyResultDataAccessException exc){
-            return Boolean.FALSE;
+            return false;
         }
 
-        return Boolean.TRUE;
+        return true;
     }
 
     public Boolean checkIntegrityOfData(LoginUser loginUser){
@@ -92,10 +94,10 @@ public class UserLoginService implements UserDetailsService, CrudOperations<Logi
 
             User userFromJSON = loginUser.getUser();
 
-            if(userService.validate(userFromJSON)) return Boolean.TRUE;
-            return Boolean.FALSE;
+            if(userService.validate(userFromJSON)) return true;
+            return false;
         }
-        return Boolean.FALSE;
+        return false;
     }
 
     @Override

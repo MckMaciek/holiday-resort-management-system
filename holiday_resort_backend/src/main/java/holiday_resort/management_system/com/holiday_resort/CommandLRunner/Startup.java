@@ -1,18 +1,13 @@
 package holiday_resort.management_system.com.holiday_resort.CommandLRunner;
 
 
-import holiday_resort.management_system.com.holiday_resort.Entities.LoginUser;
-import holiday_resort.management_system.com.holiday_resort.Entities.User;
-import holiday_resort.management_system.com.holiday_resort.Enums.Roles;
 import holiday_resort.management_system.com.holiday_resort.Repositories.LoginUserRepository;
 import holiday_resort.management_system.com.holiday_resort.Repositories.UserRepository;
-import org.h2.engine.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import java.time.LocalDateTime;
 
 
 @Component
@@ -36,11 +31,11 @@ public class Startup implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
 
-        User user = User.getInstanceOfBuilder()
-                .setEmail("dsadas")
-                .setFirstName("dsadsa")
-                .setLastName("dsaa")
-                .build();
+//        User user = User.builder()
+//                .email("dsadas")
+//                .firstName("dsadsa")
+//                .lastName("dsaa")
+//                .build();
 
 //        LoginUser loginUser = LoginUser.getInstanceOfBuilder()
 //                .setUser(user)

@@ -4,6 +4,7 @@ import holiday_resort.management_system.com.holiday_resort.Controllers.Exception
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginUser;
 import holiday_resort.management_system.com.holiday_resort.Services.UserLoginService;
 import holiday_resort.management_system.com.holiday_resort.Services.UserService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,9 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@Api(tags="[ADMIN] - UserLogin CRUD")
 @RequestMapping("/api/v1")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserLoginController {
+
+    private static final String ROLE_ADMIN= "hasRole('ROLE_ADMIN')";
 
     private final UserService userService;
     private final UserLoginService userLoginService;
@@ -26,7 +30,7 @@ public class UserLoginController {
         this.userLoginService = _useLoginService;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize(ROLE_ADMIN)
     @RequestMapping(value = "/login-user/add", method = RequestMethod.POST)
     public ResponseEntity<UserLoginResponse> addUser(@RequestBody(required = true) LoginUser loginUser){
 
@@ -34,7 +38,6 @@ public class UserLoginController {
             userLoginService.saveUserAndUserLoginObject(loginUser);
 
             return ResponseEntity.ok(new UserLoginResponse.UserLoginResponseBuilder()
-                    .setId(loginUser.getId())
                     .setResponse("CREATED")
                     .build());
         }
@@ -42,7 +45,7 @@ public class UserLoginController {
         return ResponseEntity.badRequest().build();
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize(ROLE_ADMIN)
     @RequestMapping(value = "/login-user/delete", method = RequestMethod.DELETE)
     public ResponseEntity<UserLoginResponse> deleteUser(@RequestParam(required = true) Long id) {
         if(!userLoginService.delete(id)){

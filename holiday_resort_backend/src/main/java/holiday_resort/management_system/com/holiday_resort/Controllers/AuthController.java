@@ -1,12 +1,16 @@
 package holiday_resort.management_system.com.holiday_resort.Controllers;
 
 import holiday_resort.management_system.com.holiday_resort.Configuration.JwtUtils;
-import holiday_resort.management_system.com.holiday_resort.Entities.JwtResponse;
-import holiday_resort.management_system.com.holiday_resort.Entities.LoginRequest;
+import holiday_resort.management_system.com.holiday_resort.Dto.JwtResponse;
+import holiday_resort.management_system.com.holiday_resort.Dto.LoginRequest;
+import holiday_resort.management_system.com.holiday_resort.Dto.RegisterRequest;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginUser;
+import holiday_resort.management_system.com.holiday_resort.Enums.Roles;
 import holiday_resort.management_system.com.holiday_resort.Repositories.LoginUserRepository;
 import holiday_resort.management_system.com.holiday_resort.Repositories.UserRepository;
 import holiday_resort.management_system.com.holiday_resort.Services.UserLoginService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
+@Api(tags="[ALL] Authentication controller")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -45,9 +50,11 @@ public class AuthController {
         this.jwtUtils = jwtUtils;
         this.loginUserRepository = loginUserRepository;
         this.userRepository = userRepository;
+
     }
 
     @PostMapping("/sign-in")
+    @ApiOperation(value = "sign-in", response = ResponseEntity.class)
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -70,7 +77,11 @@ public class AuthController {
 
 
     @PostMapping("/sign-up")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody LoginUser signUpUser){
+    @ApiOperation(value = "sign-up", response = ResponseEntity.class)
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest){
+
+        LoginUser signUpUser = new LoginUser(registerRequest);
+
         if (loginUserRepository.existsByUsername(signUpUser.getUsername())) {
             return ResponseEntity
                     .badRequest()
@@ -82,13 +93,9 @@ public class AuthController {
                     .build();
         }
 
-        LoginUser loginUser = LoginUser.getInstanceOfBuilder()
-                .setUser(signUpUser.getUser())
-                .setPassword(signUpUser.getPassword())
-                .setUsername(signUpUser.getUsername())
-                .build();
+        signUpUser.setRoles(Roles.USER);
 
-        userLoginService.saveUserAndUserLoginObject(loginUser);
+        userLoginService.saveUserAndUserLoginObject(signUpUser);
 
         return ResponseEntity.ok().build();
     }

@@ -1,5 +1,6 @@
 package holiday_resort.management_system.com.holiday_resort.Entities;
 
+import holiday_resort.management_system.com.holiday_resort.Dto.RegisterRequest;
 import holiday_resort.management_system.com.holiday_resort.Enums.Roles;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -17,6 +19,8 @@ import java.util.Collections;
         uniqueConstraints = {
             @UniqueConstraint(columnNames = "username")
         })
+
+
 public class LoginUser implements UserDetails {
 
     @Id
@@ -33,16 +37,67 @@ public class LoginUser implements UserDetails {
     @Column(name="password")
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @NotNull
     private User user;
 
     @NotNull
-    private Boolean isEnabled = Boolean.TRUE;
+    private Boolean isEnabled = true;
 
     @NotNull
-    @Enumerated(value = EnumType.STRING)
-    private Roles role = Roles.USER;
+    private Roles roles = Roles.USER;
+
+    public LoginUser(RegisterRequest registerRequest){
+
+        this.username = registerRequest.getUsername();
+        this.password = registerRequest.getPassword();
+        this.user = new User.UserBuilder()
+                .setCreationDate(LocalDateTime.now())
+                .setPhoneNumber(registerRequest.getPhoneNumber())
+                .setFirstName(registerRequest.getFirstName())
+                .setLastName(registerRequest.getLastName())
+                .setEmail(registerRequest.getEmail())
+                .setLoginUser(this)
+                .build();
+    }
+
+    public LoginUser(){}
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + getRoles()));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
 
     public Long getId() {
@@ -77,72 +132,31 @@ public class LoginUser implements UserDetails {
         isEnabled = enabled;
     }
 
-    public Roles getRole() {
-        return role;
+    public Roles getRoles() {
+        return roles;
     }
 
-    public void setRole(Roles role) {
-        this.role = role;
+    public void setRoles(Roles roles) {
+        this.roles = roles;
     }
 
-    public LoginUser() {
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role.name()));
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return isEnabled;
-    }
-
-    @Override
-    public String toString() {
-        return "LoginUser{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", user=" + user +
-                ", isEnabled=" + isEnabled +
-                ", role=" + role +
-                '}';
-    }
 
     public static UserLoginBuilder getInstanceOfBuilder(){
         return new UserLoginBuilder();
     }
 
     public static class UserLoginBuilder{
+        private Long id;
         private String username;
         private String password;
         private User user;
+        private Boolean isEnabled = true;
+        private Roles role = Roles.ADMIN;
+
+        public UserLoginBuilder setId(Long id){
+            this.id = id;
+            return this;
+        }
 
         public UserLoginBuilder setUsername(String username){
             this.username = username;
@@ -157,9 +171,23 @@ public class LoginUser implements UserDetails {
             return this;
         }
 
+        public UserLoginBuilder setEnabled(Boolean enabled) {
+            isEnabled = enabled;
+            return this;
+        }
+
+        public UserLoginBuilder setRole(Roles role) {
+            this.role = role;
+            return this;
+        }
+
         public LoginUser build(){
             LoginUser loginUser = new LoginUser();
+
+            loginUser.setId(this.id);
             loginUser.setUser(this.user);
+            loginUser.setRoles(this.role);
+            loginUser.setEnabled(this.isEnabled);
             loginUser.setUsername(this.username);
             loginUser.setPassword(this.password);
 
@@ -168,5 +196,4 @@ public class LoginUser implements UserDetails {
 
 
     }
-
 }

@@ -1,4 +1,4 @@
-package holiday_resort.management_system.com.holiday_resort.Entities;
+package holiday_resort.management_system.com.holiday_resort.Dto;
 
 import javax.validation.constraints.NotBlank;
 
