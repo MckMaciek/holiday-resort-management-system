@@ -66,7 +66,6 @@ public class EventService implements CrudOperations<EventDTO, Long>, Validate<Ev
                     Event eventPatched = applyPatchToEvent(eventPatch, ev);
 
                     eventRepo.save(eventPatched);
-                    System.out.println("Dsdas");
 
                     } catch (JsonPatchException e) {
                         e.printStackTrace();

@@ -68,6 +68,8 @@ public class Event {
     @Column(name="duration_date")
     private LocalDateTime durationDate;
 
+    //dodac koszty
+
     @Column(name="priority")
     @NotBlank
     private Integer priority;

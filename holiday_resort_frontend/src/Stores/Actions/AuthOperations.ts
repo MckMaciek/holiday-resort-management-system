@@ -1,15 +1,22 @@
-import makeAction from '../ActionMaker/ActionMaker';
 import {AuthOperationLoginTypes, AuthOperationRegisterTypes} from '../ActionTypes/AuthOperationTypes';
+
 import {errorInterface} from '../../Interfaces/ErrorHandling';
 import {LoginActionInterface, 
     LoginActionFetchingInterface,
     LoginActionIsSetInReducerInterface,
-    LoginActionErrorInterface
+    LoginActionErrorInterface,
+    RegisterActionInterface,
+    RegisterActionErrorInterface,
+    RegisterActionFetchingInterface,
+    RegisterActionIsSetInReducerInterface,
     } from '../../Interfaces/AuthOperations';
+import { LoginResponse } from '../../Interfaces/LoginResponse';
+import { RegisterResponse } from '../../Interfaces/RegisterResponse';
 
 
 /* ACTIONS DISPATCHED WHILE SIGN-IN PROCESS */
-export const loginAction  = (payload : any) : LoginActionInterface => ({
+
+export const loginAction  = (payload : LoginResponse) : LoginActionInterface => ({
     type : AuthOperationLoginTypes.LOGIN_ACTION,
     payload : payload,
 });
@@ -24,14 +31,30 @@ export const loginSetReducer = (isSet : boolean) : LoginActionIsSetInReducerInte
     isSet : isSet,
 });
 
-export const loginSetError = (erorr : errorInterface) : LoginActionErrorInterface => ({
+export const loginSetError = (error : errorInterface) : LoginActionErrorInterface => ({
     type : AuthOperationLoginTypes.LOGIN_PROCESS_ERROR,
-    error : erorr,
+    error : error,
 })
 
-
 /* ACTIONS DISPATCHED WHILE SIGN-UP PROCESS */
-export const registerAction : any = makeAction(AuthOperationRegisterTypes.REGISTER_ACTION)('payload');
-export const registerFetching : any = makeAction(AuthOperationRegisterTypes.REGISTER_FETCHING)('isFetching');
-export const registerSetReducer : any = makeAction(AuthOperationRegisterTypes.REGISTER_SET_IN_REDUCER)('isSet');
-export const registerFail : any = makeAction(AuthOperationRegisterTypes.REGISTER_PROCESS_ERROR)('payload');
+
+export const registerAction  = (payload : RegisterResponse) : RegisterActionInterface => ({
+    type : AuthOperationRegisterTypes.REGISTER_ACTION,
+    payload : payload,
+});
+
+export const registerFetching  = (isFetching : boolean) : RegisterActionFetchingInterface => ({
+    type : AuthOperationRegisterTypes.REGISTER_FETCHING,
+    isFetching : isFetching,
+});
+
+export const registerSetReducer = (isSet : boolean) : RegisterActionIsSetInReducerInterface => ({
+    type : AuthOperationRegisterTypes.REGISTER_SET_IN_REDUCER,
+    isSet : isSet,
+});
+
+export const registerSetError = (error : errorInterface) : RegisterActionErrorInterface => ({
+    type : AuthOperationRegisterTypes.REGISTER_PROCESS_ERROR,
+    error : error,
+})
+

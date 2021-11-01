@@ -53,7 +53,7 @@ public class User {
     @NotNull
     private LoginUser loginUser;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY) // 1 DO WIELU ZMIENIC
     private Reservation reservation;
 
     @OneToMany(fetch = FetchType.LAZY)
