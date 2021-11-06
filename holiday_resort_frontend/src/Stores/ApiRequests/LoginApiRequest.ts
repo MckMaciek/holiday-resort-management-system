@@ -54,7 +54,6 @@ const setUserId = (userId : string) : void => {
 const setUsername = (username : string) : void => {
     localStorage.setItem('username', username);
 }
-const setUserRoles = (roles : Array<string>) : void => { //TODO BEDZIE DO ZMIANY
-    const role = roles[0];
-    localStorage.setItem('role', role);
+const setUserRoles = (roles : Array<string>) : void => {
+    localStorage.setItem('role', JSON.stringify(roles));
 }
