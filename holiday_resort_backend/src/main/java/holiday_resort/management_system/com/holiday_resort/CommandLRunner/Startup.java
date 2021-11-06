@@ -2,7 +2,7 @@ package holiday_resort.management_system.com.holiday_resort.CommandLRunner;
 
 
 import holiday_resort.management_system.com.holiday_resort.Controllers.AuthController;
-import holiday_resort.management_system.com.holiday_resort.Dto.RegisterRequest;
+import holiday_resort.management_system.com.holiday_resort.Requests.RegisterRequest;
 import holiday_resort.management_system.com.holiday_resort.Repositories.LoginUserRepository;
 import holiday_resort.management_system.com.holiday_resort.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

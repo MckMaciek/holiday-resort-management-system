@@ -1,9 +1,9 @@
 package holiday_resort.management_system.com.holiday_resort.Controllers;
 
 import holiday_resort.management_system.com.holiday_resort.Configuration.JwtUtils;
-import holiday_resort.management_system.com.holiday_resort.Dto.JwtResponse;
-import holiday_resort.management_system.com.holiday_resort.Dto.LoginRequest;
-import holiday_resort.management_system.com.holiday_resort.Dto.RegisterRequest;
+import holiday_resort.management_system.com.holiday_resort.Requests.JwtResponse;
+import holiday_resort.management_system.com.holiday_resort.Requests.LoginRequest;
+import holiday_resort.management_system.com.holiday_resort.Requests.RegisterRequest;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginUser;
 import holiday_resort.management_system.com.holiday_resort.Enums.Roles;
 import holiday_resort.management_system.com.holiday_resort.Repositories.LoginUserRepository;

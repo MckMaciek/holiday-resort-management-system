@@ -1,4 +1,4 @@
-package holiday_resort.management_system.com.holiday_resort.Dto;
+package holiday_resort.management_system.com.holiday_resort.Requests;
 
 import java.util.List;
 

@@ -3,8 +3,8 @@ package holiday_resort.management_system.com.holiday_resort.Entities;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -20,14 +20,16 @@ public class Reservation {
     @Id
     private Long id;
 
-    @Column(name="address")
-    @NotBlank
-    private String address;
+    @Column(name="final_price")
+    private BigDecimal finalPrice;
 
     @OneToMany(fetch=FetchType.LAZY)
     private List<ReservationRemarks> reservationRemarks;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToMany(fetch=FetchType.LAZY)
+    private List<Accommodation> accommodationList;
+
+    @OneToOne(fetch = FetchType.EAGER)
     @MapsId
     @NotNull
     private User user;
