@@ -27,28 +27,33 @@ public class UserLoginService implements UserDetailsService, CrudOperations<Logi
     private final LoginUserRepository loginUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
+    private final RoleService roleService;
 
     private static final Logger logger = LogManager.getLogger(UserControllerExceptions.class);
 
     @Autowired
     public UserLoginService(LoginUserRepository _loginUserRepository,
                             @Lazy PasswordEncoder _passwordEncoder,
-                            UserService _userService)
+                            UserService _userService,
+                            RoleService roleService)
     {
 
         this.passwordEncoder = _passwordEncoder;
         this.loginUserRepository = _loginUserRepository;
         this.userService = _userService;
+        this.roleService = roleService;
     }
 
     @Transactional
     public void saveUserAndUserLoginObject(LoginUser loginUser){
-        User userFromJSON = loginUser.getUser();
-        userFromJSON.setLoginUser(loginUser);
+        User user = loginUser.getUser();
+        user.setLoginUser(loginUser);
 
-        userService.add(userFromJSON);
-        System.out.println(loginUser.getAuthorities());
+        userService.add(user);
         this.add(loginUser);
+        roleService.saveRole(loginUser.getRoles());
+
+        System.out.println("[DEBUG] " + loginUser.getAuthorities());
     }
 
     @Override

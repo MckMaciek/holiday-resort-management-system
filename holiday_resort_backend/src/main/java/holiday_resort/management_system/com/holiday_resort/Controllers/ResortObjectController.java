@@ -25,7 +25,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ResortObjectController {
 
-    private static final String ROLE_ADMIN_OR_USER = "hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')";
+    private static final String ROLE_USER = "hasRole('ROLE_USER')";
 
     private final LoginUserRepository loginUserRepository;
     private final ResortObjectService resortObjectService;
@@ -36,7 +36,7 @@ public class ResortObjectController {
         this.resortObjectService = resortObjectService;
     }
 
-    @PreAuthorize(ROLE_ADMIN_OR_USER)
+    @PreAuthorize(ROLE_USER)
     @RequestMapping(value = "/resort/available", method = RequestMethod.GET)
     public ResponseEntity<List<ResortObjectDTO>> getAvailableResortObjects() {
 
@@ -46,7 +46,7 @@ public class ResortObjectController {
         return ResponseEntity.ok(available);
     }
 
-    @PreAuthorize(ROLE_ADMIN_OR_USER)
+    @PreAuthorize(ROLE_USER)
     @RequestMapping(value = "/resort/user/all", method = RequestMethod.GET)
     public ResponseEntity<List<ResortObjectDTO>> getUsersResortObjects(){
 

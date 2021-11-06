@@ -1,13 +1,14 @@
 package holiday_resort.management_system.com.holiday_resort.Controllers;
 
 import holiday_resort.management_system.com.holiday_resort.Configuration.JwtUtils;
-import holiday_resort.management_system.com.holiday_resort.Requests.JwtResponse;
-import holiday_resort.management_system.com.holiday_resort.Requests.LoginRequest;
-import holiday_resort.management_system.com.holiday_resort.Requests.RegisterRequest;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginUser;
 import holiday_resort.management_system.com.holiday_resort.Enums.Roles;
 import holiday_resort.management_system.com.holiday_resort.Repositories.LoginUserRepository;
 import holiday_resort.management_system.com.holiday_resort.Repositories.UserRepository;
+import holiday_resort.management_system.com.holiday_resort.Requests.JwtResponse;
+import holiday_resort.management_system.com.holiday_resort.Requests.LoginRequest;
+import holiday_resort.management_system.com.holiday_resort.Requests.RegisterRequest;
+import holiday_resort.management_system.com.holiday_resort.Services.RoleService;
 import holiday_resort.management_system.com.holiday_resort.Services.UserLoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,7 +18,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,7 +32,7 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final UserLoginService userLoginService;
-    private final PasswordEncoder encoder;
+    private final RoleService roleService;
     private final JwtUtils jwtUtils;
     private final LoginUserRepository loginUserRepository;
     private final UserRepository userRepository;
@@ -40,13 +40,13 @@ public class AuthController {
     @Autowired
     public AuthController(AuthenticationManager authenticationManager,
                    UserLoginService userLoginService,
-                   PasswordEncoder passwordEncoder,
+                   RoleService roleService,
                    JwtUtils jwtUtils,
                    LoginUserRepository loginUserRepository,
                    UserRepository userRepository){
         this.authenticationManager = authenticationManager;
         this.userLoginService = userLoginService;
-        this.encoder = passwordEncoder;
+        this.roleService = roleService;
         this.jwtUtils = jwtUtils;
         this.loginUserRepository = loginUserRepository;
         this.userRepository = userRepository;
@@ -93,8 +93,7 @@ public class AuthController {
                     .build();
         }
 
-        signUpUser.setRoles(Roles.USER);
-
+        roleService.assignRolesAndOverride(signUpUser, Roles.USER, Roles.ADMIN);
         userLoginService.saveUserAndUserLoginObject(signUpUser);
 
         return ResponseEntity.ok().build();

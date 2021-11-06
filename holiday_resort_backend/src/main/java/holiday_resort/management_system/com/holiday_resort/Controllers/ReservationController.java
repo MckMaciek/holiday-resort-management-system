@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ReservationController {
 
-    private static final String ROLE_ADMIN_OR_USER = "hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')";
+    private static final String ROLE_USER = "hasRole('ROLE_USER')";
 
     private final LoginUserRepository loginUserRepository;
     private final ReservationService reservationService;
@@ -31,7 +31,7 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @PreAuthorize(ROLE_ADMIN_OR_USER)
+    @PreAuthorize(ROLE_USER)
     @RequestMapping(value = "/reservation/user", method = RequestMethod.POST)
     public ResponseEntity<?> postReservationForUser(@RequestBody(required = true) ReservationRequest reservationRequest) {
 

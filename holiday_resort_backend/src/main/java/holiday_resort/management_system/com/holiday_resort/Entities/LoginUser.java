@@ -1,7 +1,6 @@
 package holiday_resort.management_system.com.holiday_resort.Entities;
 
 import holiday_resort.management_system.com.holiday_resort.Requests.RegisterRequest;
-import holiday_resort.management_system.com.holiday_resort.Enums.Roles;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,8 +10,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Table(name="users_login_tb",
@@ -22,6 +22,8 @@ import java.util.Collections;
 
 
 public class LoginUser implements UserDetails {
+
+    private final static String ROLE_PREFIX = "ROLE_";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -37,15 +39,15 @@ public class LoginUser implements UserDetails {
     @Column(name="password")
     private String password;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @NotNull
     private User user;
 
-    @NotNull
-    private Boolean isEnabled = true;
+    @OneToOne
+    private UserRoles userRoles;
 
     @NotNull
-    private Roles roles = Roles.USER;
+    private Boolean isEnabled = true;
 
     public LoginUser(RegisterRequest registerRequest){
 
@@ -66,7 +68,14 @@ public class LoginUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + getRoles()));
+        UserRoles userRoles = getRoles();
+        List<SimpleGrantedAuthority> simpleGrantedAuthorityList = new ArrayList<>();
+
+        userRoles.getRolesList().forEach(
+                role -> simpleGrantedAuthorityList.add(new SimpleGrantedAuthority(ROLE_PREFIX + role))
+        );
+
+        return simpleGrantedAuthorityList;
     }
 
     @Override
@@ -132,12 +141,12 @@ public class LoginUser implements UserDetails {
         isEnabled = enabled;
     }
 
-    public Roles getRoles() {
-        return roles;
+    public UserRoles getRoles() {
+        return userRoles;
     }
 
-    public void setRoles(Roles roles) {
-        this.roles = roles;
+    public void setRoles(UserRoles roles) {
+        this.userRoles = roles;
     }
 
 
@@ -151,7 +160,7 @@ public class LoginUser implements UserDetails {
         private String password;
         private User user;
         private Boolean isEnabled = true;
-        private Roles role = Roles.ADMIN;
+        private UserRoles roles;
 
         public UserLoginBuilder setId(Long id){
             this.id = id;
@@ -176,8 +185,8 @@ public class LoginUser implements UserDetails {
             return this;
         }
 
-        public UserLoginBuilder setRole(Roles role) {
-            this.role = role;
+        public UserLoginBuilder setRole(UserRoles roles) {
+            this.roles = roles;
             return this;
         }
 
@@ -186,7 +195,7 @@ public class LoginUser implements UserDetails {
 
             loginUser.setId(this.id);
             loginUser.setUser(this.user);
-            loginUser.setRoles(this.role);
+            loginUser.setRoles(this.roles);
             loginUser.setEnabled(this.isEnabled);
             loginUser.setUsername(this.username);
             loginUser.setPassword(this.password);

@@ -23,7 +23,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserEventController {
 
-    private static final String ROLE_ADMIN_OR_USER = "hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')";
+    private static final String ROLE_USER = "hasRole('ROLE_USER')";
 
     private final LoginUserRepository loginUserRepository;
     private final EventService eventService;
@@ -34,7 +34,7 @@ public class UserEventController {
         this.eventService = eventService;
     }
 
-    @PreAuthorize(ROLE_ADMIN_OR_USER)
+    @PreAuthorize(ROLE_USER)
     @RequestMapping(value = "/event/all", method = RequestMethod.GET)
     public ResponseEntity<List<EventDTO>> getEvents()
             throws InvalidParameterException {
@@ -44,7 +44,7 @@ public class UserEventController {
         return ResponseEntity.ok(eventService.findEventsForUser(contextUser));
     }
 
-    @PreAuthorize(ROLE_ADMIN_OR_USER)
+    @PreAuthorize(ROLE_USER)
     @RequestMapping(value = "/event/{eventId}", method = RequestMethod.GET)
     public ResponseEntity<EventDTO> getEvent(@PathVariable(name = "eventId", required = true) Long eventId)
             throws InvalidParameterException {
@@ -63,7 +63,7 @@ public class UserEventController {
         return ResponseEntity.ok(eventDTO);
     }
 
-    @PreAuthorize(ROLE_ADMIN_OR_USER)
+    @PreAuthorize(ROLE_USER)
     @RequestMapping(value = "/event/{eventId}", method = RequestMethod.PATCH)
     public ResponseEntity<?> patchEvent(@PathVariable(name = "eventId", required = true) Long eventId,
             @RequestBody JsonMergePatch patch)
@@ -81,7 +81,7 @@ public class UserEventController {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize(ROLE_ADMIN_OR_USER)
+    @PreAuthorize(ROLE_USER)
     @RequestMapping(value = "/event/delete/{eventId}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteEvent(@PathVariable(name = "eventId", required = true) Long eventId){
 
@@ -93,7 +93,7 @@ public class UserEventController {
         return ResponseEntity.badRequest().build();
     }
 
-    @PreAuthorize(ROLE_ADMIN_OR_USER)
+    @PreAuthorize(ROLE_USER)
     @RequestMapping(value = "/event/add", method = RequestMethod.POST)
     public ResponseEntity<?> addEvent(@RequestBody(required = true) EventDTO eventDTO)
             throws InvalidParameterException {
