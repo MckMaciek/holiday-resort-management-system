@@ -38,10 +38,10 @@ public class ResortObjectService implements CrudOperations<ResortObjectDTO, Long
                 .collect(Collectors.toList());
     }
 
-    public List<ResortObjectDTO> getUserObjects(LoginUser loginUser){
+    public List<ResortObjectDTO> getUserObjects(LoginDetails loginDetails){
 
-        if(Objects.isNull(loginUser.getUser())) throw new NullPointerException("User cannot be null!");
-        User user = loginUser.getUser();
+        if(Objects.isNull(loginDetails.getUser())) throw new NullPointerException("User cannot be null!");
+        User user = loginDetails.getUser();
 
         if(Objects.isNull(user.getReservation())) throw new NullPointerException("User reservation cannot be null!");
 
@@ -89,7 +89,7 @@ public class ResortObjectService implements CrudOperations<ResortObjectDTO, Long
 
     @Override
     public boolean validate(ResortObjectDTO resortObjectDTO) {
-        return resortObjectDTO.getReserved() != null &&
+        return resortObjectDTO.getIsReserved() != null &&
                 resortObjectDTO.getObjectName() != null &&
                 resortObjectDTO.getObjectName() != null;
     }

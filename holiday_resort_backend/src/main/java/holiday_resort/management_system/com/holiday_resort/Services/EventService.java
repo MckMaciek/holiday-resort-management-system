@@ -8,7 +8,7 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import holiday_resort.management_system.com.holiday_resort.Dto.EventDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.Event;
-import holiday_resort.management_system.com.holiday_resort.Entities.LoginUser;
+import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
 import holiday_resort.management_system.com.holiday_resort.Entities.User;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.CrudOperations;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.Validate;
@@ -36,10 +36,10 @@ public class EventService implements CrudOperations<EventDTO, Long>, Validate<Ev
         this.objectMapper = objectMapper;
     }
 
-    public List<EventDTO> findEventsForUser(LoginUser loginUser){
+    public List<EventDTO> findEventsForUser(LoginDetails loginDetails){
 
-        if(Objects.isNull(loginUser.getUser())) throw new NullPointerException("User cannot be null!");
-        User user = loginUser.getUser();
+        if(Objects.isNull(loginDetails.getUser())) throw new NullPointerException("User cannot be null!");
+        User user = loginDetails.getUser();
 
         if(Objects.isNull(user.getId())) throw new NullPointerException("User Id cannot be null!");
 
@@ -51,7 +51,7 @@ public class EventService implements CrudOperations<EventDTO, Long>, Validate<Ev
         return listOfEventsDto;
     }
 
-    public boolean patchEventUserAction(LoginUser loginUser, Long eventId, JsonMergePatch eventPatch){
+    public boolean patchEventUserAction(LoginDetails loginDetails, Long eventId, JsonMergePatch eventPatch){
 
         if(Objects.isNull(eventId)) throw new NullPointerException("Cannot patch event with null id!");
 
@@ -60,8 +60,8 @@ public class EventService implements CrudOperations<EventDTO, Long>, Validate<Ev
                 String.format("Event with id %s does not exist!", eventId));
 
         event.ifPresent(ev -> {
-                LoginUser eventOwner = getEventAssociatedUser(ev);
-                if(checkIfEventOwnerAndUserRequestAreSame(eventOwner, loginUser)){
+                LoginDetails eventOwner = getEventAssociatedUser(ev);
+                if(checkIfEventOwnerAndUserRequestAreSame(eventOwner, loginDetails)){
                     try {
                     Event eventPatched = applyPatchToEvent(eventPatch, ev);
 
@@ -78,49 +78,49 @@ public class EventService implements CrudOperations<EventDTO, Long>, Validate<Ev
         return true;
     }
 
-    public EventDTO findEventForUser(LoginUser loginUser, Long eventId){
+    public EventDTO findEventForUser(LoginDetails loginDetails, Long eventId){
         Optional<Event> userEventOpt = eventRepo.getEventById(eventId);
 
         if(userEventOpt.isEmpty()) throw new NullPointerException(
                 String.format("Event with id %s does not exist!", eventId));
 
-        LoginUser eventOwner = getEventAssociatedUser(userEventOpt.get());
-            if (!checkIfEventOwnerAndUserRequestAreSame(eventOwner, loginUser)){
+        LoginDetails eventOwner = getEventAssociatedUser(userEventOpt.get());
+            if (!checkIfEventOwnerAndUserRequestAreSame(eventOwner, loginDetails)){
                 throw new IllegalArgumentException(
                             String.format("Event owner - %s and username in request - %s do not match!",
-                                eventOwner.getUsername(), loginUser.getUsername()));
+                                eventOwner.getUsername(), loginDetails.getUsername()));
             }
 
         return new EventDTO(userEventOpt.get());
     }
 
-    public boolean deleteEventUserAction(LoginUser loginUser, Long eventId){
+    public boolean deleteEventUserAction(LoginDetails loginDetails, Long eventId){
 
         Optional<Event> userEventOpt = eventRepo.getEventById(eventId);
         if(userEventOpt.isEmpty()) throw new NullPointerException(
                 String.format("Event with id %s does not exist!", eventId));
 
         userEventOpt.ifPresent(event ->{
-            LoginUser eventOwner = getEventAssociatedUser(event);
+            LoginDetails eventOwner = getEventAssociatedUser(event);
 
-            if(checkIfEventOwnerAndUserRequestAreSame(eventOwner, loginUser)){
+            if(checkIfEventOwnerAndUserRequestAreSame(eventOwner, loginDetails)){
                 eventRepo.deleteById(eventId);
             }
             else throw new IllegalArgumentException(
                     String.format("Event owner - %s and username in request - %s do not match!",
-                            eventOwner.getUsername(), loginUser.getUsername()));
+                            eventOwner.getUsername(), loginDetails.getUsername()));
         });
         return true; //wont reach if exception was thrown
     }
 
-    public boolean addEventUserAction(LoginUser loginUser, EventDTO eventDTO){
+    public boolean addEventUserAction(LoginDetails loginDetails, EventDTO eventDTO){
 
         if(Objects.nonNull(eventDTO.getId())) throw new IllegalArgumentException("Cannot insert event with Id");
         if(!validate(eventDTO)) throw new IllegalArgumentException("Cannot insert illegal event entity");
 
         Event eventToBeInserted = new Event(eventDTO);
 
-        eventToBeInserted.setUserId(loginUser.getUser().getId());
+        eventToBeInserted.setUserId(loginDetails.getUser().getId());
         eventRepo.save(eventToBeInserted);
 
         return true; //wont reach if exception was thrown
@@ -166,18 +166,18 @@ public class EventService implements CrudOperations<EventDTO, Long>, Validate<Ev
         return validated;
     }
 
-    private LoginUser getEventAssociatedUser(Event event){
+    private LoginDetails getEventAssociatedUser(Event event){
         Optional<User> associatedUser = userRepo.findById(event.getUserId());
 
         if(associatedUser.isEmpty()) throw new IllegalArgumentException(
                 String.format("Event with id %s has no owner!", event.getId()));
 
-        LoginUser eventOwner = associatedUser.get().getLoginUser();
+        LoginDetails eventOwner = associatedUser.get().getLoginDetails();
 
         return eventOwner;
     }
 
-    private boolean checkIfEventOwnerAndUserRequestAreSame(LoginUser eventOwner, LoginUser requestUser){
+    private boolean checkIfEventOwnerAndUserRequestAreSame(LoginDetails eventOwner, LoginDetails requestUser){
         return eventOwner.getUsername().equals(requestUser.getUsername());
     }
 

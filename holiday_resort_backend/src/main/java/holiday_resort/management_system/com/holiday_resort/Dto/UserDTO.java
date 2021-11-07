@@ -1,7 +1,15 @@
 package holiday_resort.management_system.com.holiday_resort.Dto;
 
 import holiday_resort.management_system.com.holiday_resort.Entities.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
 public class UserDTO {
 
     private Long id;
@@ -17,21 +25,5 @@ public class UserDTO {
         this.firstname = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
     }
 }

@@ -3,8 +3,8 @@ package holiday_resort.management_system.com.holiday_resort.Controllers;
 
 import holiday_resort.management_system.com.holiday_resort.Controllers.Exceptions.UserControllerExceptions;
 import holiday_resort.management_system.com.holiday_resort.Dto.ResortObjectDTO;
-import holiday_resort.management_system.com.holiday_resort.Entities.LoginUser;
-import holiday_resort.management_system.com.holiday_resort.Repositories.LoginUserRepository;
+import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
+import holiday_resort.management_system.com.holiday_resort.Repositories.LoginDetailsRepository;
 import holiday_resort.management_system.com.holiday_resort.Services.ResortObjectService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +27,12 @@ public class ResortObjectController {
 
     private static final String ROLE_USER = "hasRole('ROLE_USER')";
 
-    private final LoginUserRepository loginUserRepository;
+    private final LoginDetailsRepository loginDetailsRepository;
     private final ResortObjectService resortObjectService;
 
     @Autowired
-    public ResortObjectController(LoginUserRepository loginUserRepository, ResortObjectService resortObjectService){
-        this.loginUserRepository = loginUserRepository;
+    public ResortObjectController(LoginDetailsRepository loginDetailsRepository, ResortObjectService resortObjectService){
+        this.loginDetailsRepository = loginDetailsRepository;
         this.resortObjectService = resortObjectService;
     }
 
@@ -50,7 +50,7 @@ public class ResortObjectController {
     @RequestMapping(value = "/resort/user/all", method = RequestMethod.GET)
     public ResponseEntity<List<ResortObjectDTO>> getUsersResortObjects(){
 
-        LoginUser contextUser = getAssociatedUser();
+        LoginDetails contextUser = getAssociatedUser();
 
         try{
             List<ResortObjectDTO> available = resortObjectService.getUserObjects(contextUser);
@@ -64,11 +64,11 @@ public class ResortObjectController {
     }
 
 
-    private LoginUser getAssociatedUser(){
+    private LoginDetails getAssociatedUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
-        return loginUserRepository.findByUsername(userName)
+        return loginDetailsRepository.findByUsername(userName)
                 .orElseThrow(UserControllerExceptions.UserNotFoundException::new);
     }
 }

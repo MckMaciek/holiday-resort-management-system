@@ -3,8 +3,8 @@ package holiday_resort.management_system.com.holiday_resort.Controllers;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import holiday_resort.management_system.com.holiday_resort.Controllers.Exceptions.UserControllerExceptions;
 import holiday_resort.management_system.com.holiday_resort.Dto.EventDTO;
-import holiday_resort.management_system.com.holiday_resort.Entities.LoginUser;
-import holiday_resort.management_system.com.holiday_resort.Repositories.LoginUserRepository;
+import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
+import holiday_resort.management_system.com.holiday_resort.Repositories.LoginDetailsRepository;
 import holiday_resort.management_system.com.holiday_resort.Services.EventService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +25,12 @@ public class UserEventController {
 
     private static final String ROLE_USER = "hasRole('ROLE_USER')";
 
-    private final LoginUserRepository loginUserRepository;
+    private final LoginDetailsRepository loginDetailsRepository;
     private final EventService eventService;
 
     @Autowired
-    public UserEventController(LoginUserRepository loginUserRepository, EventService eventService){
-        this.loginUserRepository = loginUserRepository;
+    public UserEventController(LoginDetailsRepository loginDetailsRepository, EventService eventService){
+        this.loginDetailsRepository = loginDetailsRepository;
         this.eventService = eventService;
     }
 
@@ -39,7 +39,7 @@ public class UserEventController {
     public ResponseEntity<List<EventDTO>> getEvents()
             throws InvalidParameterException {
 
-        LoginUser contextUser = getAssociatedUser();
+        LoginDetails contextUser = getAssociatedUser();
 
         return ResponseEntity.ok(eventService.findEventsForUser(contextUser));
     }
@@ -49,7 +49,7 @@ public class UserEventController {
     public ResponseEntity<EventDTO> getEvent(@PathVariable(name = "eventId", required = true) Long eventId)
             throws InvalidParameterException {
 
-        LoginUser contextUser = getAssociatedUser();
+        LoginDetails contextUser = getAssociatedUser();
         EventDTO eventDTO = null;
 
         try{
@@ -69,7 +69,7 @@ public class UserEventController {
             @RequestBody JsonMergePatch patch)
             throws InvalidParameterException {
 
-        LoginUser contextUser = getAssociatedUser();
+        LoginDetails contextUser = getAssociatedUser();
 
         try{
             eventService.patchEventUserAction(contextUser, eventId, patch);
@@ -85,7 +85,7 @@ public class UserEventController {
     @RequestMapping(value = "/event/delete/{eventId}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteEvent(@PathVariable(name = "eventId", required = true) Long eventId){
 
-        LoginUser contextUser = getAssociatedUser();
+        LoginDetails contextUser = getAssociatedUser();
         if(eventService.deleteEventUserAction(contextUser, eventId)){
             return ResponseEntity.ok().build();
         }
@@ -98,7 +98,7 @@ public class UserEventController {
     public ResponseEntity<?> addEvent(@RequestBody(required = true) EventDTO eventDTO)
             throws InvalidParameterException {
 
-        LoginUser contextUser = getAssociatedUser();
+        LoginDetails contextUser = getAssociatedUser();
         try{
             eventService.addEventUserAction(contextUser, eventDTO);
 
@@ -110,11 +110,11 @@ public class UserEventController {
     }
 
 
-    private LoginUser getAssociatedUser(){
+    private LoginDetails getAssociatedUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
-        return loginUserRepository.findByUsername(userName)
+        return loginDetailsRepository.findByUsername(userName)
                     .orElseThrow(UserControllerExceptions.UserNotFoundException::new);
     }
 

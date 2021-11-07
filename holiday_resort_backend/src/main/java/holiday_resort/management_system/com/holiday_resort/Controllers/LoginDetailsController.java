@@ -1,8 +1,8 @@
 package holiday_resort.management_system.com.holiday_resort.Controllers;
 
 import holiday_resort.management_system.com.holiday_resort.Controllers.Exceptions.UserControllerExceptions;
-import holiday_resort.management_system.com.holiday_resort.Entities.LoginUser;
-import holiday_resort.management_system.com.holiday_resort.Services.UserLoginService;
+import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
+import holiday_resort.management_system.com.holiday_resort.Services.LoginDetailsService;
 import holiday_resort.management_system.com.holiday_resort.Services.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,27 +15,27 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags="[ADMIN] - UserLogin CRUD")
 @RequestMapping("/api/v1")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-public class UserLoginController {
+public class LoginDetailsController {
 
     private static final String ROLE_ADMIN= "hasRole('ROLE_ADMIN')";
 
     private final UserService userService;
-    private final UserLoginService userLoginService;
+    private final LoginDetailsService loginDetailsService;
 
     @Autowired
-    public UserLoginController(UserService _userService,
-                               UserLoginService _useLoginService){
+    public LoginDetailsController(UserService _userService,
+                                  LoginDetailsService _useLoginService){
 
         this.userService = _userService;
-        this.userLoginService = _useLoginService;
+        this.loginDetailsService = _useLoginService;
     }
 
     @PreAuthorize(ROLE_ADMIN)
     @RequestMapping(value = "/login-user/add", method = RequestMethod.POST)
-    public ResponseEntity<UserLoginResponse> addUser(@RequestBody(required = true) LoginUser loginUser){
+    public ResponseEntity<UserLoginResponse> addUser(@RequestBody(required = true) LoginDetails loginDetails){
 
-        if(userLoginService.checkIntegrityOfData(loginUser)){
-            userLoginService.saveUserAndUserLoginObject(loginUser);
+        if(loginDetailsService.checkIntegrityOfData(loginDetails)){
+            loginDetailsService.saveUserAndUserLoginObject(loginDetails);
 
             return ResponseEntity.ok(new UserLoginResponse.UserLoginResponseBuilder()
                     .setResponse("CREATED")
@@ -48,7 +48,7 @@ public class UserLoginController {
     @PreAuthorize(ROLE_ADMIN)
     @RequestMapping(value = "/login-user/delete", method = RequestMethod.DELETE)
     public ResponseEntity<UserLoginResponse> deleteUser(@RequestParam(required = true) Long id) {
-        if(!userLoginService.delete(id)){
+        if(!loginDetailsService.delete(id)){
             throw new UserControllerExceptions.UserNotFoundException();
         }
 

@@ -3,8 +3,8 @@ package holiday_resort.management_system.com.holiday_resort.Controllers;
 
 import holiday_resort.management_system.com.holiday_resort.Controllers.Exceptions.UserControllerExceptions;
 import holiday_resort.management_system.com.holiday_resort.Requests.ReservationRequest;
-import holiday_resort.management_system.com.holiday_resort.Entities.LoginUser;
-import holiday_resort.management_system.com.holiday_resort.Repositories.LoginUserRepository;
+import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
+import holiday_resort.management_system.com.holiday_resort.Repositories.LoginDetailsRepository;
 import holiday_resort.management_system.com.holiday_resort.Services.ReservationService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +22,12 @@ public class ReservationController {
 
     private static final String ROLE_USER = "hasRole('ROLE_USER')";
 
-    private final LoginUserRepository loginUserRepository;
+    private final LoginDetailsRepository loginDetailsRepository;
     private final ReservationService reservationService;
 
     @Autowired
-    public ReservationController(LoginUserRepository loginUserRepository, ReservationService reservationService){
-        this.loginUserRepository = loginUserRepository;
+    public ReservationController(LoginDetailsRepository loginDetailsRepository, ReservationService reservationService){
+        this.loginDetailsRepository = loginDetailsRepository;
         this.reservationService = reservationService;
     }
 
@@ -35,18 +35,18 @@ public class ReservationController {
     @RequestMapping(value = "/reservation/user", method = RequestMethod.POST)
     public ResponseEntity<?> postReservationForUser(@RequestBody(required = true) ReservationRequest reservationRequest) {
 
-        LoginUser contextUser = getAssociatedUser();
+        LoginDetails contextUser = getAssociatedUser();
 
         reservationService.setReservation(contextUser, reservationRequest);
 
         return ResponseEntity.ok().build();
     }
 
-    private LoginUser getAssociatedUser(){
+    private LoginDetails getAssociatedUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
-        return loginUserRepository.findByUsername(userName)
+        return loginDetailsRepository.findByUsername(userName)
                 .orElseThrow(UserControllerExceptions.UserNotFoundException::new);
     }
 }

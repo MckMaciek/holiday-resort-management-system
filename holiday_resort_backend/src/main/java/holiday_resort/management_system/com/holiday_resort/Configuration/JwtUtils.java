@@ -1,6 +1,6 @@
 package holiday_resort.management_system.com.holiday_resort.Configuration;
 
-import holiday_resort.management_system.com.holiday_resort.Entities.LoginUser;
+import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
 import io.jsonwebtoken.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +22,7 @@ public class JwtUtils {
 
     public String generateJwtToken(Authentication authentication) {
 
-        LoginUser userPrincipal = (LoginUser) authentication.getPrincipal();
+        LoginDetails userPrincipal = (LoginDetails) authentication.getPrincipal();
 
 
         return Jwts.builder()

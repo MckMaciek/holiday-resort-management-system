@@ -1,6 +1,6 @@
 package holiday_resort.management_system.com.holiday_resort.Configuration;
 
-import holiday_resort.management_system.com.holiday_resort.Services.UserLoginService;
+import holiday_resort.management_system.com.holiday_resort.Services.LoginDetailsService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private JwtUtils jwtUtils;
 
     @Autowired
-    private UserLoginService userDetailsService;
+    private LoginDetailsService userDetailsService;
 
     private static final Logger logger = LogManager.getLogger(AuthTokenFilter.class);
 

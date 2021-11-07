@@ -1,6 +1,9 @@
 package holiday_resort.management_system.com.holiday_resort.Entities;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
@@ -15,6 +18,9 @@ import java.util.List;
             @Index(columnList = "email", name = "email_idx")
         }
         )
+
+@Getter
+@Setter
 public class User {
 
     @Id
@@ -51,7 +57,7 @@ public class User {
 
     @OneToOne(fetch = FetchType.EAGER)
     @NotNull
-    private LoginUser loginUser;
+    private LoginDetails loginDetails;
 
     @OneToOne(fetch = FetchType.LAZY)
     private Reservation reservation;
@@ -66,102 +72,6 @@ public class User {
     public User() {
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public LocalDateTime getUserCreationDate() {
-        return modificationDate;
-    }
-
-    public void setUserCreationDate(LocalDateTime userCreationDate) {
-        this.creationDate = userCreationDate;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public LocalDateTime getModificationDate() {
-        return modificationDate;
-    }
-
-    public void setModificationDate(LocalDateTime modificationDate) {
-        this.modificationDate = modificationDate;
-    }
-
-    public LoginUser getLoginUser() {
-        return loginUser;
-    }
-
-    public void setLoginUser(LoginUser loginUser) {
-        this.loginUser = loginUser;
-    }
-
-    public Reservation getReservation() {
-        return reservation;
-    }
-
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
-    }
-
-    public List<UserRemarks> getUserRemarks() {
-        return userRemarks;
-    }
-
-    public void setUserRemarks(List<UserRemarks> userRemarks) {
-        this.userRemarks = userRemarks;
-    }
-
-    public List<Event> getEventList() {
-        return eventList;
-    }
-
-    public void setEventList(List<Event> eventList) {
-        this.eventList = eventList;
-    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -172,7 +82,7 @@ public class User {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", creationDate=" + creationDate +
                 ", modificationDate=" + modificationDate +
-                ", loginUser=" + loginUser +
+                ", loginUser=" + loginDetails +
                 ", reservation=" + reservation +
                 ", userRemarks=" + userRemarks +
                 ", eventList=" + eventList +
@@ -195,7 +105,7 @@ public class User {
         private List<Event> eventList;
         private List<UserRemarks> userRemarks;
         private Reservation reservation;
-        private LoginUser loginUser;
+        private LoginDetails loginDetails;
 
         public UserBuilder setId(Long id) {
             this.id = id;
@@ -206,7 +116,6 @@ public class User {
             this.phoneNumber = phoneNumber;
             return this;
         }
-
 
         public UserBuilder setCreationDate(LocalDateTime creationDate) {
             this.creationDate = creationDate;
@@ -234,8 +143,8 @@ public class User {
             return this;
         }
 
-        public UserBuilder setLoginUser(LoginUser loginUser) {
-            this.loginUser = loginUser;
+        public UserBuilder setLoginDetails(LoginDetails loginDetails) {
+            this.loginDetails = loginDetails;
             return this;
         }
 
@@ -259,6 +168,13 @@ public class User {
             user.setFirstName(this.firstName);
             user.setLastName(this.lastName);
             user.setEmail(this.email);
+            user.setLoginDetails(this.loginDetails);
+            user.setUserRemarks(this.userRemarks);
+            user.setReservation(this.reservation);
+            user.setCreationDate(this.creationDate);
+            user.setEventList(this.eventList);
+            user.setPhoneNumber(this.phoneNumber);
+            user.setModificationDate(this.modificationDate);
 
             return user;
         }

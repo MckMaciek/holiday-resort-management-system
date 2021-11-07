@@ -1,15 +1,15 @@
 package holiday_resort.management_system.com.holiday_resort.Controllers;
 
 import holiday_resort.management_system.com.holiday_resort.Configuration.JwtUtils;
-import holiday_resort.management_system.com.holiday_resort.Entities.LoginUser;
-import holiday_resort.management_system.com.holiday_resort.Enums.Roles;
-import holiday_resort.management_system.com.holiday_resort.Repositories.LoginUserRepository;
+import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
+import holiday_resort.management_system.com.holiday_resort.Enums.RoleTypes;
+import holiday_resort.management_system.com.holiday_resort.Repositories.LoginDetailsRepository;
 import holiday_resort.management_system.com.holiday_resort.Repositories.UserRepository;
 import holiday_resort.management_system.com.holiday_resort.Requests.JwtResponse;
 import holiday_resort.management_system.com.holiday_resort.Requests.LoginRequest;
 import holiday_resort.management_system.com.holiday_resort.Requests.RegisterRequest;
 import holiday_resort.management_system.com.holiday_resort.Services.RoleService;
-import holiday_resort.management_system.com.holiday_resort.Services.UserLoginService;
+import holiday_resort.management_system.com.holiday_resort.Services.LoginDetailsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,24 +31,24 @@ import java.util.stream.Collectors;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
-    private final UserLoginService userLoginService;
+    private final LoginDetailsService loginDetailsService;
     private final RoleService roleService;
     private final JwtUtils jwtUtils;
-    private final LoginUserRepository loginUserRepository;
+    private final LoginDetailsRepository loginDetailsRepository;
     private final UserRepository userRepository;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager,
-                   UserLoginService userLoginService,
+                   LoginDetailsService loginDetailsService,
                    RoleService roleService,
                    JwtUtils jwtUtils,
-                   LoginUserRepository loginUserRepository,
+                   LoginDetailsRepository loginDetailsRepository,
                    UserRepository userRepository){
         this.authenticationManager = authenticationManager;
-        this.userLoginService = userLoginService;
+        this.loginDetailsService = loginDetailsService;
         this.roleService = roleService;
         this.jwtUtils = jwtUtils;
-        this.loginUserRepository = loginUserRepository;
+        this.loginDetailsRepository = loginDetailsRepository;
         this.userRepository = userRepository;
 
     }
@@ -63,7 +63,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
-        LoginUser userDetails = (LoginUser) authentication.getPrincipal();
+        LoginDetails userDetails = (LoginDetails) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
@@ -80,9 +80,9 @@ public class AuthController {
     @ApiOperation(value = "sign-up", response = ResponseEntity.class)
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest){
 
-        LoginUser signUpUser = new LoginUser(registerRequest);
+        LoginDetails signUpUser = new LoginDetails(registerRequest);
 
-        if (loginUserRepository.existsByUsername(signUpUser.getUsername())) {
+        if (loginDetailsRepository.existsByUsername(signUpUser.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .build();
@@ -93,8 +93,8 @@ public class AuthController {
                     .build();
         }
 
-        roleService.assignRolesAndOverride(signUpUser, Roles.USER, Roles.ADMIN);
-        userLoginService.saveUserAndUserLoginObject(signUpUser);
+        roleService.assignRolesAndOverride(signUpUser, RoleTypes.USER, RoleTypes.ADMIN);
+        loginDetailsService.saveUserAndUserLoginObject(signUpUser);
 
         return ResponseEntity.ok().build();
     }

@@ -1,6 +1,8 @@
 package holiday_resort.management_system.com.holiday_resort.Entities;
 
 import holiday_resort.management_system.com.holiday_resort.Requests.RegisterRequest;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,15 +20,15 @@ import java.util.List;
 @Table(name="users_login_tb",
         uniqueConstraints = {
             @UniqueConstraint(columnNames = "username")
-        })
+})
 
-
-public class LoginUser implements UserDetails {
+@Getter
+@Setter
+public class LoginDetails implements UserDetails {
 
     private final static String ROLE_PREFIX = "ROLE_";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @NotBlank
@@ -41,15 +43,16 @@ public class LoginUser implements UserDetails {
 
     @OneToOne
     @NotNull
+    @MapsId
     private User user;
 
     @OneToOne
-    private UserRoles userRoles;
+    private Roles roles;
 
     @NotNull
     private Boolean isEnabled = true;
 
-    public LoginUser(RegisterRequest registerRequest){
+    public LoginDetails(RegisterRequest registerRequest){
 
         this.username = registerRequest.getUsername();
         this.password = registerRequest.getPassword();
@@ -59,19 +62,18 @@ public class LoginUser implements UserDetails {
                 .setFirstName(registerRequest.getFirstName())
                 .setLastName(registerRequest.getLastName())
                 .setEmail(registerRequest.getEmail())
-                .setLoginUser(this)
+                .setLoginDetails(this)
                 .build();
     }
 
-    public LoginUser(){}
-
+    public LoginDetails(){}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        UserRoles userRoles = getRoles();
+        Roles roles = getRoles();
         List<SimpleGrantedAuthority> simpleGrantedAuthorityList = new ArrayList<>();
 
-        userRoles.getRolesList().forEach(
+        roles.getRoleTypesList().forEach(
                 role -> simpleGrantedAuthorityList.add(new SimpleGrantedAuthority(ROLE_PREFIX + role))
         );
 
@@ -108,48 +110,6 @@ public class LoginUser implements UserDetails {
         return true;
     }
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Boolean getEnabled() {
-        return isEnabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        isEnabled = enabled;
-    }
-
-    public UserRoles getRoles() {
-        return userRoles;
-    }
-
-    public void setRoles(UserRoles roles) {
-        this.userRoles = roles;
-    }
-
-
     public static UserLoginBuilder getInstanceOfBuilder(){
         return new UserLoginBuilder();
     }
@@ -160,7 +120,7 @@ public class LoginUser implements UserDetails {
         private String password;
         private User user;
         private Boolean isEnabled = true;
-        private UserRoles roles;
+        private Roles roles;
 
         public UserLoginBuilder setId(Long id){
             this.id = id;
@@ -185,22 +145,22 @@ public class LoginUser implements UserDetails {
             return this;
         }
 
-        public UserLoginBuilder setRole(UserRoles roles) {
+        public UserLoginBuilder setRole(Roles roles) {
             this.roles = roles;
             return this;
         }
 
-        public LoginUser build(){
-            LoginUser loginUser = new LoginUser();
+        public LoginDetails build(){
+            LoginDetails loginDetails = new LoginDetails();
 
-            loginUser.setId(this.id);
-            loginUser.setUser(this.user);
-            loginUser.setRoles(this.roles);
-            loginUser.setEnabled(this.isEnabled);
-            loginUser.setUsername(this.username);
-            loginUser.setPassword(this.password);
+            loginDetails.setId(this.id);
+            loginDetails.setUser(this.user);
+            loginDetails.setRoles(this.roles);
+            loginDetails.setIsEnabled(this.isEnabled);
+            loginDetails.setUsername(this.username);
+            loginDetails.setPassword(this.password);
 
-            return loginUser;
+            return loginDetails;
         }
 
 

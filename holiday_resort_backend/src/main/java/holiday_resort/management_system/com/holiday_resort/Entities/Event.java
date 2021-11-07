@@ -2,6 +2,8 @@ package holiday_resort.management_system.com.holiday_resort.Entities;
 
 import holiday_resort.management_system.com.holiday_resort.Dto.EventDTO;
 import holiday_resort.management_system.com.holiday_resort.Enums.EventEnum;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -17,6 +19,8 @@ import java.time.LocalDateTime;
             }
         )
 
+@Getter
+@Setter
 public class Event {
 
     public final static String GET_EVENTS_BY_USER_ID  = "Event.getEventsByUserId";
@@ -43,7 +47,6 @@ public class Event {
     }
 
     public Event(){
-
     }
 
     @Id
@@ -68,71 +71,9 @@ public class Event {
     @Column(name="duration_date")
     private LocalDateTime durationDate;
 
-    //dodac koszty
-
     @Column(name="priority")
     @NotBlank
     private Integer priority;
-
-    public static String getGetEventsByUserId() {
-        return GET_EVENTS_BY_USER_ID;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public EventEnum getEventType() {
-        return eventType;
-    }
-
-    public void setEventType(EventEnum eventType) {
-        this.eventType = eventType;
-    }
-
-    public LocalDateTime getStartingDate() {
-        return startingDate;
-    }
-
-    public void setStartingDate(LocalDateTime startingDate) {
-        this.startingDate = startingDate;
-    }
-
-    public LocalDateTime getEndingDate() {
-        return endingDate;
-    }
-
-    public void setEndingDate(LocalDateTime endingDate) {
-        this.endingDate = endingDate;
-    }
-
-    public LocalDateTime getDurationDate() {
-        return durationDate;
-    }
-
-    public void setDurationDate(LocalDateTime durationDate) {
-        this.durationDate = durationDate;
-    }
-
-    public Integer getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
 
     public static EventBuilder getInstanceOfBuilder(){
         return new EventBuilder();

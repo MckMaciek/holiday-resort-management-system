@@ -1,5 +1,6 @@
 package holiday_resort.management_system.com.holiday_resort.Entities;
 
+import holiday_resort.management_system.com.holiday_resort.Dto.ResortObjectDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -41,4 +42,15 @@ public class ResortObject {
     @Column(name="reserved")
     @NotNull
     private Boolean isReserved;
+
+    public ResortObject(ResortObjectDTO resortObjectDTO){
+        this.id = resortObjectDTO.getId();
+        this.objectName = resortObjectDTO.getObjectName();
+        this.objectType = resortObjectDTO.getObjectType();
+        this.maxAmountOfPeople = resortObjectDTO.getMaxAmountOfPeople();
+        this.pricePerPerson = resortObjectDTO.getPricePerPerson();
+        this.unusedSpacePrice = resortObjectDTO.getUnusedSpacePrice();
+        this.isReserved = resortObjectDTO.getIsReserved();
+    }
+
 }

@@ -1,8 +1,8 @@
 package holiday_resort.management_system.com.holiday_resort.Services;
 
-import holiday_resort.management_system.com.holiday_resort.Entities.LoginUser;
-import holiday_resort.management_system.com.holiday_resort.Entities.UserRoles;
-import holiday_resort.management_system.com.holiday_resort.Enums.Roles;
+import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
+import holiday_resort.management_system.com.holiday_resort.Entities.Roles;
+import holiday_resort.management_system.com.holiday_resort.Enums.RoleTypes;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.CrudOperations;
 import holiday_resort.management_system.com.holiday_resort.Repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class RoleService implements CrudOperations<UserRoles, Long> {
+public class RoleService implements CrudOperations<Roles, Long> {
 
     private final RoleRepository roleRepository;
 
@@ -23,64 +23,64 @@ public class RoleService implements CrudOperations<UserRoles, Long> {
         this.roleRepository = roleRepository;
     }
 
-    public void assignRolesAndOverride(LoginUser loginUser, Roles... rolesEnum){
+    public void assignRolesAndOverride(LoginDetails loginDetails, RoleTypes... roleTypesEnum){
 
-        if(loginUser != null) {
+        if(loginDetails != null) {
 
-            UserRoles userRoles = loginUser.getRoles();
-            if (userRoles == null) {
-                userRoles = new UserRoles();
-                userRoles.setLoginUser(loginUser);
+            Roles roles = loginDetails.getRoles();
+            if (roles == null) {
+                roles = new Roles();
+                roles.setLoginDetails(loginDetails);
             }
-            userRoles.setRolesList(Arrays.asList(rolesEnum));
-            loginUser.setRoles(userRoles);
+            roles.setRoleTypesList(Arrays.asList(roleTypesEnum));
+            loginDetails.setRoles(roles);
         }
     }
 
-    public void assignRole(LoginUser loginUser, Roles... rolesEnum){
+    public void assignRole(LoginDetails loginDetails, RoleTypes... roleTypesEnum){
 
-        if(loginUser != null) {
+        if(loginDetails != null) {
 
-            UserRoles userRoles = loginUser.getRoles();
-            if (userRoles == null) {
-                userRoles = new UserRoles();
-                userRoles.setLoginUser(loginUser);
-                userRoles.setRolesList(Arrays.asList(rolesEnum));
+            Roles roles = loginDetails.getRoles();
+            if (roles == null) {
+                roles = new Roles();
+                roles.setLoginDetails(loginDetails);
+                roles.setRoleTypesList(Arrays.asList(roleTypesEnum));
             } else {
-                List<Roles> userExistingRoles = userRoles.getRolesList();
-                userExistingRoles.addAll(Arrays.asList(rolesEnum));
+                List<RoleTypes> userExistingRoles = roles.getRoleTypesList();
+                userExistingRoles.addAll(Arrays.asList(roleTypesEnum));
 
-                userRoles.setRolesList(userExistingRoles
+                roles.setRoleTypesList(userExistingRoles
                         .stream()
                         .distinct()
                         .collect(Collectors.toList()));
             }
-            loginUser.setRoles(userRoles);
+            loginDetails.setRoles(roles);
         }
     }
 
-    public void saveRole(UserRoles userRoles){
-        roleRepository.save(userRoles);
+    public void saveRole(Roles roles){
+        roleRepository.save(roles);
     }
 
     @Override
-    public List<UserRoles> getAll() {
+    public List<Roles> getAll() {
         return roleRepository.findAll();
     }
 
     @Override
-    public Optional<UserRoles> findById(Long aLong) {
+    public Optional<Roles> findById(Long aLong) {
         return roleRepository.findById(aLong);
     }
 
     @Override
-    public void add(UserRoles userRole) {
+    public void add(Roles userRole) {
         roleRepository.save(userRole);
     }
 
     @Override
     public Boolean delete(Long aLong) {
-        Optional<UserRoles> userRoles = roleRepository.findById(aLong);
+        Optional<Roles> userRoles = roleRepository.findById(aLong);
         if(userRoles.isPresent()){
             roleRepository.delete(userRoles.get());
             return true;

@@ -1,7 +1,7 @@
 package holiday_resort.management_system.com.holiday_resort.Entities;
 
 
-import holiday_resort.management_system.com.holiday_resort.Enums.Roles;
+import holiday_resort.management_system.com.holiday_resort.Enums.RoleTypes;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,16 +15,16 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRoles {
+public class Roles {
 
     @Id
     private Long id;
 
     @ElementCollection(fetch=FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private List<Roles> rolesList = new ArrayList<>();
+    private List<RoleTypes> roleTypesList = new ArrayList<>();
 
     @OneToOne
     @MapsId
-    private LoginUser loginUser;
+    private LoginDetails loginDetails;
 }

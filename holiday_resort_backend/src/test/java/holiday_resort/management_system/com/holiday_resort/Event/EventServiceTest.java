@@ -61,7 +61,7 @@ public class EventServiceTest {
     public void findAllEventsForUser(){
         when(eventRepository.getEventsByUserId(USER_ID)).thenReturn(List.of(userEvent));
 
-        List<EventDTO> eventDTOS = eventService.findEventsForUser(user.getLoginUser());
+        List<EventDTO> eventDTOS = eventService.findEventsForUser(user.getLoginDetails());
         assertThat(eventDTOS).hasSize(1);
 
         EventDTO extractedEvent = eventDTOS.get(0);

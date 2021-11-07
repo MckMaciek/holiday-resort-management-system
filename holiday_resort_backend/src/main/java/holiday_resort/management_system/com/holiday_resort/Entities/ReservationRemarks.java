@@ -1,6 +1,7 @@
 package holiday_resort.management_system.com.holiday_resort.Entities;
 
 
+import holiday_resort.management_system.com.holiday_resort.Dto.ReservationRemarksDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -38,4 +39,14 @@ public class ReservationRemarks {
 
     @Column(name="modification_date")
     private LocalDateTime modificationDate;
+
+    public ReservationRemarks(ReservationRemarksDTO reservationRemarksDTO){
+        this.id = reservationRemarksDTO.getId();
+        this.creationDate = reservationRemarksDTO.getCreationDate();
+        this.modificationDate = reservationRemarksDTO.getModificationDate();
+        this.description = reservationRemarksDTO.getDescription();
+        this.topic = reservationRemarksDTO.getTopic();
+
+        this.reservation = new Reservation(reservationRemarksDTO.getReservation());
+    }
 }

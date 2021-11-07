@@ -1,7 +1,7 @@
 package holiday_resort.management_system.com.holiday_resort.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import holiday_resort.management_system.com.holiday_resort.Entities.LoginUser;
+import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,7 +31,7 @@ public class JsonObjectAuthFilter extends UsernamePasswordAuthenticationFilter {
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }
-            LoginUser authRequest = objectMapper.readValue(sb.toString(), LoginUser.class);
+            LoginDetails authRequest = objectMapper.readValue(sb.toString(), LoginDetails.class);
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                     authRequest.getUsername(), authRequest.getPassword()
             );

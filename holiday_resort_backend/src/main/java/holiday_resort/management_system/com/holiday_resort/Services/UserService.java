@@ -37,8 +37,6 @@ public class UserService implements CrudOperations<User,Long>, Validate<User> {
     @Override
     public void add(User user) {
         if(!Objects.isNull(user)){
-
-
             userRepository.save(user);
         }
     }
