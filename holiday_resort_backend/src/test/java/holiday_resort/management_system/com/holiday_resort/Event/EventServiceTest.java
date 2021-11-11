@@ -38,22 +38,22 @@ public class EventServiceTest {
     @BeforeAll
     private void init(){
 
-        user = User.getInstanceOfBuilder()
-                        .setId(USER_ID)
-                        .setFirstName("TEST")
-                        .setLastName("TEST")
-                        .setEmail("TEST@GMAIL.COM")
-                        .setCreationDate(LocalDateTime.now())
-                        .setModificationDate(LocalDateTime.now())
+        user = User.builder()
+                        .id(USER_ID)
+                        .firstName("TEST")
+                        .lastName("TEST")
+                        .email("TEST@GMAIL.COM")
+                        .creationDate(LocalDateTime.now())
+                        .modificationDate(LocalDateTime.now())
                         .build();
 
-        userEvent = Event.getInstanceOfBuilder()
-                            .setId(33L)
-                            .setUserId(USER_ID)
-                            .setStartingDate(LocalDateTime.now())
-                            .setEndingDate(LocalDateTime.now())
-                            .setDurationDate(LocalDateTime.now())
-                            .setPriority(3)
+        userEvent = Event.builder()
+                            .id(33L)
+                            .userId(USER_ID)
+                            .startingDate(LocalDateTime.now())
+                            .endingDate(LocalDateTime.now())
+                            .durationDate(LocalDateTime.now())
+                            .priority(3)
                             .build();
     }
 

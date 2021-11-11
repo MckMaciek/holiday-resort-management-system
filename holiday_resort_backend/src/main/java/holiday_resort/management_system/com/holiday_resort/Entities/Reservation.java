@@ -1,6 +1,7 @@
 package holiday_resort.management_system.com.holiday_resort.Entities;
 
 import holiday_resort.management_system.com.holiday_resort.Dto.ReservationDTO;
+import holiday_resort.management_system.com.holiday_resort.Interfaces.LoginDetailsLinked;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,14 +11,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "user_reservation_tb")
+@Table(name = "reservation_tb")
 @Getter
 @Setter
-@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Reservation {
+public class Reservation implements LoginDetailsLinked {
 
     @Id
     private Long id;
@@ -25,10 +25,10 @@ public class Reservation {
     @Column(name="final_price")
     private BigDecimal finalPrice;
 
-    @OneToMany(fetch=FetchType.LAZY)
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "reservation")
     private List<ReservationRemarks> reservationRemarks;
 
-    @OneToMany(fetch=FetchType.LAZY)
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "reservation")
     private List<Accommodation> accommodationList;
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -51,4 +51,8 @@ public class Reservation {
         this.user = reservationDTO.getUser();
     }
 
+    @Override
+    public LoginDetails getLinkedLoginDetails() {
+        return user.getLoginDetails();
+    }
 }

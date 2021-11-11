@@ -10,14 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import static holiday_resort.management_system.com.holiday_resort.Enums.Access.ROLE_ADMIN;
+
 
 @RestController
 @Api(tags="[ADMIN] - UserLogin CRUD")
 @RequestMapping("/api/v1")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class LoginDetailsController {
-
-    private static final String ROLE_ADMIN= "hasRole('ROLE_ADMIN')";
 
     private final UserService userService;
     private final LoginDetailsService loginDetailsService;

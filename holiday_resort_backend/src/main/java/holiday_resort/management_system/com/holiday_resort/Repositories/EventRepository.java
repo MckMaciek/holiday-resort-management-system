@@ -12,6 +12,5 @@ import java.util.Optional;
 public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> getEventsByUserId(@Param("userId") Long userId);
-
     Optional<Event> getEventById(Long id);
 }

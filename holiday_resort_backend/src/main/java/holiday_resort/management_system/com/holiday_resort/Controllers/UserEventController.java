@@ -1,21 +1,21 @@
 package holiday_resort.management_system.com.holiday_resort.Controllers;
 
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import holiday_resort.management_system.com.holiday_resort.Controllers.Exceptions.UserControllerExceptions;
 import holiday_resort.management_system.com.holiday_resort.Dto.EventDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
 import holiday_resort.management_system.com.holiday_resort.Repositories.LoginDetailsRepository;
 import holiday_resort.management_system.com.holiday_resort.Services.EventService;
+import holiday_resort.management_system.com.holiday_resort.Context.UserContext;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.InvalidParameterException;
 import java.util.List;
+
+import static holiday_resort.management_system.com.holiday_resort.Enums.Access.ROLE_USER;
 
 @RestController
 @Api(tags="[USER] - Get user events")
@@ -23,15 +23,18 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserEventController {
 
-    private static final String ROLE_USER = "hasRole('ROLE_USER')";
-
     private final LoginDetailsRepository loginDetailsRepository;
     private final EventService eventService;
+    private final UserContext userContext;
 
     @Autowired
-    public UserEventController(LoginDetailsRepository loginDetailsRepository, EventService eventService){
+    public UserEventController(LoginDetailsRepository loginDetailsRepository,
+                               EventService eventService,
+                               UserContext userContext
+    ){
         this.loginDetailsRepository = loginDetailsRepository;
         this.eventService = eventService;
+        this.userContext = userContext;
     }
 
     @PreAuthorize(ROLE_USER)
@@ -39,7 +42,7 @@ public class UserEventController {
     public ResponseEntity<List<EventDTO>> getEvents()
             throws InvalidParameterException {
 
-        LoginDetails contextUser = getAssociatedUser();
+        LoginDetails contextUser = userContext.getAssociatedUser();
 
         return ResponseEntity.ok(eventService.findEventsForUser(contextUser));
     }
@@ -49,7 +52,7 @@ public class UserEventController {
     public ResponseEntity<EventDTO> getEvent(@PathVariable(name = "eventId", required = true) Long eventId)
             throws InvalidParameterException {
 
-        LoginDetails contextUser = getAssociatedUser();
+        LoginDetails contextUser = userContext.getAssociatedUser();
         EventDTO eventDTO = null;
 
         try{
@@ -69,7 +72,7 @@ public class UserEventController {
             @RequestBody JsonMergePatch patch)
             throws InvalidParameterException {
 
-        LoginDetails contextUser = getAssociatedUser();
+        LoginDetails contextUser = userContext.getAssociatedUser();
 
         try{
             eventService.patchEventUserAction(contextUser, eventId, patch);
@@ -85,7 +88,7 @@ public class UserEventController {
     @RequestMapping(value = "/event/delete/{eventId}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteEvent(@PathVariable(name = "eventId", required = true) Long eventId){
 
-        LoginDetails contextUser = getAssociatedUser();
+        LoginDetails contextUser = userContext.getAssociatedUser();
         if(eventService.deleteEventUserAction(contextUser, eventId)){
             return ResponseEntity.ok().build();
         }
@@ -98,7 +101,7 @@ public class UserEventController {
     public ResponseEntity<?> addEvent(@RequestBody(required = true) EventDTO eventDTO)
             throws InvalidParameterException {
 
-        LoginDetails contextUser = getAssociatedUser();
+        LoginDetails contextUser = userContext.getAssociatedUser();
         try{
             eventService.addEventUserAction(contextUser, eventDTO);
 
@@ -108,14 +111,4 @@ public class UserEventController {
 
         return ResponseEntity.ok().build();
     }
-
-
-    private LoginDetails getAssociatedUser(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
-
-        return loginDetailsRepository.findByUsername(userName)
-                    .orElseThrow(UserControllerExceptions.UserNotFoundException::new);
-    }
-
 }

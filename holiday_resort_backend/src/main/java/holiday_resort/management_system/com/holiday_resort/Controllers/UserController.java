@@ -14,13 +14,13 @@ import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static holiday_resort.management_system.com.holiday_resort.Enums.Access.ROLE_ADMIN;
+
 @RestController
 @Api(tags="[ADMIN] - Manage users")
 @RequestMapping("/api/v1")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController extends Throwable{
-
-    private static final String ROLE_ADMIN = "hasRole('ROLE_ADMIN')";
 
     private final UserService userService;
 

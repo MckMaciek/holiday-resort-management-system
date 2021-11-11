@@ -2,15 +2,15 @@ package holiday_resort.management_system.com.holiday_resort.Entities;
 
 import holiday_resort.management_system.com.holiday_resort.Dto.EventDTO;
 import holiday_resort.management_system.com.holiday_resort.Enums.EventEnum;
-import lombok.Getter;
-import lombok.Setter;
+import holiday_resort.management_system.com.holiday_resort.Interfaces.LoginDetailsLinked;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_event_tb")
+@Table(name = "event_tb")
 
 @NamedQueries
         (
@@ -21,7 +21,10 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class Event {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Event implements LoginDetailsLinked {
 
     public final static String GET_EVENTS_BY_USER_ID  = "Event.getEventsByUserId";
 
@@ -34,27 +37,9 @@ public class Event {
         this.priority = eventDTO.getPriority();
     }
 
-    public Event(Long id, Long userId, @NotBlank EventEnum eventType,
-                 @NotBlank LocalDateTime startingDate, LocalDateTime endingDate,
-                 LocalDateTime durationDate, @NotBlank Integer priority) {
-        this.id = id;
-        this.userId = userId;
-        this.eventType = eventType;
-        this.startingDate = startingDate;
-        this.endingDate = endingDate;
-        this.durationDate = durationDate;
-        this.priority = priority;
-    }
-
-    public Event(){
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-
-    @Column(name="user_id_fk")
-    private Long userId;
 
     @Column(name="event_type")
     @Enumerated(EnumType.STRING)
@@ -75,70 +60,13 @@ public class Event {
     @NotBlank
     private Integer priority;
 
-    public static EventBuilder getInstanceOfBuilder(){
-        return new EventBuilder();
-    }
+    @OneToOne
+    @MapsId
+    @ToString.Exclude
+    private User user;
 
-    public static class EventBuilder{
-
-        private Long id;
-        private Long userId;
-        private EventEnum eventType;
-        private LocalDateTime startingDate;
-        private LocalDateTime endingDate;
-        private LocalDateTime durationDate;
-        private Integer priority;
-
-        public EventBuilder setId(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public EventBuilder setUserId(Long userId) {
-            this.userId = userId;
-            return this;
-        }
-
-        public EventBuilder setEventType(EventEnum eventType) {
-            this.eventType = eventType;
-            return this;
-        }
-
-        public EventBuilder setStartingDate(LocalDateTime startingDate) {
-            this.startingDate = startingDate;
-            return this;
-        }
-
-        public EventBuilder setEndingDate(LocalDateTime endingDate) {
-            this.endingDate = endingDate;
-            return this;
-        }
-
-        public EventBuilder setDurationDate(LocalDateTime durationDate) {
-            this.durationDate = durationDate;
-            return this;
-        }
-
-        public EventBuilder setPriority(Integer priority) {
-            this.priority = priority;
-            return this;
-        }
-
-        public Event build(){
-            Event event = new Event();
-
-            event.setEventType(this.eventType);
-            event.setDurationDate(this.durationDate);
-            event.setPriority(this.priority);
-            event.setUserId(this.userId);
-            event.setId(this.id);
-            event.setStartingDate(this.startingDate);
-            event.setEndingDate(this.endingDate);
-
-
-            return event;
-        }
-
-
+    @Override
+    public LoginDetails getLinkedLoginDetails() {
+        return null;
     }
 }

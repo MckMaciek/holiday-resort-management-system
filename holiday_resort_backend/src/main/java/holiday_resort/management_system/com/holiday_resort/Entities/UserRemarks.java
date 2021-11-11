@@ -1,5 +1,6 @@
 package holiday_resort.management_system.com.holiday_resort.Entities;
 
+import holiday_resort.management_system.com.holiday_resort.Interfaces.LoginDetailsLinked;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRemarks {
+public class UserRemarks implements LoginDetailsLinked {
 
     @Id
     private Long id;
@@ -38,4 +39,9 @@ public class UserRemarks {
 
     @Column(name="modification_date")
     private LocalDateTime modificationDate;
+
+    @Override
+    public LoginDetails getLinkedLoginDetails() {
+        return user.getLoginDetails();
+    }
 }

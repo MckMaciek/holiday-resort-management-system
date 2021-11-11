@@ -135,36 +135,36 @@ public class UserEventIT {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         TIME_NOW = LocalDateTime.parse(DATE_VALUE, formatter);
 
-        user = User.getInstanceOfBuilder()
-                .setFirstName(FIRST_NAME)
-                .setLastName(LAST_NAME)
-                .setEmail(EMAIL)
-                .setCreationDate(TIME_NOW)
-                .setModificationDate(TIME_NOW)
+        user = User.builder()
+                .firstName(FIRST_NAME)
+                .lastName(LAST_NAME)
+                .email(EMAIL)
+                .creationDate(TIME_NOW)
+                .modificationDate(TIME_NOW)
                 .build();
 
-        eventForUser = Event.getInstanceOfBuilder()
-                .setEventType(EventEnum.CHECK_IN)
-                .setDurationDate(TIME_NOW)
-                .setStartingDate(TIME_NOW)
-                .setEndingDate(TIME_NOW)
-                .setPriority(3)
+        eventForUser = Event.builder()
+                .eventType(EventEnum.CHECK_IN)
+                .durationDate(TIME_NOW)
+                .startingDate(TIME_NOW)
+                .endingDate(TIME_NOW)
+                .priority(3)
                 .build();
 
-        eventForUser2 = Event.getInstanceOfBuilder()
-                .setEventType(EventEnum.CHECK_IN)
-                .setDurationDate(TIME_NOW)
-                .setStartingDate(TIME_NOW)
-                .setEndingDate(TIME_NOW)
-                .setPriority(3)
+        eventForUser2 = Event.builder()
+                .eventType(EventEnum.CHECK_IN)
+                .durationDate(TIME_NOW)
+                .startingDate(TIME_NOW)
+                .endingDate(TIME_NOW)
+                .priority(3)
                 .build();
 
-        notUserEvent = Event.getInstanceOfBuilder()
-                .setEventType(EventEnum.CHECK_IN)
-                .setDurationDate(TIME_NOW)
-                .setStartingDate(null)
-                .setEndingDate(null)
-                .setPriority(3)
+        notUserEvent = Event.builder()
+                .eventType(EventEnum.CHECK_IN)
+                .durationDate(TIME_NOW)
+                .startingDate(null)
+                .endingDate(null)
+                .priority(3)
                 .build();
     }
 

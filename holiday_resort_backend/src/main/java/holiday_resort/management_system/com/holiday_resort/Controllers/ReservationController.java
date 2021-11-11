@@ -1,18 +1,17 @@
 package holiday_resort.management_system.com.holiday_resort.Controllers;
 
 
-import holiday_resort.management_system.com.holiday_resort.Controllers.Exceptions.UserControllerExceptions;
-import holiday_resort.management_system.com.holiday_resort.Requests.ReservationRequest;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
-import holiday_resort.management_system.com.holiday_resort.Repositories.LoginDetailsRepository;
+import holiday_resort.management_system.com.holiday_resort.Requests.ReservationRequest;
 import holiday_resort.management_system.com.holiday_resort.Services.ReservationService;
+import holiday_resort.management_system.com.holiday_resort.Context.UserContext;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import static holiday_resort.management_system.com.holiday_resort.Enums.Access.ROLE_USER;
 
 @RestController
 @Api(tags="[USER] - Manage resort objects")
@@ -20,33 +19,25 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ReservationController {
 
-    private static final String ROLE_USER = "hasRole('ROLE_USER')";
-
-    private final LoginDetailsRepository loginDetailsRepository;
     private final ReservationService reservationService;
+    private final UserContext userContext;
 
     @Autowired
-    public ReservationController(LoginDetailsRepository loginDetailsRepository, ReservationService reservationService){
-        this.loginDetailsRepository = loginDetailsRepository;
+    public ReservationController(ReservationService reservationService,
+                                 UserContext userContext
+    ){
         this.reservationService = reservationService;
+        this.userContext = userContext;
     }
 
     @PreAuthorize(ROLE_USER)
     @RequestMapping(value = "/reservation/user", method = RequestMethod.POST)
     public ResponseEntity<?> postReservationForUser(@RequestBody(required = true) ReservationRequest reservationRequest) {
 
-        LoginDetails contextUser = getAssociatedUser();
+        LoginDetails contextUser = userContext.getAssociatedUser();
 
         reservationService.setReservation(contextUser, reservationRequest);
 
         return ResponseEntity.ok().build();
-    }
-
-    private LoginDetails getAssociatedUser(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
-
-        return loginDetailsRepository.findByUsername(userName)
-                .orElseThrow(UserControllerExceptions.UserNotFoundException::new);
     }
 }

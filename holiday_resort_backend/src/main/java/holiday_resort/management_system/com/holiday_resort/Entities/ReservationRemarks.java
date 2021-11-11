@@ -2,6 +2,7 @@ package holiday_resort.management_system.com.holiday_resort.Entities;
 
 
 import holiday_resort.management_system.com.holiday_resort.Dto.ReservationRemarksDTO;
+import holiday_resort.management_system.com.holiday_resort.Interfaces.LoginDetailsLinked;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReservationRemarks {
+public class ReservationRemarks implements LoginDetailsLinked {
 
     @Id
     private Long id;
@@ -48,5 +49,10 @@ public class ReservationRemarks {
         this.topic = reservationRemarksDTO.getTopic();
 
         this.reservation = new Reservation(reservationRemarksDTO.getReservation());
+    }
+
+    @Override
+    public LoginDetails getLinkedLoginDetails() {
+        return reservation.getUser().getLoginDetails();
     }
 }

@@ -10,8 +10,11 @@ import holiday_resort.management_system.com.holiday_resort.Interfaces.Validate;
 import holiday_resort.management_system.com.holiday_resort.Repositories.ReservationRepository;
 import holiday_resort.management_system.com.holiday_resort.Requests.ReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ReservationService implements CrudOperations<ReservationDTO, Long>, Validate<ReservationDTO> {
 
     private final ReservationRepository reservationRepository;

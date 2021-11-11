@@ -1,8 +1,8 @@
 package holiday_resort.management_system.com.holiday_resort.Entities;
 
+import holiday_resort.management_system.com.holiday_resort.Interfaces.LoginDetailsLinked;
 import holiday_resort.management_system.com.holiday_resort.Requests.RegisterRequest;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,14 +17,17 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name="users_login_tb",
+@Table(name="login_details_tb",
         uniqueConstraints = {
             @UniqueConstraint(columnNames = "username")
 })
 
 @Getter
 @Setter
-public class LoginDetails implements UserDetails {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class LoginDetails implements UserDetails, LoginDetailsLinked {
 
     private final static String ROLE_PREFIX = "ROLE_";
 
@@ -57,16 +60,14 @@ public class LoginDetails implements UserDetails {
         this.username = registerRequest.getUsername();
         this.password = registerRequest.getPassword();
         this.user = new User.UserBuilder()
-                .setCreationDate(LocalDateTime.now())
-                .setPhoneNumber(registerRequest.getPhoneNumber())
-                .setFirstName(registerRequest.getFirstName())
-                .setLastName(registerRequest.getLastName())
-                .setEmail(registerRequest.getEmail())
-                .setLoginDetails(this)
+                .creationDate(LocalDateTime.now())
+                .phoneNumber(registerRequest.getPhoneNumber())
+                .firstName(registerRequest.getFirstName())
+                .lastName(registerRequest.getLastName())
+                .email(registerRequest.getEmail())
+                .loginDetails(this)
                 .build();
     }
-
-    public LoginDetails(){}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -110,59 +111,8 @@ public class LoginDetails implements UserDetails {
         return true;
     }
 
-    public static UserLoginBuilder getInstanceOfBuilder(){
-        return new UserLoginBuilder();
-    }
-
-    public static class UserLoginBuilder{
-        private Long id;
-        private String username;
-        private String password;
-        private User user;
-        private Boolean isEnabled = true;
-        private Roles roles;
-
-        public UserLoginBuilder setId(Long id){
-            this.id = id;
-            return this;
-        }
-
-        public UserLoginBuilder setUsername(String username){
-            this.username = username;
-            return this;
-        }
-        public UserLoginBuilder setPassword(String password){
-            this.password = password;
-            return this;
-        }
-        public UserLoginBuilder setUser(User user){
-            this.user = user;
-            return this;
-        }
-
-        public UserLoginBuilder setEnabled(Boolean enabled) {
-            isEnabled = enabled;
-            return this;
-        }
-
-        public UserLoginBuilder setRole(Roles roles) {
-            this.roles = roles;
-            return this;
-        }
-
-        public LoginDetails build(){
-            LoginDetails loginDetails = new LoginDetails();
-
-            loginDetails.setId(this.id);
-            loginDetails.setUser(this.user);
-            loginDetails.setRoles(this.roles);
-            loginDetails.setIsEnabled(this.isEnabled);
-            loginDetails.setUsername(this.username);
-            loginDetails.setPassword(this.password);
-
-            return loginDetails;
-        }
-
-
+    @Override
+    public LoginDetails getLinkedLoginDetails() {
+        return this;
     }
 }

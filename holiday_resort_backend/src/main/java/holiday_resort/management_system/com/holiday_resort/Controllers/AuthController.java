@@ -43,7 +43,8 @@ public class AuthController {
                    RoleService roleService,
                    JwtUtils jwtUtils,
                    LoginDetailsRepository loginDetailsRepository,
-                   UserRepository userRepository){
+                   UserRepository userRepository
+    ){
         this.authenticationManager = authenticationManager;
         this.loginDetailsService = loginDetailsService;
         this.roleService = roleService;
