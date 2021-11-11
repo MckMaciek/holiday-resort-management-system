@@ -21,16 +21,16 @@ import static holiday_resort.management_system.com.holiday_resort.Enums.Access.R
 @Api(tags="[USER] - Get user events")
 @RequestMapping("/api/v1")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-public class UserEventController {
+public class EventController {
 
     private final LoginDetailsRepository loginDetailsRepository;
     private final EventService eventService;
     private final UserContext userContext;
 
     @Autowired
-    public UserEventController(LoginDetailsRepository loginDetailsRepository,
-                               EventService eventService,
-                               UserContext userContext
+    public EventController(LoginDetailsRepository loginDetailsRepository,
+                           EventService eventService,
+                           UserContext userContext
     ){
         this.loginDetailsRepository = loginDetailsRepository;
         this.eventService = eventService;

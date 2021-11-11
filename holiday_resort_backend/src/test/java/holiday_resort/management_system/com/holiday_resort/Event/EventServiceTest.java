@@ -49,7 +49,7 @@ public class EventServiceTest {
 
         userEvent = Event.builder()
                             .id(33L)
-                            .userId(USER_ID)
+                            .user(user)
                             .startingDate(LocalDateTime.now())
                             .endingDate(LocalDateTime.now())
                             .durationDate(LocalDateTime.now())

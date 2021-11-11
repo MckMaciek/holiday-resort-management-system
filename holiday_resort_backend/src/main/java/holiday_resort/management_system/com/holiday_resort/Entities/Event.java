@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 @Table(name = "event_tb")
 
 @NamedQueries
-        (
-            {
-    @NamedQuery(name= Event.GET_EVENTS_BY_USER_ID, query = "select ev from Event ev where ev.userId = :userId order by ev.startingDate")
-            }
-        )
+    (
+        {
+@NamedQuery(name= Event.GET_EVENTS_BY_USER_ID, query = "select ev from Event ev where ev.user.id = :userId order by ev.startingDate")
+        }
+    )
 
 @Getter
 @Setter
@@ -67,6 +67,6 @@ public class Event implements LoginDetailsLinked {
 
     @Override
     public LoginDetails getLinkedLoginDetails() {
-        return null;
+        return user.getLoginDetails();
     }
 }

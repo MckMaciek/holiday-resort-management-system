@@ -39,7 +39,7 @@ public class AccommodationConverter implements Converter<AccommodationDTO, Objec
 
         if(resortObject.isEmpty()){
             throw new NullPointerException(
-                    String.format("Resort Object not found with id of %s",accommodationRequest.getResortObjectId()));
+                    String.format("Resort Object not found with id of %s", accommodationRequest.getResortObjectId()));
         }
 
         return accommodationDTO;

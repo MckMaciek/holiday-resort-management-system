@@ -28,7 +28,6 @@ public class AccommodationController {
     @Autowired
     public AccommodationController(AccommodationService accommodationService,
                                    UserContext userContext){
-
         this.accommodationService = accommodationService;
         this.userContext = userContext;
     }
@@ -61,10 +60,5 @@ public class AccommodationController {
 
         return ResponseEntity.ok(accommodationService.getAccommodationListForUser(contextUser));
     }
-
-
-
-
-
 
 }

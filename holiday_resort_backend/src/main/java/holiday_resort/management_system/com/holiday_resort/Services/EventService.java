@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
+import holiday_resort.management_system.com.holiday_resort.Context.CustomContext;
 import holiday_resort.management_system.com.holiday_resort.Dto.EventDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.Event;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
@@ -15,6 +16,7 @@ import holiday_resort.management_system.com.holiday_resort.Interfaces.Validate;
 import holiday_resort.management_system.com.holiday_resort.Repositories.EventRepository;
 import holiday_resort.management_system.com.holiday_resort.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,11 +31,18 @@ public class EventService implements CrudOperations<EventDTO, Long>, Validate<Ev
     private final UserRepository userRepo;
     private final ObjectMapper objectMapper;
 
+    private final CustomContext<Event, EventRepository> eventContext;
+
     @Autowired
-    public EventService(EventRepository eventRepo, UserRepository userRepo, ObjectMapper objectMapper){
+    public EventService(EventRepository eventRepo,
+                        UserRepository userRepo,
+                        ObjectMapper objectMapper,
+                        CustomContext<Event, EventRepository> eventContext
+    ){
         this.eventRepo = eventRepo;
         this.userRepo = userRepo;
         this.objectMapper = objectMapper;
+        this.eventContext = eventContext;
     }
 
     public List<EventDTO> findEventsForUser(LoginDetails loginDetails){
@@ -55,62 +64,50 @@ public class EventService implements CrudOperations<EventDTO, Long>, Validate<Ev
 
         if(Objects.isNull(eventId)) throw new NullPointerException("Cannot patch event with null id!");
 
-        Optional<Event> event = eventRepo.findById(eventId);
-        if(event.isEmpty()) throw new NullPointerException(
-                String.format("Event with id %s does not exist!", eventId));
+        Pair<LoginDetails, Event> eventAssociation = eventContext.getAssociatedUser(eventRepo, eventId);
+        if(eventContext.checkIfOwnerAndUserRequestAreSame(eventAssociation.getFirst(), loginDetails)){
+            try {
+            Event eventPatched = applyPatchToEvent(eventPatch, eventAssociation.getSecond());
 
-        event.ifPresent(ev -> {
-                LoginDetails eventOwner = getEventAssociatedUser(ev);
-                if(checkIfEventOwnerAndUserRequestAreSame(eventOwner, loginDetails)){
-                    try {
-                    Event eventPatched = applyPatchToEvent(eventPatch, ev);
+            eventRepo.save(eventPatched);
 
-                    eventRepo.save(eventPatched);
+            } catch (JsonPatchException e) {
+                e.printStackTrace();
+                return false;
 
-                    } catch (JsonPatchException e) {
-                        e.printStackTrace();
-                    } catch (JsonProcessingException e) {
-                        e.printStackTrace();
-                    }
-                }
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
 
-        });
         return true;
     }
 
     public EventDTO findEventForUser(LoginDetails loginDetails, Long eventId){
-        Optional<Event> userEventOpt = eventRepo.getEventById(eventId);
 
-        if(userEventOpt.isEmpty()) throw new NullPointerException(
-                String.format("Event with id %s does not exist!", eventId));
-
-        LoginDetails eventOwner = getEventAssociatedUser(userEventOpt.get());
-            if (!checkIfEventOwnerAndUserRequestAreSame(eventOwner, loginDetails)){
+        Pair<LoginDetails, Event> eventAssociation = eventContext.getAssociatedUser(eventRepo, eventId);
+            if (!eventContext.checkIfOwnerAndUserRequestAreSame(eventAssociation.getFirst(), loginDetails)){
                 throw new IllegalArgumentException(
                             String.format("Event owner - %s and username in request - %s do not match!",
-                                eventOwner.getUsername(), loginDetails.getUsername()));
+                                    eventAssociation.getFirst().getUsername(), loginDetails.getUsername()));
             }
 
-        return new EventDTO(userEventOpt.get());
+        return new EventDTO(eventAssociation.getSecond());
     }
 
     public boolean deleteEventUserAction(LoginDetails loginDetails, Long eventId){
 
-        Optional<Event> userEventOpt = eventRepo.getEventById(eventId);
-        if(userEventOpt.isEmpty()) throw new NullPointerException(
-                String.format("Event with id %s does not exist!", eventId));
+        Pair<LoginDetails, Event> eventAssociation = eventContext.getAssociatedUser(eventRepo, eventId);
 
-        userEventOpt.ifPresent(event ->{
-            LoginDetails eventOwner = getEventAssociatedUser(event);
+        if(eventContext.checkIfOwnerAndUserRequestAreSame(eventAssociation.getFirst(), loginDetails)){
+            eventRepo.deleteById(eventId);
+        }
+        else throw new IllegalArgumentException(
+                String.format("Event owner - %s and username in request - %s do not match!",
+                        eventAssociation.getFirst().getUsername(), loginDetails.getUsername()));
 
-            if(checkIfEventOwnerAndUserRequestAreSame(eventOwner, loginDetails)){
-                eventRepo.deleteById(eventId);
-            }
-            else throw new IllegalArgumentException(
-                    String.format("Event owner - %s and username in request - %s do not match!",
-                            eventOwner.getUsername(), loginDetails.getUsername()));
-        });
-        return true; //wont reach if exception was thrown
+        return true;
     }
 
     public boolean addEventUserAction(LoginDetails loginDetails, EventDTO eventDTO){
@@ -120,7 +117,7 @@ public class EventService implements CrudOperations<EventDTO, Long>, Validate<Ev
 
         Event eventToBeInserted = new Event(eventDTO);
 
-        eventToBeInserted.setUserId(loginDetails.getUser().getId());
+        eventToBeInserted.setUser(loginDetails.getUser());
         eventRepo.save(eventToBeInserted);
 
         return true; //wont reach if exception was thrown
@@ -164,21 +161,6 @@ public class EventService implements CrudOperations<EventDTO, Long>, Validate<Ev
         if(Objects.isNull(eventDTO.getStartingDate())) validated = false;
 
         return validated;
-    }
-
-    private LoginDetails getEventAssociatedUser(Event event){
-        Optional<User> associatedUser = userRepo.findById(event.getUserId());
-
-        if(associatedUser.isEmpty()) throw new IllegalArgumentException(
-                String.format("Event with id %s has no owner!", event.getId()));
-
-        LoginDetails eventOwner = associatedUser.get().getLoginDetails();
-
-        return eventOwner;
-    }
-
-    private boolean checkIfEventOwnerAndUserRequestAreSame(LoginDetails eventOwner, LoginDetails requestUser){
-        return eventOwner.getUsername().equals(requestUser.getUsername());
     }
 
     private Event applyPatchToEvent(

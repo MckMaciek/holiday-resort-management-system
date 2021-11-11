@@ -64,8 +64,8 @@ public class UserEventIT {
         User downloadedUser = userList.get(0);
         Long extractedId = downloadedUser.getId();
 
-        eventForUser.setUserId(extractedId);
-        eventForUser2.setUserId(extractedId);
+        eventForUser.setUser(user);
+        eventForUser2.setUser(user);
 
         eventRepo.save(eventForUser);
         eventRepo.save(eventForUser2);
@@ -84,7 +84,7 @@ public class UserEventIT {
         assertThat(listOfUserEvents).hasSize(2);
         Event userEventExtracted = listOfUserEvents.get(0);
 
-        assertThat(userEventExtracted.getUserId()).isEqualTo(extractedId);
+        assertThat(userEventExtracted.getUser().getId()).isEqualTo(extractedId);
         assertThat(userEventExtracted.getEventType()).isEqualTo(eventForUser.getEventType());
         assertThat(userEventExtracted.getPriority()).isEqualTo(eventForUser.getPriority());
         assertThat(userEventExtracted.getStartingDate()).isEqualTo(eventForUser.getStartingDate());
@@ -107,8 +107,8 @@ public class UserEventIT {
         User downloadedUser = userList.get(0);
         Long extractedId = downloadedUser.getId();
 
-        eventForUser.setUserId(extractedId);
-        eventForUser2.setUserId(extractedId);
+        eventForUser.setUser(user);
+        eventForUser2.setUser(user);
 
         eventRepo.save(eventForUser);
         eventRepo.save(eventForUser2);
