@@ -1,7 +1,6 @@
 package holiday_resort.management_system.com.holiday_resort.Context;
 
 
-import holiday_resort.management_system.com.holiday_resort.Controllers.Exceptions.UserControllerExceptions;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
 import holiday_resort.management_system.com.holiday_resort.Repositories.LoginDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +24,7 @@ public class UserContext {
 
     public LoginDetails getAssociatedUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
-
-        return loginDetailsRepository.findByUsername(userName)
-                .orElseThrow(UserControllerExceptions.UserNotFoundException::new);
+        return (LoginDetails) authentication.getPrincipal();
     }
 
 }

@@ -24,6 +24,7 @@ public class CustomContext<ContextClass, ContextClassRepo> {
             CrudRepository<? extends ContextClass, Long> crudRepository =
                     (CrudRepository<? extends ContextClass, Long>) contextClassRepo;
 
+
             Optional<? extends ContextClass> associatedEntity = crudRepository.findById(id);
 
             if(associatedEntity.isEmpty()) throw new IllegalArgumentException(

@@ -44,6 +44,9 @@ public class LoginDetails implements UserDetails, LoginDetailsLinked {
     @Column(name="password")
     private String password;
 
+    @OneToOne(mappedBy = "loginDetails", fetch = FetchType.EAGER)
+    private VerificationToken verificationToken;
+
     @OneToOne
     @NotNull
     @MapsId
@@ -53,12 +56,14 @@ public class LoginDetails implements UserDetails, LoginDetailsLinked {
     private Roles roles;
 
     @NotNull
-    private Boolean isEnabled = true;
+    private Boolean isEnabled;
 
     public LoginDetails(RegisterRequest registerRequest){
 
         this.username = registerRequest.getUsername();
         this.password = registerRequest.getPassword();
+        this.isEnabled = true;
+
         this.user = new User.UserBuilder()
                 .creationDate(LocalDateTime.now())
                 .phoneNumber(registerRequest.getPhoneNumber())

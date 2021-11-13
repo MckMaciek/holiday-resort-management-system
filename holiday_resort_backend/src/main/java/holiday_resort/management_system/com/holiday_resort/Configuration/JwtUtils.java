@@ -24,7 +24,6 @@ public class JwtUtils {
 
         LoginDetails userPrincipal = (LoginDetails) authentication.getPrincipal();
 
-
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
