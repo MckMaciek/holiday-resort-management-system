@@ -2,17 +2,21 @@ package holiday_resort.management_system.com.holiday_resort.Controllers;
 
 import holiday_resort.management_system.com.holiday_resort.Configuration.JwtUtils;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
+import holiday_resort.management_system.com.holiday_resort.Entities.VerificationToken;
 import holiday_resort.management_system.com.holiday_resort.Enums.RoleTypes;
+import holiday_resort.management_system.com.holiday_resort.Events.RegistrationCompleteEvent;
 import holiday_resort.management_system.com.holiday_resort.Repositories.LoginDetailsRepository;
 import holiday_resort.management_system.com.holiday_resort.Repositories.UserRepository;
 import holiday_resort.management_system.com.holiday_resort.Requests.JwtResponse;
 import holiday_resort.management_system.com.holiday_resort.Requests.LoginRequest;
 import holiday_resort.management_system.com.holiday_resort.Requests.RegisterRequest;
-import holiday_resort.management_system.com.holiday_resort.Services.RoleService;
 import holiday_resort.management_system.com.holiday_resort.Services.LoginDetailsService;
+import holiday_resort.management_system.com.holiday_resort.Services.RoleService;
+import holiday_resort.management_system.com.holiday_resort.Services.VerificationTokenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,11 +35,13 @@ import java.util.stream.Collectors;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
+    private final VerificationTokenService verificationTokenService;
     private final LoginDetailsService loginDetailsService;
     private final RoleService roleService;
     private final JwtUtils jwtUtils;
     private final LoginDetailsRepository loginDetailsRepository;
     private final UserRepository userRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager,
@@ -43,7 +49,9 @@ public class AuthController {
                    RoleService roleService,
                    JwtUtils jwtUtils,
                    LoginDetailsRepository loginDetailsRepository,
-                   UserRepository userRepository
+                   UserRepository userRepository,
+                   VerificationTokenService verificationTokenService,
+                   ApplicationEventPublisher applicationEventPublisher
     ){
         this.authenticationManager = authenticationManager;
         this.loginDetailsService = loginDetailsService;
@@ -51,7 +59,8 @@ public class AuthController {
         this.jwtUtils = jwtUtils;
         this.loginDetailsRepository = loginDetailsRepository;
         this.userRepository = userRepository;
-
+        this.verificationTokenService = verificationTokenService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @PostMapping("/sign-in")
@@ -96,6 +105,9 @@ public class AuthController {
 
         roleService.assignRolesAndOverride(signUpUser, RoleTypes.USER, RoleTypes.ADMIN);
         loginDetailsService.saveUserAndUserLoginObject(signUpUser);
+
+        VerificationToken verificationToken = verificationTokenService.provideToken(signUpUser);
+        applicationEventPublisher.publishEvent(new RegistrationCompleteEvent(verificationToken));
 
         return ResponseEntity.ok().build();
     }

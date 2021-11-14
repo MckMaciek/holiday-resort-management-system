@@ -44,6 +44,10 @@ public class LoginDetailsService implements UserDetailsService, CrudOperations<L
         this.roleService = roleService;
     }
 
+    public void save(LoginDetails loginDetails){
+        loginDetailsRepository.save(loginDetails);
+    }
+
     @Transactional
     public void saveUserAndUserLoginObject(LoginDetails loginDetails){
         User user = loginDetails.getUser();

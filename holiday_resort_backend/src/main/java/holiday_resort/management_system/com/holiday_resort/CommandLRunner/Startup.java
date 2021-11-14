@@ -6,13 +6,11 @@ import holiday_resort.management_system.com.holiday_resort.Emails.GmailMailServi
 import holiday_resort.management_system.com.holiday_resort.Repositories.AccommodationRepository;
 import holiday_resort.management_system.com.holiday_resort.Repositories.LoginDetailsRepository;
 import holiday_resort.management_system.com.holiday_resort.Repositories.UserRepository;
-import holiday_resort.management_system.com.holiday_resort.Requests.JwtResponse;
 import holiday_resort.management_system.com.holiday_resort.Requests.LoginRequest;
 import holiday_resort.management_system.com.holiday_resort.Requests.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +48,7 @@ public class Startup implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setEmail("mckmus@gmail.com");
+        registerRequest.setEmail("mckmusial@gmail.com");
         registerRequest.setFirstName("Maciej");
         registerRequest.setLastName("Musial");
         registerRequest.setPhoneNumber("666666666");
@@ -64,13 +62,13 @@ public class Startup implements CommandLineRunner {
         loginRequest.setUsername(registerRequest.getUsername());
         loginRequest.setPassword(registerRequest.getPassword());
 
-        ResponseEntity<JwtResponse> responseEntity = authController.authenticateUser(loginRequest);
+        //ResponseEntity<JwtResponse> responseEntity = authController.authenticateUser(loginRequest);
 
 
-        boolean flag = gmailMailService.sendMessage(
-                "mckmusial@gmail.com", "dsadsadsadsa!", "dsadsadsads"
-        );
-
-        System.out.println(flag);
+//        boolean flag = gmailMailService.sendMessage(
+//                "mckmusial@gmail.com", "dsadsadsadsa!", "dsadsadsads"
+//        );
+//
+//        System.out.println(flag);
     }
 }

@@ -62,7 +62,7 @@ public class LoginDetails implements UserDetails, LoginDetailsLinked {
 
         this.username = registerRequest.getUsername();
         this.password = registerRequest.getPassword();
-        this.isEnabled = true;
+        this.isEnabled = false;
 
         this.user = new User.UserBuilder()
                 .creationDate(LocalDateTime.now())
@@ -113,7 +113,7 @@ public class LoginDetails implements UserDetails, LoginDetailsLinked {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.isEnabled;
     }
 
     @Override
