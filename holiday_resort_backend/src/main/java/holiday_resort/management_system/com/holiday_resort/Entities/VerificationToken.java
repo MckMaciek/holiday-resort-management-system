@@ -18,8 +18,11 @@ public class VerificationToken {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(name="expiry_date")
+    @Column(name="expiry_date_until_activation")
     private LocalDateTime expiryDate;
+
+    @Column(name="activated_date")
+    private LocalDateTime activationDate;
 
     @NotBlank
     private String token;

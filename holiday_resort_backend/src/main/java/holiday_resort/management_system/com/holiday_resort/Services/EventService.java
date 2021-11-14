@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import holiday_resort.management_system.com.holiday_resort.Context.CustomContext;
 import holiday_resort.management_system.com.holiday_resort.Dto.EventDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.Event;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
@@ -31,13 +30,13 @@ public class EventService implements CrudOperations<EventDTO, Long>, Validate<Ev
     private final UserRepository userRepo;
     private final ObjectMapper objectMapper;
 
-    private final CustomContext<Event, EventRepository> eventContext;
+    private final GenericAction<Event, EventRepository> eventContext;
 
     @Autowired
     public EventService(EventRepository eventRepo,
                         UserRepository userRepo,
                         ObjectMapper objectMapper,
-                        CustomContext<Event, EventRepository> eventContext
+                        GenericAction<Event, EventRepository> eventContext
     ){
         this.eventRepo = eventRepo;
         this.userRepo = userRepo;

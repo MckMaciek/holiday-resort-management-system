@@ -1,6 +1,5 @@
 package holiday_resort.management_system.com.holiday_resort.Services;
 
-import holiday_resort.management_system.com.holiday_resort.Context.CustomContext;
 import holiday_resort.management_system.com.holiday_resort.Converters.AccommodationConverter;
 import holiday_resort.management_system.com.holiday_resort.Dto.AccommodationDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.Accommodation;
@@ -32,7 +31,7 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
     private final AccommodationRepository accommodationRepository;
     private final AccommodationConverter accommodationConverter;
 
-    private final CustomContext<Accommodation, AccommodationRepository> accommodationContext;
+    private final GenericAction<Accommodation, AccommodationRepository> accommodationContext;
 
     private final ResortObjectService resortObjectService;
 
@@ -40,7 +39,7 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
     public AccommodationService(AccommodationRepository accommodationRepository,
                                 AccommodationConverter accommodationConverter,
                                 ResortObjectService resortObjectService,
-                                CustomContext<Accommodation, AccommodationRepository> accommodationContext
+                                GenericAction<Accommodation, AccommodationRepository> accommodationContext
                                 ){
         this.accommodationRepository = accommodationRepository;
         this.accommodationConverter = accommodationConverter;

@@ -9,11 +9,11 @@ import org.springframework.context.ApplicationEvent;
 @Getter
 @Setter
 @Builder
-public class RegistrationCompleteEvent extends ApplicationEvent {
+public class TokenEvent extends ApplicationEvent {
 
     private final VerificationToken verificationToken;
 
-    public RegistrationCompleteEvent(VerificationToken verificationToken
+    public TokenEvent(VerificationToken verificationToken
     ){
         super(verificationToken);
         this.verificationToken = verificationToken;

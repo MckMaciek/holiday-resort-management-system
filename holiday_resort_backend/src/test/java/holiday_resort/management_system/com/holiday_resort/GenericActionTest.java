@@ -1,6 +1,6 @@
 package holiday_resort.management_system.com.holiday_resort;
 
-import holiday_resort.management_system.com.holiday_resort.Context.CustomContext;
+import holiday_resort.management_system.com.holiday_resort.Services.GenericAction;
 import holiday_resort.management_system.com.holiday_resort.Entities.Accommodation;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
 import holiday_resort.management_system.com.holiday_resort.Entities.User;
@@ -28,9 +28,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @Transactional
-public class CustomContextTest {
+public class GenericActionTest {
 
-    private final CustomContext<Accommodation, AccommodationRepository> customContext;
+    private final GenericAction<Accommodation, AccommodationRepository> genericAction;
     private final AccommodationRepository accommodationRepository;
     private final UserRepository userRepository;
     private final LoginDetailsService loginDetailsService;
@@ -43,14 +43,14 @@ public class CustomContextTest {
     private static LocalDateTime TIME_NOW;
 
     @Autowired
-    public CustomContextTest(AccommodationRepository accommodationRepository,
-                             CustomContext<Accommodation, AccommodationRepository> customContext,
+    public GenericActionTest(AccommodationRepository accommodationRepository,
+                             GenericAction<Accommodation, AccommodationRepository> genericAction,
                              UserRepository userRepository,
                              LoginDetailsService loginDetailsService
                              ){
         this.accommodationRepository = accommodationRepository;
         this.userRepository = userRepository;
-        this.customContext = customContext;
+        this.genericAction = genericAction;
         this.loginDetailsService = loginDetailsService;
     }
 
@@ -98,7 +98,7 @@ public class CustomContextTest {
         Accommodation accommodation1 = accommodationList.get(0);
 
         Pair<LoginDetails, Accommodation> accommodationPair =
-                customContext.getAssociatedUser(accommodationRepository, accommodation1.getId());
+                genericAction.getAssociatedUser(accommodationRepository, accommodation1.getId());
 
         LoginDetails userLoginDetails = accommodationPair.getFirst();
         Accommodation accommodationForId = accommodationPair.getSecond();

@@ -4,7 +4,7 @@ import holiday_resort.management_system.com.holiday_resort.Configuration.JwtUtil
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
 import holiday_resort.management_system.com.holiday_resort.Entities.VerificationToken;
 import holiday_resort.management_system.com.holiday_resort.Enums.RoleTypes;
-import holiday_resort.management_system.com.holiday_resort.Events.RegistrationCompleteEvent;
+import holiday_resort.management_system.com.holiday_resort.Events.TokenEvent;
 import holiday_resort.management_system.com.holiday_resort.Repositories.LoginDetailsRepository;
 import holiday_resort.management_system.com.holiday_resort.Repositories.UserRepository;
 import holiday_resort.management_system.com.holiday_resort.Requests.JwtResponse;
@@ -107,7 +107,7 @@ public class AuthController {
         loginDetailsService.saveUserAndUserLoginObject(signUpUser);
 
         VerificationToken verificationToken = verificationTokenService.provideToken(signUpUser);
-        applicationEventPublisher.publishEvent(new RegistrationCompleteEvent(verificationToken));
+        applicationEventPublisher.publishEvent(new TokenEvent(verificationToken));
 
         return ResponseEntity.ok().build();
     }

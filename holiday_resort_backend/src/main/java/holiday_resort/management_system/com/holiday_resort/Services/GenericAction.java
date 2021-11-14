@@ -1,21 +1,17 @@
-package holiday_resort.management_system.com.holiday_resort.Context;
+package holiday_resort.management_system.com.holiday_resort.Services;
 
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.LoginDetailsLinked;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Optional;
 
 @Service
-@Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class CustomContext<ContextClass, ContextClassRepo> {
+public class GenericAction<ContextClass, ContextClassRepo> {
 
-    public CustomContext(){}
+    public GenericAction(){}
 
     @SuppressWarnings("unchecked")
     public Pair<LoginDetails, ContextClass> getAssociatedUser(ContextClassRepo contextClassRepo, Long id){

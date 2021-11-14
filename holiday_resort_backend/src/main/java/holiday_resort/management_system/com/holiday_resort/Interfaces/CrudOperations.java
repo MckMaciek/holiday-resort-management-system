@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CrudOperations<T, ID> {
-
     List<T> getAll();
     Optional<T> findById(ID id);
     void add(T t);
     Boolean delete(ID id);
-
 }
