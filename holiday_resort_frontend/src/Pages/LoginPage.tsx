@@ -35,15 +35,6 @@ const LoginPage : React.FC<PropsFromRedux> = ({
 
     const classes = useStyles();
 
-    const [validationStatus, setValidationStatus] = useState({status : false, message : ""});
-
-    const validationFailed = (reason : string) => {
-        setValidationStatus({
-            status : true,
-            message : reason
-        });
-    }
-
     return(
         <div className={classes.root}>
             <LoginForm sendLoginReq={sendLoginRequest} />
