@@ -1,12 +1,14 @@
 package holiday_resort.management_system.com.holiday_resort.Entities;
 
 import holiday_resort.management_system.com.holiday_resort.Dto.ReservationDTO;
+import holiday_resort.management_system.com.holiday_resort.Enums.ReservationStatus;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.LoginDetailsLinked;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +22,14 @@ import java.util.stream.Collectors;
 public class Reservation implements LoginDetailsLinked {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
+    @Column(name="reservation_status")
+    private ReservationStatus reservationStatus;
+
+    @Column(name="reservation_date")
+    private LocalDateTime reservationDate;
 
     @Column(name="final_price")
     private BigDecimal finalPrice;
@@ -32,7 +41,6 @@ public class Reservation implements LoginDetailsLinked {
     private List<Accommodation> accommodationList;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @MapsId
     @NotNull
     private User user;
 

@@ -62,8 +62,8 @@ public class User implements LoginDetailsLinked {
     @NotNull
     private LoginDetails loginDetails;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    private Reservation reservation;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Reservation> reservation;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserRemarks> userRemarks;

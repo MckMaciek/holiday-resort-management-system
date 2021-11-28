@@ -70,6 +70,16 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         this.add(reservationDTO);
     }
 
+    public List<ReservationDTO> getUserReservations(LoginDetails loginDetails){
+
+        List<Reservation> reservationList = reservationRepository.findByUser(loginDetails.getUser());
+
+        return reservationList
+                    .stream()
+                    .map(ReservationDTO::new)
+                    .collect(Collectors.toList());
+    }
+
     @Override
     public List<ReservationDTO> getAll() {
         return reservationRepository.findAll().stream().map(ReservationDTO::new).collect(Collectors.toList());

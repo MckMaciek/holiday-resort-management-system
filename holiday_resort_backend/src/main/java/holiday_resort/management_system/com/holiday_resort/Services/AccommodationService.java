@@ -4,7 +4,6 @@ import holiday_resort.management_system.com.holiday_resort.Converters.Accommodat
 import holiday_resort.management_system.com.holiday_resort.Dto.AccommodationDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.Accommodation;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
-import holiday_resort.management_system.com.holiday_resort.Entities.Reservation;
 import holiday_resort.management_system.com.holiday_resort.Entities.User;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.CrudOperations;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.Validate;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -67,12 +65,9 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
         User user = loginDetails.getUser();
 
         if(Objects.isNull(user.getId())) throw new NullPointerException("User Id cannot be null!");
+        List<Accommodation> accommodationList = accommodationRepository.getAccommodationByUser(user);
 
-        Reservation reservation = loginDetails.getUser().getReservation();
-        if(Objects.isNull(reservation)) return Collections.emptyList();
-
-        return reservation
-                .getAccommodationList()
+        return accommodationList
                 .stream()
                 .map(AccommodationDTO::new)
                 .collect(Collectors.toList());

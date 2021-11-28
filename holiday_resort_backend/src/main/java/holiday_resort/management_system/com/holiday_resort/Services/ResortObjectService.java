@@ -4,6 +4,7 @@ import holiday_resort.management_system.com.holiday_resort.Dto.ResortObjectDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.*;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.CrudOperations;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.Validate;
+import holiday_resort.management_system.com.holiday_resort.Repositories.ReservationRepository;
 import holiday_resort.management_system.com.holiday_resort.Repositories.ResortObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,14 @@ import java.util.stream.Collectors;
 public class ResortObjectService implements CrudOperations<ResortObjectDTO, Long>, Validate<ResortObjectDTO> {
 
     private final ResortObjectRepository resortObjectRepository;
+    private final ReservationRepository reservationRepository;
 
     @Autowired
-    public ResortObjectService(ResortObjectRepository resortObjectRepository){
+    public ResortObjectService(ResortObjectRepository resortObjectRepository,
+                               ReservationRepository reservationRepository
+                               ){
         this.resortObjectRepository = resortObjectRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     private final Predicate<ResortObject> objectNotReservedFilter = obj -> !obj.getIsReserved();
@@ -43,14 +48,11 @@ public class ResortObjectService implements CrudOperations<ResortObjectDTO, Long
         if(Objects.isNull(loginDetails.getUser())) throw new NullPointerException("User cannot be null!");
         User user = loginDetails.getUser();
 
-        if(Objects.isNull(user.getReservation())) throw new NullPointerException("User reservation cannot be null!");
+        List<Reservation> reservationList = reservationRepository.findBriefByUser(user);
+        if(Objects.isNull(reservationList)) throw new NullPointerException("User reservation list cannot be null!");
 
-        Reservation userReservation = user.getReservation();
-        List<Accommodation> accommodationList = userReservation.getAccommodationList();
-
-        if(Objects.isNull(accommodationList)) throw new NullPointerException("User accommodation list cannot be null!");
-
-        List<ResortObjectDTO> userObjectList = accommodationList.stream()
+        List<ResortObjectDTO> userObjectList = reservationList.stream()
+                .flatMap(reservation -> reservation.getAccommodationList().stream())
                 .map(Accommodation::getResortObject)
                 .map(ResortObjectDTO::new)
                 .collect(Collectors.toList());

@@ -23,10 +23,10 @@ public class Accommodation implements LoginDetailsLinked {
     @Column(name="number_of_people")
     private Long numberOfPeople;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Reservation reservation;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private ResortObject resortObject;
 
     @OneToOne

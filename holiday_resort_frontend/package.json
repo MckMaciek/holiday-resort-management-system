@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.7.0",
+    "@emotion/styled": "^11.6.0",
     "@material-ui/core": "^4.12.3",
+    "@material-ui/lab": "^4.0.0-alpha.60",
+    "@mui/material": "^5.2.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -13,6 +17,7 @@
     "@types/react-dom": "^17.0.10",
     "@types/react-router": "^5.1.17",
     "axios": "^0.24.0",
+    "formik": "^2.2.9",
     "material-ui": "^0.20.2",
     "rambda": "^6.9.0",
     "react": "^17.0.2",
@@ -23,7 +28,8 @@
     "react-scripts": "4.0.3",
     "redux-thunk": "^2.3.0",
     "typescript": "^4.3.4",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "react-scripts start",

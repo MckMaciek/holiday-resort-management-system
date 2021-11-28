@@ -11,11 +11,8 @@ import lombok.*;
 public class AccommodationDTO {
 
     private Long id;
-
     private Long numberOfPeople;
-
     private ResortObjectDTO resortObject;
-
     private User user;
 
     public AccommodationDTO(Accommodation accommodation){
@@ -24,5 +21,6 @@ public class AccommodationDTO {
         this.resortObject = new ResortObjectDTO(accommodation.getResortObject());
         this.user = accommodation.getUser();
     }
+
     public AccommodationDTO(){}
 }
