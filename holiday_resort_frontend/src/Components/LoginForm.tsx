@@ -4,8 +4,12 @@ import * as Yup from 'yup';
 import {LoginActionPayloadInterface} from "../Interfaces/LoginActionPayload";
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 
+import {Link} from "react-router-dom";
+
+import Typography from '@mui/material/Typography';
 import Button from '@material-ui/core/Button';
 import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import Fade from '@mui/material/Fade';
 
 interface FuncProps{
@@ -16,6 +20,8 @@ const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
 
     const classes = useStyles();
 
+    const headerName = "Holiday Resort";
+
     const formik = useFormik({
         initialValues : {
             username : '',
@@ -24,15 +30,20 @@ const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
 
         validationSchema: Yup.object({
             username: Yup.string()
+                .min(6, 'Username must be 6 characters or more')
                 .max(15, 'Username must be 15 characters or less')
+                .trim('Username name cannot include leading and trailing spaces')
+                .strict(true)
                 .required('Username is required'),
             password: Yup.string()
-                .required('No password provided.') 
+                .required('Password is required') 
+                .strict(true)
+                .trim('Password cannot include leading and trailing spaces')
                 .min(8, 'Password is too short - should be 8 chars minimum.')
+                .max(20, 'Password must be 20 characters or less')
                 .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.')
         }),
         onSubmit: values => {
-            alert(JSON.stringify(values, null, 2));
             sendLoginReq(values);
         },
     });
@@ -43,16 +54,29 @@ const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
             <div className={classes.validationBar}>
                 {formik.errors.password && formik.touched.password ? (
                     <Fade in={formik.errors.password !== ""}>
-                        <Alert className={classes.validationBar} severity="error">{formik.errors.password}</Alert>
+                        <Alert className={classes.validationBar} severity="warning">
+                        <AlertTitle>Warning</AlertTitle>
+                            {formik.errors.password}
+                        </Alert>
                     </Fade>
                 ): null}
 
                 {formik.errors.username && formik.touched.username ? (
                     <Fade in={formik.errors.username !== ""}>
-                        <Alert className={classes.validationBar} severity="error">{formik.errors.username}</Alert>
+                        <Alert className={classes.validationBar} severity="warning">
+                            <AlertTitle>Warning</AlertTitle>
+                                {formik.errors.username}
+                        </Alert>
                     </Fade>
                 ): null}
             </div>
+
+            <Typography className={classes.headerTitle}
+            align='center'
+            variant='h2'
+            >
+                {headerName}
+            </Typography>
 
             <div className={classes.loginBox} >
                 <form onSubmit={formik.handleSubmit}>
@@ -80,6 +104,7 @@ const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
                     >
                         Log-In
                     </Button>
+                    <Link className={classes.redirectLink} to="/signup"> No account? Sign up!</Link>
             </form>
         </div>  
         </div>  
@@ -97,7 +122,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
     loginBox : {
         display : 'flex',
-        padding : "5vh",
+        padding : "6vh 10vh",
         boxSizing: 'content-box',
         flexDirection : 'column',
         alignItems : 'center',
@@ -120,18 +145,31 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
     submitButton: {
         display : 'block',
-        marginTop : '15%',
-        marginBottom : '2%',
+        marginTop : '4vh',
+        marginBottom : '2vh',
         minWidth : '14vw',
         minHeight: '3vh',
+        marginLeft : 'auto',
+        marginRight : 'auto',
     },
     invalidInput: {
         color : 'white',
     },
     validationBar:{
         marginBottom : "20px",
-        width : "100%",
-    }
+        width : "35vw",
+    },
+    redirectLink: {
+        display : 'block',
+        color : 'white',
+        textDecoration : 'none',
+        marginTop : '3vh',
+        textAlign : 'center',
+    },
+    headerTitle: {
+        color : 'white',
+        paddingBottom: '4vh',
+    },
 
   }));
 

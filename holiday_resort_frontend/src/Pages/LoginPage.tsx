@@ -4,7 +4,7 @@ import loginApiRequest from '../Stores/ApiRequests/LoginApiRequest';
 import { ThunkDispatch } from 'redux-thunk';
 import { connect, ConnectedProps  } from 'react-redux';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
-import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import LoginForm from "../Components/LoginForm";
 import { useState } from 'react';
@@ -37,6 +37,9 @@ const LoginPage : React.FC<PropsFromRedux> = ({
 
     return(
         <div className={classes.root}>
+
+            {isLoginFetching === true ? (<CircularProgress className={classes.spinner}/>) : null}
+
             <LoginForm sendLoginReq={sendLoginRequest} />
         </div>
     );
@@ -51,12 +54,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         alignItems : 'center',
         minHeight: '100vh',
     },
-
-    validationLabel: {
-        textAlign : 'center',
-        marginBottom: "10vh",
-        minWidth : "100vw",
-        background: "red",
+    spinner: {
+        marginBottom: '3vh',
     }
+    
   }));
 export default connector(LoginPage);

@@ -3,6 +3,8 @@ import { connect, ConnectedProps  } from 'react-redux';
 
 import {RegisterActionPayloadInterface} from '../Interfaces/RegisterActionPayload';
 import registerApiRequest from "../Stores/ApiRequests/RegisterApiRequest";
+import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import RegisterForm from '../Components/RegisterForm';
 
 interface MapDispatcherToProps {
     sendRegisterRequest : (registerModel : RegisterActionPayloadInterface) => void;
@@ -29,24 +31,29 @@ const RegisterPage : React.FC<PropsFromRedux> = ({
     sendRegisterRequest
 }) : JSX.Element => {
 
-    const testRegisterModel = {
-        username : "Maciej123",
-        password : "Musial",
-        email : "mckmusial14323@gmail.com",
-        firstName : "J",
-        lastName : "J",
-        phoneNumber : "666666666"
-    }
+    const classes = useStyles();
 
     return(
-        <>
-            {console.log(isRegisterFetching)};
-            <p> TUTAJ JEST TO REJESTRACJA {isRegisterFetching} </p>
-            <button onClick={() => sendRegisterRequest(testRegisterModel)}> 
-                CLICK ME
-            </button>
-        </>
+        <div className={classes.root}>
+            <RegisterForm />
+        </div>
     );
 
 }
+
+
+const useStyles = makeStyles((theme: Theme) => createStyles({
+    root: {
+        display: 'flex',
+        backgroundColor: theme.palette.background.paper,
+        flexDirection : 'column',
+        justifyContent : 'center',
+        alignItems : 'center',
+        minHeight: '100vh',
+    },
+    spinner: {
+        marginBottom: '3vh',
+    }
+    
+  }));
 export default connector(RegisterPage);
