@@ -4,7 +4,14 @@ import { connect, ConnectedProps  } from 'react-redux';
 import {RegisterActionPayloadInterface} from '../Interfaces/RegisterActionPayload';
 import registerApiRequest from "../Stores/ApiRequests/RegisterApiRequest";
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
+
+import Typography from '@mui/material/Typography';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+
 import RegisterForm from '../Components/RegisterForm';
+
+import { Link } from 'react-router-dom';
+
 
 interface MapDispatcherToProps {
     sendRegisterRequest : (registerModel : RegisterActionPayloadInterface) => void;
@@ -36,6 +43,12 @@ const RegisterPage : React.FC<PropsFromRedux> = ({
     return(
         <div className={classes.root}>
             <RegisterForm />
+            <Typography className={classes.aboutHeader} 
+            align='center'
+            variant='h3'
+            >
+                <Link className={classes.aboutLink} to='/about'> About Us?</Link>
+            </Typography>
         </div>
     );
 
@@ -46,11 +59,30 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     root: {
         display: 'flex',
         backgroundColor: theme.palette.background.paper,
-        flexDirection : 'column',
+        flexDirection : 'row',
         justifyContent : 'center',
         alignItems : 'center',
         minHeight: '100vh',
     },
+
+    aboutHeader:{
+        display : 'flex',
+        marginBottom : '1vh',
+    },
+
+    aboutIcon : {
+        color : 'white',
+        fontSize : '44px',
+    },
+
+    aboutLink : {
+        color : 'white',
+        textDecoration : 'none',
+        textAlign : 'center',
+        marginLeft : '10vw',
+        marginRight : '5vw',
+    },
+
     spinner: {
         marginBottom: '3vh',
     }

@@ -2,6 +2,7 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import LoginPage from '../Pages/LoginPage';
 import MainPage from '../Pages/MainPage';
 import RegisterPage from '../Pages/RegisterPage';
+import AboutPage from '../Pages/AboutUs';
 
 import {
     Route,
@@ -23,6 +24,10 @@ const AppRouter = (props : any) =>{
 
                     <Route path='/signup'> 
                        <RegisterPage/>
+                    </Route>
+
+                    <Route path='/about'>
+                        <AboutPage></AboutPage>
                     </Route>
 
             </Switch>

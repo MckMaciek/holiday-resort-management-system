@@ -6,10 +6,9 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core';
 
 import {Link} from "react-router-dom";
 
-import Typography from '@mui/material/Typography';
 import Button from '@material-ui/core/Button';
 import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
+import Typography from '@mui/material/Typography';
 import Fade from '@mui/material/Fade';
 
 const RegisterForm = () => {
@@ -20,6 +19,7 @@ const RegisterForm = () => {
         initialValues : {
             username : '',
             password : '',
+            passwordConfirmation : '',
             email : '',
             firstName : '',
             lastName : '',
@@ -40,6 +40,10 @@ const RegisterForm = () => {
                 .min(8, 'Password is too short - should be 8 chars minimum.')
                 .max(20, 'Password must be 20 characters or less')
                 .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
+            passwordConfirmation: Yup.string()
+                .test('passwords-match', 'Passwords has to match', function(value){
+                    return this.parent.password === value
+                }),
             email : Yup.string()
                 .email('Must be a valid email')
                 .max(50, "Email is too big")
@@ -66,92 +70,122 @@ const RegisterForm = () => {
         },
     });
 
+
+    const showValidationAlert = (formikError : string | undefined, formikTouched : boolean | undefined) =>{
+
+        if(formikError && formikTouched){
+            return(
+                    <Fade in={formikError !== ""}>
+                    <Alert variant="filled" className={classes.validationBar} severity="warning">
+                        {formikError}
+                    </Alert>
+                </Fade>
+            )
+        }
+    }
+
     return(
 
         <div className={classes.root}>
-            <div className={classes.validationBar}>
-                {formik.errors.password && formik.touched.password ? (
-                    <Fade in={formik.errors.password !== ""}>
-                        <Alert className={classes.validationBar} severity="warning">
-                        <AlertTitle>Warning</AlertTitle>
-                            {formik.errors.password}
-                        </Alert>
-                    </Fade>
-                ): null}
-
-                {formik.errors.username && formik.touched.username ? (
-                    <Fade in={formik.errors.username !== ""}>
-                        <Alert className={classes.validationBar} severity="warning">
-                            <AlertTitle>Warning</AlertTitle>
-                                {formik.errors.username}
-                        </Alert>
-                    </Fade>
-                ): null}
-            </div>
-
+            <Typography className={classes.headerTitle} 
+                align='center'
+                variant='h3'
+            >
+                Please introduce <span className={classes.fontRed}>Yourself.</span>
+            </Typography>
             <div className={classes.registerBox} >
                 <form onSubmit={formik.handleSubmit}>
                     <div className={classes.userInputContainer}>
-                        <label className={classes.fieldLabels} htmlFor="username">Username </label>
+
+                    <label className={classes.fieldLabels} htmlFor="username">Username </label>
+                    <div className={classes.validationContainer}>
                         <input
-                            className={classes.userPersonalInput}
+                            className={classes.userInput}
                             id="username"
                             type="text"
                             {...formik.getFieldProps('username')}
                         />
+                        {showValidationAlert(formik.errors.username, formik.touched.username)}
+                    </div>
 
-                        <label className={classes.fieldLabels} htmlFor="password">Password</label>
+                    <label className={classes.fieldLabels} htmlFor="password">Password</label>
+                    <div className={classes.validationContainer}>
                         <input
-                            className={classes.userPersonalInput}
+                            className={classes.userInput}
                             id="password"
                             type="password"
                             {...formik.getFieldProps('password')}
                         />
+                        {showValidationAlert(formik.errors.password, formik.touched.password)}
+                    </div>
 
-                        <label className={classes.fieldLabels} htmlFor="email">E-mail</label>
+                    <label className={classes.fieldLabels} htmlFor="passwordConfirmation">Password Confirm</label>
+                    <div className={classes.validationContainer}>
+                        <input
+                            className={classes.userInput}
+                            id="passwordConfirmation"
+                            type="password"
+                            {...formik.getFieldProps('passwordConfirmation')}
+                        />
+                        {showValidationAlert(formik.errors.passwordConfirmation, formik.touched.passwordConfirmation)}
+                    </div>
+
+                    <label className={classes.fieldLabels} htmlFor="email">E-mail</label>
+                    <div className={classes.validationContainer}>
                         <input
                             id="email"
                             type="email"
-                            className={classes.userPersonalInput}
+                            className={classes.userInput}
                             {...formik.getFieldProps('email')}
                         />
+                        {showValidationAlert(formik.errors.email, formik.touched.email)}
+                    </div>
 
-                        <label className={classes.fieldLabels} htmlFor="firstName">First name</label>
+                    <label className={classes.fieldLabels} htmlFor="firstName">First name</label>
+                    <div className={classes.validationContainer}>
                         <input
                             id="firstName"
                             type="firstName"
-                            className={classes.userPersonalInput}
+                            className={classes.userInput}
                             {...formik.getFieldProps('firstName')}
                         />
-
-                        <label className={classes.fieldLabels} htmlFor="lastName">Last name</label>
+                        {showValidationAlert(formik.errors.firstName, formik.touched.firstName)}
+                    </div>
+                        
+                    <label className={classes.fieldLabels} htmlFor="lastName">Last name</label>
+                    <div className={classes.validationContainer}>
                         <input
                             id="lastName"
                             type="lastName"
-                            className={classes.userPersonalInput}
+                            className={classes.userInput}
                             {...formik.getFieldProps('lastName')}
                         />
+                        {showValidationAlert(formik.errors.lastName, formik.touched.lastName)}
+                    </div>
 
-                        <label className={classes.fieldLabels} htmlFor="phoneNumber">Phone number</label>
+                    <label className={classes.fieldLabels} htmlFor="phoneNumber">Phone number</label>
+                    <div className={classes.validationContainer}>
                         <input
                             id="phoneNumber"
                             type="phoneNumber"
-                            className={classes.userPersonalInput}
+                            className={classes.userInput}
                             {...formik.getFieldProps('phoneNumber')}
                         />
-
-                        <Button 
-                        color="secondary" 
-                        variant="contained" 
-                        className={classes.submitButton}
-                        type="submit"
-                        >
-                            Sign-Up
-                        </Button>
-                        <Link className={classes.redirectLink} to="/signin"> Already have an account?</Link>                      
+                        {showValidationAlert(formik.errors.phoneNumber, formik.touched.phoneNumber)}
                     </div>
+
+                    <Button 
+                    color="secondary" 
+                    variant="contained" 
+                    className={classes.submitButton}
+                    type="submit"
+                    >
+                        Sign-Up
+                    </Button>
+                </div>
             </form>
         </div>  
+        <Link className={classes.redirectLink} to="/signin"> Already have an account?</Link>                      
         </div>  
     );
 };
@@ -164,11 +198,24 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         justifyContent : 'flex-start',
     },
 
-    userPersonalInput : {
+    userInput : {
         display: 'block',
         minWidth : '14vw',
-        minHeight: '3vh',
+        height: '3.3Vh',
         marginBottom : '1vh',
+        marginTop : '1%',
+        borderRadius : '5px',
+        marginLeft : '1vw',
+    },
+
+    fontRed : {
+        color : '#ff4040',
+    },
+
+    validationContainer : {
+        display : 'flex',
+        flexDirection : 'row',
+        alignItems : 'center',
     },
 
     registerBox : {
@@ -178,6 +225,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         flexDirection : 'column',
         border: '5px solid white',
         borderRadius : '15px',
+        minWidth : '50vw',
     },
 
     userInputContainer: {
@@ -190,30 +238,31 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         textAlign : 'center',
         color : 'white',
         marginTop : '1vh',
+        marginLeft : '1vw',
         minWidth : '1vw',
         minHeight: '3vh',
     },
     submitButton: {
         display : 'block',
         marginTop : '4vh',
-        marginBottom : '2vh',
+        marginBottom : '3vh',
         minWidth : '14vw',
         minHeight: '3vh',
         marginLeft : 'auto',
         marginRight : 'auto',
     },
-    invalidInput: {
-        color : 'white',
-    },
+
     validationBar:{
-        marginBottom : "20px",
-        width : "35vw",
+        marginLeft : '3vw',
+        marginRight : '3vw',
+        minHeight : '1vh',
+        minWidth : "20vw",
     },
     redirectLink: {
         display : 'block',
         color : 'white',
         textDecoration : 'none',
-        marginTop : '3vh',
+        marginTop : '2vh',
         textAlign : 'center',
         marginBottom : '1vh',
     },

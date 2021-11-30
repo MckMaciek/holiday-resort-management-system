@@ -54,7 +54,7 @@ const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
             <div className={classes.validationBar}>
                 {formik.errors.password && formik.touched.password ? (
                     <Fade in={formik.errors.password !== ""}>
-                        <Alert className={classes.validationBar} severity="warning">
+                        <Alert variant="filled" className={classes.validationBar} severity="warning">
                         <AlertTitle>Warning</AlertTitle>
                             {formik.errors.password}
                         </Alert>
@@ -63,7 +63,7 @@ const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
 
                 {formik.errors.username && formik.touched.username ? (
                     <Fade in={formik.errors.username !== ""}>
-                        <Alert className={classes.validationBar} severity="warning">
+                        <Alert variant="filled" className={classes.validationBar} severity="warning">
                             <AlertTitle>Warning</AlertTitle>
                                 {formik.errors.username}
                         </Alert>
