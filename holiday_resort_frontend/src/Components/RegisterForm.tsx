@@ -1,8 +1,9 @@
-import { useFormik } from 'formik';
+import { useFormik, Field } from 'formik';
 import * as Yup from 'yup';
 import "yup-phone";
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { pink } from '@mui/material/colors';
 
 import {Link} from "react-router-dom";
 
@@ -10,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import Fade from '@mui/material/Fade';
+import Checkbox from '@mui/material/Checkbox';
 
 const RegisterForm = () => {
 
@@ -24,6 +26,7 @@ const RegisterForm = () => {
             firstName : '',
             lastName : '',
             phoneNumber : '',
+            acceptTerms: false,
         },
 
         validationSchema: Yup.object({
@@ -62,7 +65,9 @@ const RegisterForm = () => {
                 .required('Last name is required'), 
             phoneNumber : Yup.string()
                 .phone()
-                .required('Phone number is required')
+                .required('Phone number is required'),
+            acceptTerms: Yup.bool()
+                .oneOf([true], 'Accept Terms Conditions is required')
 
         }),
         onSubmit: values => {
@@ -174,6 +179,25 @@ const RegisterForm = () => {
                         {showValidationAlert(formik.errors.phoneNumber, formik.touched.phoneNumber)}
                     </div>
 
+                    <label>
+                    <div className={classes.validationContainer}>
+                        <div className={classes.acceptTerms}>
+                            <Checkbox
+                            id="acceptTerms"
+                            sx={{
+                                color: pink[800],
+                                '&.Mui-checked': {
+                                  color: pink[600],
+                                },
+                              }}
+                            {...formik.getFieldProps('acceptTerms')}
+                            />
+                            I accept terms conditions
+                        </div>
+                        {showValidationAlert(formik.errors.acceptTerms, formik.touched.acceptTerms)}
+                    </div>
+                    </label>
+
                     <Button 
                     color="secondary" 
                     variant="contained" 
@@ -206,6 +230,17 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         marginTop : '1%',
         borderRadius : '5px',
         marginLeft : '1vw',
+    },
+
+    acceptTerms : {
+        display : 'block',
+        textAlign : 'center',
+        minWidth : '14vw',
+        color : 'white',
+        marginTop : '2vh',
+        marginLeft : '1.2vw',
+        marginRight : '0.vw',
+        minHeight: '1vh',
     },
 
     fontRed : {
