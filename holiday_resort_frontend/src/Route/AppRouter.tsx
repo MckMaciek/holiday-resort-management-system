@@ -2,15 +2,16 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import LoginPage from '../Pages/LoginPage';
 import MainPage from '../Pages/MainPage';
 import RegisterPage from '../Pages/RegisterPage';
-import AboutPage from '../Pages/AboutUs';
+
+import PermissionRouter from './PermissionRouter';
 
 import {
     Route,
     Switch
   } from 'react-router-dom';
 
+const AppRouter = () =>{
 
-const AppRouter = (props : any) =>{
     return(
         <Router>
             <Switch>
@@ -26,10 +27,7 @@ const AppRouter = (props : any) =>{
                        <RegisterPage/>
                     </Route>
 
-                    <Route path='/about'>
-                        <AboutPage></AboutPage>
-                    </Route>
-
+                    <PermissionRouter/>
             </Switch>
         </Router>
     );

@@ -20,7 +20,7 @@ const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
 
     const classes = useStyles();
 
-    const headerName = "Holiday Resort";
+    const headerName = "Login";
 
     const formik = useFormik({
         initialValues : {

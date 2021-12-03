@@ -5,6 +5,7 @@ import {LoginActionInterface,
     LoginActionFetchingInterface,
     LoginActionIsSetInReducerInterface,
     LoginActionErrorInterface,
+    LoginActionIsAuthenticated,
     RegisterActionInterface,
     RegisterActionErrorInterface,
     RegisterActionFetchingInterface,
@@ -34,6 +35,11 @@ export const loginSetReducer = (isSet : boolean) : LoginActionIsSetInReducerInte
 export const loginSetError = (error : errorInterface) : LoginActionErrorInterface => ({
     type : AuthOperationLoginTypes.LOGIN_PROCESS_ERROR,
     error : error,
+})
+
+export const loginSetAuthenticated = (isAuth : boolean) : LoginActionIsAuthenticated => ({
+    type : AuthOperationLoginTypes.SET_AUTHENTICATED,
+    isAuth : isAuth,
 })
 
 /* ACTIONS DISPATCHED WHILE SIGN-UP PROCESS */

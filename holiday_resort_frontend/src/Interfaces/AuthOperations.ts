@@ -26,10 +26,16 @@ export type LoginActionErrorInterface = {
     error : errorInterface,
 }
 
+export type LoginActionIsAuthenticated = {
+    type : typeof AuthOperationLoginTypes.SET_AUTHENTICATED,
+    isAuth : boolean,
+}
+
 export type LoginGenericAction = 
     LoginActionErrorInterface | 
     LoginActionIsSetInReducerInterface | 
     LoginActionFetchingInterface | 
+    LoginActionIsAuthenticated |
     LoginActionInterface;
 
 /* INTERFACES FOR ACTIONS DISPATCHED WHILE SIGN-UP PROCESS  */

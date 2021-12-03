@@ -4,6 +4,7 @@ export enum AuthOperationLoginTypes {
     LOGIN_FETCHING = "LOGIN_FETCHING",
     LOGIN_PROCESS_ERROR = "LOGIN_PROCESS_ERROR",
     LOGIN_SET_IN_REDUCER = "LOGIN_SET_IN_REDUCER",
+    SET_AUTHENTICATED = "SET_AUTHENTICATED"
 }
 
 export enum AuthOperationRegisterTypes {

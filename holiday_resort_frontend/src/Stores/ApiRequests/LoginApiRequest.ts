@@ -1,5 +1,10 @@
 import { LoginActionPayloadInterface } from "../../Interfaces/LoginActionPayload";
-import {loginFetching, loginAction, loginSetReducer, loginSetError} from "../Actions/AuthOperations";
+import {
+    loginFetching, 
+    loginAction, 
+    loginSetReducer, 
+    loginSetError, 
+    loginSetAuthenticated} from "../Actions/AuthOperations";
 import {LoginResponse} from "../../Interfaces/LoginResponse";
 
 import Axios from 'axios';
@@ -11,21 +16,35 @@ const sendLoginRequest =  async (loginModel : LoginActionPayloadInterface) : Pro
     return loginRequest.data as LoginResponse;
 }
 
+const validateLoginResponse = (loginResponse : LoginResponse) : boolean => {
+        return (
+            !!loginResponse  && 
+            !!loginResponse.email  &&
+            !!loginResponse.userId  &&
+            !!loginResponse.jwt  &&
+            !!loginResponse.username &&
+            !!loginResponse.roles
+        )
+}
 
 const loginApiRequest = (loginModel : LoginActionPayloadInterface ) => {
     return async (dispatch : ThunkDispatch<{}, {}, any> ) => {
         try{
             dispatch(loginFetching(true));
-            const loginResonse = await sendLoginRequest(loginModel);
-            console.log(loginResonse);
-            setLocalStorageVar(loginResonse);
+            const loginResponse = await sendLoginRequest(loginModel);
+            const isValidResponse = validateLoginResponse(loginResponse);
 
-            dispatch(loginAction(loginResonse));
-            dispatch(loginSetReducer(true));
-
+            if(isValidResponse){
+                console.log(isValidResponse);
+                dispatch(loginSetAuthenticated(true));
+                dispatch(loginSetReducer(true));
+                dispatch(loginAction(loginResponse));
+            }
+            else throw new Error();
         }
         catch (err){
             console.log("ERROR-WHILE-LOGIN");
+            dispatch(loginSetAuthenticated(false));
             dispatch(loginSetReducer(false));
             dispatch(loginSetError({isErrorFlagSet : true}))
         }

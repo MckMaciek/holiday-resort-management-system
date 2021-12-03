@@ -2,6 +2,8 @@ import { useFormik, Field } from 'formik';
 import * as Yup from 'yup';
 import "yup-phone";
 
+import {RegisterActionPayloadInterface} from "../Interfaces/RegisterActionPayload";
+
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { pink } from '@mui/material/colors';
 
@@ -13,7 +15,11 @@ import Typography from '@mui/material/Typography';
 import Fade from '@mui/material/Fade';
 import Checkbox from '@mui/material/Checkbox';
 
-const RegisterForm = () => {
+interface FuncProps{
+    sendRegisterReq : (registerModel : RegisterActionPayloadInterface) => void,
+}
+ 
+const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq}) => {
 
     const classes = useStyles();
 
@@ -71,7 +77,7 @@ const RegisterForm = () => {
 
         }),
         onSubmit: values => {
-            alert('elo');
+            sendRegisterReq(values);
         },
     });
 
@@ -237,9 +243,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         textAlign : 'center',
         minWidth : '14vw',
         color : 'white',
-        marginTop : '2vh',
+        marginTop : '1vh',
         marginLeft : '1.2vw',
-        marginRight : '0.vw',
+        marginBottom : '1vh',
         minHeight: '1vh',
     },
 
@@ -279,10 +285,10 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
     submitButton: {
         display : 'block',
-        marginTop : '4vh',
-        marginBottom : '3vh',
+        marginTop : '2vh',
+        marginBottom : '2vh',
         minWidth : '14vw',
-        minHeight: '3vh',
+        minHeight: '2vh',
         marginLeft : 'auto',
         marginRight : 'auto',
     },
@@ -290,6 +296,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     validationBar:{
         marginLeft : '3vw',
         marginRight : '3vw',
+        marginBottom : '0.5wh',
         minHeight : '1vh',
         minWidth : "20vw",
     },
@@ -297,13 +304,14 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         display : 'block',
         color : 'white',
         textDecoration : 'none',
-        marginTop : '2vh',
+        marginTop : '1vh',
         textAlign : 'center',
         marginBottom : '1vh',
     },
     headerTitle: {
         color : 'white',
         paddingBottom: '4vh',
+        marginTop : '1vh',
     },
 
   }));
