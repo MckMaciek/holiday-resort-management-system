@@ -9,7 +9,7 @@ const PrivateRouter = ({children, isAuth, ...rest}) => {
         <Route
             render={
                 ({ location }) => {
-                    return isAuth == true ? (children) : (
+                    return isAuth ? (children) : (
                         <Redirect
                             to={{
                                 pathname: '/signin',

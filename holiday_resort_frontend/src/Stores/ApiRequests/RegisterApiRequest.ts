@@ -7,6 +7,11 @@ import {registerAction,
         registerFetching,
         registerSetError, 
         registerSetReducer} from "../Actions/AuthOperations";
+import {registerEmailSent,
+        registerEmailFetching,
+        
+} from "../Actions/EmailOperations";
+
 
 
 const sendRegisterRequest =  async (registerModel : RegisterActionPayloadInterface) : Promise<RegisterResponse> => {
@@ -20,19 +25,26 @@ const registerApiRequest = (registerModel : RegisterActionPayloadInterface) => {
 
         try{
             dispatch(registerFetching(true));
+
             const registerResponse = await sendRegisterRequest(registerModel);
+            dispatch(registerEmailFetching(true));
+            
             console.log(registerResponse);
 
+            dispatch(registerEmailSent(true));
             dispatch(registerAction(registerResponse));
             dispatch(registerSetReducer(true));
+
         }
         catch (err){
-            console.log("ERROR-WHILE-REGISTER");
+            console.log(err);
             dispatch(registerSetReducer(false));
             dispatch(registerSetError({isErrorFlagSet : true}))
+            dispatch(registerEmailSent(false));
         }
         finally{
             dispatch(registerFetching(false));
+            dispatch(registerEmailFetching(false));
         }
 
     }

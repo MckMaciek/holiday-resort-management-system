@@ -1,4 +1,4 @@
-import { useFormik, Field } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import "yup-phone";
 
@@ -14,12 +14,15 @@ import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import Fade from '@mui/material/Fade';
 import Checkbox from '@mui/material/Checkbox';
+import { Redirect } from "react-router-dom";
 
 interface FuncProps{
     sendRegisterReq : (registerModel : RegisterActionPayloadInterface) => void,
+    isEmailSent : boolean,
+    isEmailFetching : boolean,
 }
  
-const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq}) => {
+const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq, isEmailSent, isEmailFetching}) => {
 
     const classes = useStyles();
 
@@ -95,6 +98,21 @@ const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq}) => {
         }
     }
 
+    const redirectToLogin = () => {
+    
+        return (        
+            <Redirect   
+            exact
+            to={{
+                pathname: '/signin',
+                state : {
+                    from : '/signup'
+                }
+            }}
+            />
+        )
+    }
+
     return(
 
         <div className={classes.root}>
@@ -104,6 +122,11 @@ const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq}) => {
             >
                 Please introduce <span className={classes.fontRed}>Yourself.</span>
             </Typography>
+
+            {isEmailFetching ? 
+            redirectToLogin()
+            : null }
+
             <div className={classes.registerBox} >
                 <form onSubmit={formik.handleSubmit}>
                     <div className={classes.userInputContainer}>

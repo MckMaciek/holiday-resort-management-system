@@ -23,6 +23,8 @@ interface MapDispatcherToProps {
 interface MapStateToProps {
     isRegisterFetching : boolean,
     isAuthenticated : boolean,
+    isEmailSent : boolean,
+    isEmailFetching : boolean,
 }
 
 const mapDispatchToProps = (dispatch : ThunkDispatch<{}, {}, any>) : MapDispatcherToProps => ({
@@ -32,6 +34,8 @@ const mapDispatchToProps = (dispatch : ThunkDispatch<{}, {}, any>) : MapDispatch
 const mapStateToProps = (state : any) : MapStateToProps => ({
     isRegisterFetching : state.RegisterReducer.isRegisterFetching,
     isAuthenticated : state.LoginReducer.isAuthenticated,
+    isEmailSent : state.EmailReducer.isSent,
+    isEmailFetching : state.EmailReducer.isFetching,
 });
 
 const connector =  connect(mapStateToProps, mapDispatchToProps);
@@ -41,22 +45,28 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 const RegisterPage : React.FC<PropsFromRedux> = ({
     isRegisterFetching,
     isAuthenticated,
+    isEmailSent,
+    isEmailFetching,
     sendRegisterRequest
 }) : JSX.Element => {
 
     const classes = useStyles();
-    const disptach = useDispatch();
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        if(isAuthenticated == true){
-            disptach(loginSetAuthenticated(false));
+        if(isAuthenticated === true){
+            dispatch(loginSetAuthenticated(false));
         }
 
     }, [isAuthenticated]);
 
     return(
         <div className={classes.root}>
-            <RegisterForm sendRegisterReq={sendRegisterRequest} />
+            <RegisterForm 
+            sendRegisterReq={sendRegisterRequest} 
+            isEmailSent={isEmailSent} 
+            isEmailFetching={isEmailFetching}
+            />
             <Typography className={classes.aboutHeader} 
             align='center'
             variant='h3'

@@ -6,6 +6,7 @@ import {
     loginSetError, 
     loginSetAuthenticated} from "../Actions/AuthOperations";
 import {LoginResponse} from "../../Interfaces/LoginResponse";
+import {loginAttemptFailed} from '../Actions/UserOperations';
 
 import Axios from 'axios';
 import { ThunkDispatch } from 'redux-thunk';
@@ -36,14 +37,17 @@ const loginApiRequest = (loginModel : LoginActionPayloadInterface ) => {
 
             if(isValidResponse){
                 console.log(isValidResponse);
+                dispatch(loginAction(loginResponse));
                 dispatch(loginSetAuthenticated(true));
                 dispatch(loginSetReducer(true));
-                dispatch(loginAction(loginResponse));
+                dispatch(loginAttemptFailed(false));
             }
             else throw new Error();
         }
         catch (err){
-            console.log("ERROR-WHILE-LOGIN");
+
+            console.log(err);
+            dispatch(loginAttemptFailed(true));
             dispatch(loginSetAuthenticated(false));
             dispatch(loginSetReducer(false));
             dispatch(loginSetError({isErrorFlagSet : true}))

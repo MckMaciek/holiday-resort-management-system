@@ -8,7 +8,7 @@ interface INIT_STATE_LOGIN_INTERFACE {
     userId : string | null,
     username : string | null,
     email : string | null,
-    roles : Array<string> | null,
+    roles : Array<string>,
 
     isAuthenticated : boolean,
 
@@ -23,7 +23,7 @@ const INIT_STATE_LOGIN : INIT_STATE_LOGIN_INTERFACE = {
     userId : null,
     username : null,
     email : null,
-    roles : null,
+    roles : [],
 
     isAuthenticated : false,
 
@@ -35,13 +35,14 @@ const INIT_STATE_LOGIN : INIT_STATE_LOGIN_INTERFACE = {
 
 const LoginReducer = (state : INIT_STATE_LOGIN_INTERFACE = INIT_STATE_LOGIN, action : LoginGenericAction ) : INIT_STATE_LOGIN_INTERFACE => {
 
+    console.log(action);
     switch(action.type){
         case AuthOperationLoginTypes.LOGIN_ACTION : {
             const {jwt, userId, username, email, roles} = action.payload;
+            console.log(roles);
             return {...state, jwt : jwt, userId : userId, username : username, email : email, roles : roles}
         }
         case AuthOperationLoginTypes.SET_AUTHENTICATED : {
-            console.log(action);
             return {...state, isAuthenticated : action.isAuth}
         }
         case AuthOperationLoginTypes.LOGIN_FETCHING : {

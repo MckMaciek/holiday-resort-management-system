@@ -22,6 +22,8 @@ const INIT_STATE_REGISTER : INIT_STATE_REGISTER_INTERFACE = {
 
 const RegisterReducer = (state : INIT_STATE_REGISTER_INTERFACE = INIT_STATE_REGISTER, action : RegisterGenericAction ) : INIT_STATE_REGISTER_INTERFACE => {
     
+    console.log(action);
+
     switch(action.type){
         case AuthOperationRegisterTypes.REGISTER_ACTION : {
             return {...state, registerStatusCode : action.payload}

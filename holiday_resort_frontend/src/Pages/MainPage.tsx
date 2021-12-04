@@ -1,4 +1,5 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import {Link} from "react-router-dom";
 
 const MainPage = () : JSX.Element =>{
 
@@ -7,6 +8,7 @@ const MainPage = () : JSX.Element =>{
     return(
         <div className = {classes.root}>
             <p> DSDASDSADSADSADSA </p>
+            <Link  to="/system"> Link dla admina</Link>
         </div>
     );
 

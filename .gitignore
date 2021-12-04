@@ -24,6 +24,7 @@ chrome-user-data
 .vscode
 *.swp
 *.swo
+*.properties
 application.properties
 
 packages/react-devtools-core/dist

@@ -4,12 +4,17 @@ import loginApiRequest from '../Stores/ApiRequests/LoginApiRequest';
 import {errorInterface} from '../Interfaces/ErrorHandling';
 
 import { ThunkDispatch } from 'redux-thunk';
-import { connect, ConnectedProps  } from 'react-redux';
+import { connect, ConnectedProps, useDispatch  } from 'react-redux';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import CircularProgress from '@mui/material/CircularProgress';
 import { pink } from '@mui/material/colors';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+
+import {AlertActionType}  from '../Interfaces/AlertTypes';
+import {registerEmailSent} from '../Stores/Actions/EmailOperations';
+
+import {loginAttemptFailed} from '../Stores/Actions/UserOperations';
 
 import {
     Redirect
@@ -25,7 +30,14 @@ interface MapDispatcherToProps {
 interface MapStateToProps {
     isLoginFetching : boolean,
     isAuthenticated : boolean,
-    loginError : errorInterface,
+    isEmailSent : boolean,
+    isLoginFailed : boolean,
+}
+
+interface AlertState {
+    isSet : boolean,
+    message : string,
+    cause : AlertActionType.EMAIL_SENT | AlertActionType.LOGIN_FAILED | AlertActionType.NONE,
 }
 
 const mapDispatchToProps = (dispatch : ThunkDispatch<{}, {}, any>) : MapDispatcherToProps => ({
@@ -35,8 +47,10 @@ const mapDispatchToProps = (dispatch : ThunkDispatch<{}, {}, any>) : MapDispatch
 const mapStateToProps = (state : any) : MapStateToProps => ({
     isLoginFetching : state.LoginReducer.isLoginFetching,
     isAuthenticated : state.LoginReducer.isAuthenticated,
-    loginError : state.LoginReducer.error,
+    isEmailSent : state.EmailReducer.isSent,
+    isLoginFailed : state.UserOperationsReducer.isLoginFailed,
 });
+
 
 const connector =  connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -44,35 +58,50 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 const LoginPage : React.FC<PropsFromRedux> = ({
     isLoginFetching,
     isAuthenticated,
-    loginError,
+    isEmailSent,
+    isLoginFailed,
     sendLoginRequest,
 }) : JSX.Element => {
 
     const classes = useStyles();
+    const dispatch = useDispatch();
 
-    const [errorAlert, setErrorAlert] = useState({
+    const [alertMessage, setAlertMessage] = useState<AlertState>({
         isSet : false,
         message : '',
+        cause : AlertActionType.NONE,
     })
 
     useEffect(() => {
-        if(loginError !== null && loginError.isErrorFlagSet === true){
-            setErrorAlert(
+        if(isLoginFailed){
+            setAlertMessage(
             {
                 isSet : true, 
-                message : 'Could not log in'
+                message : 'Could not log in',
+                cause : AlertActionType.LOGIN_FAILED,
             })
         }
-    }, [loginError])
+
+        if(isEmailSent){
+            setAlertMessage(
+            {
+                isSet : true, 
+                message : 'Email has been sent!',
+                cause : AlertActionType.EMAIL_SENT,
+            })
+        }
+
+    }, [isLoginFailed, isEmailSent])
 
     return(
+
         <div className={classes.root}>
 
             {isAuthenticated === true ? (
                 <Redirect
                 exact
                 to={{
-                    pathname: '/about',
+                    pathname: '/',
                     state : {
                         from : '/signin'
                     }
@@ -80,19 +109,50 @@ const LoginPage : React.FC<PropsFromRedux> = ({
                 />
             ) : null }
 
-            {errorAlert !== null && errorAlert.isSet === true ? (
+            {alertMessage && alertMessage.cause === AlertActionType.EMAIL_SENT ? (
+                <Snackbar
+                    open={alertMessage.isSet}
+                    >
+                        <Alert 
+                        onClose={() => {
+                            setAlertMessage({
+                                isSet : false, 
+                                message : '', 
+                                cause : AlertActionType.NONE
+                            }); 
+                            dispatch(registerEmailSent(false))}
+                        }
+                        variant="filled" 
+                        severity="success"
+                        className={classes.errorAlert}
+                        >
+                        {alertMessage.message}
+                        </Alert>
+                </Snackbar>
+            ) : null
+            }
+
+            {alertMessage && alertMessage.cause === AlertActionType.LOGIN_FAILED ? (
                 <Snackbar 
-                open={errorAlert.isSet}
+                open={alertMessage.isSet}
                 className={classes.errorAlert}
                 >
                     <Alert 
-                    onClose={() => {setErrorAlert({isSet : false, message : ''}); loginError.isErrorFlagSet = false}}
+                    onClose={
+                        () => {
+                            setAlertMessage({
+                            isSet : false, 
+                            message : '', 
+                            cause : AlertActionType.NONE
+                        }); 
+                        dispatch(loginAttemptFailed(false));
+                        }
+                    }
                     variant="filled" 
-                    severity="error"
-                    
+                    severity="error"      
                     className={classes.errorAlert}
                     >
-                    {errorAlert.message}
+                    {alertMessage.message}
                     </Alert>
                 </Snackbar>
             ) : null
