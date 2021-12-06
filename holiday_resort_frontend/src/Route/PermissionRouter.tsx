@@ -8,7 +8,10 @@ import {RolesTypes} from '../Interfaces/Roles';
 
 import {
     Switch
+    ,Route
 } from 'react-router-dom';
+import MiddleSectionRoute from './MiddleSectionRoute';
+import { useRouteMatch } from 'react-router';
 
 
 interface MapStateToProps {
@@ -31,24 +34,29 @@ const PermissionRouter : React.FC<PropsFromRedux> = (
     }
     ) => {
 
+    const { path, url } = useRouteMatch();
+
     return(
         <Switch>
             <PrivateRouter
             isAuth={isAuthenticated && roles.includes(RolesTypes.ADMIN)}
-            path='/system'
+            path={`${path}system`}
             >
                 <AdminPage/>
             </PrivateRouter>
 
-            <PrivateRouter 
-            isAuth={isAuthenticated && roles.includes(RolesTypes.USER)}
-            exact
-            path='/'
+
+            <PrivateRouter
+            isAuth={isAuthenticated && roles.includes(RolesTypes.ADMIN)}
+            path={path}
             >
                 <MainPage/>
             </PrivateRouter>
+
         </Switch>
     );
 }
 
-export default connector(PermissionRouter);
+export default connect(mapStateToProps, null, null, {
+    pure: false,
+  })(PermissionRouter);

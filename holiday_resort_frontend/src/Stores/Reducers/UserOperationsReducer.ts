@@ -1,7 +1,6 @@
 import {UserOperationGenericAction} from '../../Interfaces/UserOperations';
 import {UserOperationTypes} from '../ActionTypes/UserOperationsTypes';
 
-
 interface INIT_STATE_USER_OPERATIONS {
     isLoginFailed : boolean,
 };

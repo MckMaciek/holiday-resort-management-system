@@ -267,9 +267,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         minWidth : '14vw',
         color : 'white',
         marginTop : '1vh',
-        marginLeft : '1.2vw',
+        marginLeft : '1.3vw',
         marginBottom : '1vh',
-        minHeight: '1vh',
+        minHeight: '3.3Vh',
     },
 
     fontRed : {
@@ -320,6 +320,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         marginLeft : '3vw',
         marginRight : '3vw',
         marginBottom : '0.5wh',
+        marginTop : '1vh',
         minHeight : '1vh',
         minWidth : "20vw",
     },

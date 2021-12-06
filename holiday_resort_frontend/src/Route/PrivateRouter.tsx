@@ -3,7 +3,7 @@ import {
     Redirect
   } from 'react-router-dom';
 
-const PrivateRouter = ({children, isAuth, ...rest}) => {
+const PrivateRouter = ({children, isAuth,  ...rest}) => {
 
     return(
         <Route
