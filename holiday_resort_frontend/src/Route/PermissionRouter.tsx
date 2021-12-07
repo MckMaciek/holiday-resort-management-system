@@ -11,7 +11,7 @@ import {
     ,Route
 } from 'react-router-dom';
 import MiddleSectionRoute from './MiddleSectionRoute';
-import { useRouteMatch } from 'react-router';
+import { useLocation, useRouteMatch } from 'react-router';
 
 
 interface MapStateToProps {

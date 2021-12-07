@@ -21,8 +21,8 @@ const DefaultMiddleSection = () => {
                 <Button 
                     style={
                         {
-                            background : '#311b92', 
-                            color : 'white',
+                        background : '#311b92', 
+                        color : 'white',
                         }
                     }
                     size="large"

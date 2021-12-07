@@ -14,32 +14,17 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Button from '@material-ui/core/Button';
 
+import DeleteIcon from '@mui/icons-material/Delete';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
+import { ReservationInterface } from '../Interfaces/Reservation';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-  price: number,
-  status : string,
-) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    status,
-  };
-}
 
-function Row(props: { row: ReturnType<typeof createData> }) {
-  const { row } = props;
+const Row = ({row, jwtToken, removeAccommodationWithId, setComponentRerender} : any) => {
+
   const [open, setOpen] = React.useState(false);
+  const classes = useStyles();
 
   return (
     <React.Fragment>
@@ -53,41 +38,94 @@ function Row(props: { row: ReturnType<typeof createData> }) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          <p> {row.name} </p>
+          <p> {row.id} </p>
         </TableCell>
-        <TableCell align="center">{row.calories}</TableCell>
-        <TableCell align="center">{row.fat}</TableCell>
-        <TableCell align="center">{row.carbs}</TableCell>
-        <TableCell align="center">{row.protein}</TableCell>
-        <TableCell align="center">{row.status}</TableCell>
+        <TableCell align="center">{row.reservationDate}</TableCell>
+        <TableCell align="center">{row.finalPrice}</TableCell>
+        <TableCell align="center">{row.reservationStatus}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-            <Typography 
-            variant="h6" 
+            <Table 
             >
-                Operacje dla {row.name}
-            </Typography>
-            <Button 
-                color="secondary" 
-                variant="contained" 
-                >
-                Show
-            </Button>
-            <Button 
-                color="secondary" 
-                variant="contained" 
-                >
-                Edit
-            </Button>
-            <Button 
-                color="secondary" 
-                variant="contained" 
-                >
-                Delete
-            </Button>
+            <TableHead>
+            <TableRow>
+                <TableCell  align="left"> Object Name</TableCell>
+                <TableCell  align="center"> Object Type</TableCell>
+                <TableCell  align="center"> Choosen Amount of People</TableCell>
+                <TableCell  align="center"> Max Amount of People</TableCell>
+                <TableCell  align="center"> Price Per Person</TableCell>
+                <TableCell  align="center"> Price Per Unused Space</TableCell>
+                <TableCell  align="center"> Operations </TableCell>
+            </TableRow>
+            </TableHead>
+            <TableBody>
+            {row.accommodationResponses.map((innerRow) => (
+                <TableRow key={innerRow.resortObject.id}>
+                  <TableCell 
+                  component="th" 
+                  scope="row"
+                  >
+                      {innerRow.resortObject.objectName}
+                  </TableCell>
+                  <TableCell 
+                  align="center"
+                  >
+                      {innerRow.resortObject.objectType}
+                  </TableCell>
+                  <TableCell 
+                  align="center"
+                  >
+                      {innerRow.numberOfPeople}
+                  </TableCell>
+                  <TableCell 
+                  align="center"
+                  >
+                      {innerRow.resortObject.maxAmountOfPeople}
+                  </TableCell>
+                  <TableCell 
+                  align="center"
+                  > 
+                    {innerRow.resortObject.pricePerPerson}
+                  </TableCell>
+                  <TableCell 
+                  align="center"
+                  > 
+                    {innerRow.resortObject.unusedSpacePrice}
+                  </TableCell>
+                  <TableCell 
+                  align="center"
+                  > 
+                  <>
+                    <Button
+                    color="primary" 
+                    type="submit"
+                    variant="contained"
+                    disabled={row.reservationStatus !== "STARTED"}
+                    className={classes.operationButton}
+                    startIcon={<ModeEditIcon/>}
+                    >
+                        EDIT
+                    </Button>
+
+                    <Button 
+                    color="secondary"
+                    variant="contained"
+                    type="submit"
+                    disabled={row.reservationStatus !== "STARTED"}
+                    onClick={() => { removeAccommodationWithId(jwtToken, innerRow.id); setComponentRerender(true); }}
+                    startIcon={<DeleteIcon/>}
+                    >
+                        DELETE
+                    </Button>
+                  </>
+                  </TableCell>
+              </TableRow>
+            ))}
+            </TableBody>
+            </Table>
             </Box>
           </Collapse>
         </TableCell>
@@ -96,20 +134,21 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   );
 }
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 3.99, "DOne"),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 4.99, "DOne"),
-  createData('Eclair', 262, 16.0, 24, 6.0, 3.79, "DOne"),
-  createData('Cupcake', 305, 3.7, 67, 4.3, 2.5, "DOne"),
-  createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5, "DOne"),
-  createData('Cupcake', 305, 3.7, 67, 4.3, 2.5, "DOne"),
+interface IMyProps {
+  reservationList : Array<ReservationInterface>,
+  jwtToken : string,
+  removeAccommodationWithId : (jwtToken : string, accommodationId : number) => void,
+  setComponentRerender : (set : boolean) => void;
+}
 
-];
-
-export default function ReservationTable() {
+const ReservationTable : React.FC<IMyProps> = ({
+  reservationList,
+  jwtToken,
+  removeAccommodationWithId,
+  setComponentRerender,
+}) : JSX.Element =>  {
 
 const classes = useStyles();
-
   return (
     <div className={classes.table}>
         <TableContainer component={Paper}>
@@ -118,18 +157,23 @@ const classes = useStyles();
             <TableHead>
             <TableRow>
                 <TableCell />
-                <TableCell  
-                align="center"> Lp.</TableCell>
-                <TableCell  align="center"> Creation Date</TableCell>
-                <TableCell  align="center"> Starting Date</TableCell>
-                <TableCell  align="center"> Ending Date</TableCell>
-                <TableCell  align="center"> Amount of people</TableCell>
-                <TableCell  align="center"> Status </TableCell>
+                <TableCell  align="left"> Reservation Id</TableCell>
+                <TableCell  align="center"> Created</TableCell>
+                <TableCell  align="center"> Final price</TableCell>
+                <TableCell  align="center"> Status</TableCell>
             </TableRow>
             </TableHead>
             <TableBody>
-            {rows.map((row) => (
-                <Row key={row.name} row={row} />
+            {reservationList.map((row) => (
+                <>
+                <Row 
+                  key={row.id} 
+                  row={row}
+                  jwtToken={jwtToken}
+                  removeAccommodationWithId={removeAccommodationWithId}
+                  setComponentRerender={setComponentRerender}
+                />
+                </>
             ))}
             </TableBody>
         </Table>
@@ -138,8 +182,15 @@ const classes = useStyles();
   );
 }
 
+export default ReservationTable;
+
 const useStyles = makeStyles((theme: Theme) => createStyles({
     table: {
         width : '87vw',
     },
+
+    operationButton : {
+      marginRight : '1vw',
+    }
+
   }));

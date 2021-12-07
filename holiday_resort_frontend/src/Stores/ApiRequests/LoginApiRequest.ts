@@ -8,11 +8,13 @@ import {
 import {LoginResponse} from "../../Interfaces/LoginResponse";
 import {loginAttemptFailed} from '../Actions/UserOperations';
 
+import API_URL from '../../API_URL.json';
+
 import Axios from 'axios';
 import { ThunkDispatch } from 'redux-thunk';
 
 const sendLoginRequest =  async (loginModel : LoginActionPayloadInterface) : Promise<LoginResponse> => {
-    const loginRequest = await Axios.post("http://localhost:8080/api/auth/sign-in", loginModel);
+    const loginRequest = await Axios.post(`${API_URL.SERVER_URL}${API_URL.LOGIN}`, loginModel);
 
     return loginRequest.data as LoginResponse;
 }
@@ -36,7 +38,6 @@ const loginApiRequest = (loginModel : LoginActionPayloadInterface ) => {
             const isValidResponse = validateLoginResponse(loginResponse);
 
             if(isValidResponse){
-                console.log(isValidResponse);
                 dispatch(loginAction(loginResponse));
                 dispatch(loginSetAuthenticated(true));
                 dispatch(loginSetReducer(true));

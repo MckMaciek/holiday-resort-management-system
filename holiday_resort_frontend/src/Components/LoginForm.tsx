@@ -19,7 +19,7 @@ interface FuncProps{
 const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
 
     const classes = useStyles();
-
+    
     const headerName = "Login";
 
     const formik = useFormik({

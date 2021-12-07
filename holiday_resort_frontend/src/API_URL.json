@@ -1,0 +1,7 @@
+{
+    "SERVER_URL" : "http://localhost:8080/api",
+    "LOGIN" : "/auth/sign-in",
+    "ACCOMMODATION_REMOVE" : "/v1/accommodation/user/",
+    "REGISTER" : "/auth/sign-up",
+    "USER_RESERVATIONS" : "/v1/reservation/user/all"
+}

@@ -12,10 +12,10 @@ import {registerEmailSent,
         
 } from "../Actions/EmailOperations";
 
-
+import API_URL from '../../API_URL.json';
 
 const sendRegisterRequest =  async (registerModel : RegisterActionPayloadInterface) : Promise<RegisterResponse> => {
-    const registerRequest = await Axios.post("http://localhost:8080/api/auth/sign-up", registerModel);
+    const registerRequest = await Axios.post(`${API_URL.SERVER_URL}${API_URL.REGISTER}`, registerModel);
 
     return registerRequest.request.status as RegisterResponse;
 }
@@ -29,8 +29,6 @@ const registerApiRequest = (registerModel : RegisterActionPayloadInterface) => {
             const registerResponse = await sendRegisterRequest(registerModel);
             dispatch(registerEmailFetching(true));
             
-            console.log(registerResponse);
-
             dispatch(registerEmailSent(true));
             dispatch(registerAction(registerResponse));
             dispatch(registerSetReducer(true));

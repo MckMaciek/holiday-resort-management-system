@@ -1,8 +1,6 @@
 import {LoginActionPayloadInterface} from '../Interfaces/LoginActionPayload';
 import loginApiRequest from '../Stores/ApiRequests/LoginApiRequest';
 
-import {errorInterface} from '../Interfaces/ErrorHandling';
-
 import { ThunkDispatch } from 'redux-thunk';
 import { connect, ConnectedProps, useDispatch  } from 'react-redux';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
