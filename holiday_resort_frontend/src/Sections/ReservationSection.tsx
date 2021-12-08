@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { pink } from '@mui/material/colors';
 
@@ -9,7 +11,9 @@ import { ReservationInterface } from '../Interfaces/Reservation';
 
 import {
     getReservations, 
-    deleteAccommodationApi} from '../Stores/ApiRequests/ReservationApiRequest';
+    deleteAccommodationApi
+} from '../Stores/ApiRequests/ReservationApiRequest';
+
 import ReservationTable from '../Components/ReservationTable';
 import { useEffect, useState } from 'react';
 
@@ -38,6 +42,14 @@ const mapStateToProps = (state : any) : MapStateToProps => ({
 const connector =  connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+interface TableContextInterface {
+    jwtToken_: string,
+    removeAccommodation_ : (jwtToken : string, accommodationId : number) => void,
+    setComponentRerender_  : (set : boolean) => void;
+}
+
+export const TableContext = React.createContext<TableContextInterface | null> (null);
+
 const ReservationSection : React.FC<PropsFromRedux> = ({
     jwtToken,
     reservation,
@@ -65,6 +77,13 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
 
     const classes = useStyles();
 
+    // TABLE CONTEXT PO TO ŻEBY NIE PRZESYŁAĆ 2 RAZY PROPSY WGŁĄB DRZEWA TABELI
+    const TableContextImp : TableContextInterface = { 
+        jwtToken_ : jwtToken,
+        removeAccommodation_ : removeAccommodation,
+        setComponentRerender_ : setComponentChanged,
+    } 
+
     return(
         <div className={classes.root}>
             {reservation.length !== 0 ? (
@@ -81,12 +100,14 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
                         />
                     ) : null}
                     <h1 className={classes.reservationHeader}> Reservation of Yours </h1>
-                    <ReservationTable 
-                        reservationList={reservation}
-                        jwtToken={jwtToken}
-                        removeAccommodationWithId={removeAccommodation}
-                        setComponentRerender={setComponentChanged}
-                    />
+
+                    <TableContext.Provider
+                        value={TableContextImp}
+                    >
+                        <ReservationTable 
+                            reservationList={reservation}
+                        />
+                    </TableContext.Provider>
                 </>
             ) : (
                 <>

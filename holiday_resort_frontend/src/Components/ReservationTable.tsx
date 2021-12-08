@@ -8,7 +8,6 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -17,14 +16,29 @@ import Button from '@material-ui/core/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
+import DialogConfirm from '../Components/DialogConfirm';
+
+import {TableContext} from '../Sections/ReservationSection';
+
 import { ReservationInterface } from '../Interfaces/Reservation';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 
-
-const Row = ({row, jwtToken, removeAccommodationWithId, setComponentRerender} : any) => {
+const Row = ({row} : any) => {
 
   const [open, setOpen] = React.useState(false);
+
+  const DIALOG_CONFIRMATION_DEFAULT = {
+    isSet : false,
+    id : -1,
+    propertyName : "",
+  }
+  const [dialogConfirmation, setDialogConfirmation] = React.useState(DIALOG_CONFIRMATION_DEFAULT);
+  
+
+
+
   const classes = useStyles();
+  const TableContextImp = React.useContext(TableContext);
 
   return (
     <React.Fragment>
@@ -115,11 +129,35 @@ const Row = ({row, jwtToken, removeAccommodationWithId, setComponentRerender} : 
                     variant="contained"
                     type="submit"
                     disabled={row.reservationStatus !== "STARTED"}
-                    onClick={() => { removeAccommodationWithId(jwtToken, innerRow.id); setComponentRerender(true); }}
+                    onClick={() => { 
+                      setDialogConfirmation({
+                        isSet : true,
+                        id : innerRow.id,
+                        propertyName : innerRow.resortObject.objectName,
+                      });
+                    }}
                     startIcon={<DeleteIcon/>}
                     >
                         DELETE
                     </Button>
+
+                    <DialogConfirm
+                          isOpen={dialogConfirmation.isSet}
+                          closeHandler={() => setDialogConfirmation(DIALOG_CONFIRMATION_DEFAULT)}
+                          onAcceptHandler={
+                            () => {
+                              TableContextImp?.removeAccommodation_(TableContextImp.jwtToken_, dialogConfirmation.id)
+                              TableContextImp?.setComponentRerender_(true)
+                              setDialogConfirmation(DIALOG_CONFIRMATION_DEFAULT) 
+                            }  
+                          }
+                          dialogTitle="Are you sure to delete?"
+                          dialogDescription= {`Accommodation with ${dialogConfirmation.propertyName} will be deleted`}
+                          disagreeText="Back"
+                          agreeText="Delete"
+                    >
+                    </DialogConfirm>
+
                   </>
                   </TableCell>
               </TableRow>
@@ -136,16 +174,10 @@ const Row = ({row, jwtToken, removeAccommodationWithId, setComponentRerender} : 
 
 interface IMyProps {
   reservationList : Array<ReservationInterface>,
-  jwtToken : string,
-  removeAccommodationWithId : (jwtToken : string, accommodationId : number) => void,
-  setComponentRerender : (set : boolean) => void;
 }
 
 const ReservationTable : React.FC<IMyProps> = ({
   reservationList,
-  jwtToken,
-  removeAccommodationWithId,
-  setComponentRerender,
 }) : JSX.Element =>  {
 
 const classes = useStyles();
@@ -169,9 +201,6 @@ const classes = useStyles();
                 <Row 
                   key={row.id} 
                   row={row}
-                  jwtToken={jwtToken}
-                  removeAccommodationWithId={removeAccommodationWithId}
-                  setComponentRerender={setComponentRerender}
                 />
                 </>
             ))}
