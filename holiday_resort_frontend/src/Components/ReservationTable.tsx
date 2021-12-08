@@ -181,11 +181,13 @@ const Row = ({row} : any) => {
                     >
                     </DialogConfirm>
 
-                    <AccommodationDialogEdit
-                        isOpen={editDialog.isSet}
-                        propertyId={editDialog.id}
-                        closeHandler={() => setEditDialog(EDIT_DIALOG_DEFAULT)}
-                    />
+                    {editDialog.isSet && editDialog.id === innerRow.id ? (
+                      <AccommodationDialogEdit
+                          isOpen={editDialog.isSet}
+                          propertyId={editDialog.id}
+                          closeHandler={() => setEditDialog(EDIT_DIALOG_DEFAULT)}
+                      />
+                    ): null}
 
                   </>
                   </TableCell>

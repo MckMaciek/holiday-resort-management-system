@@ -35,9 +35,9 @@ export const getReservations = (jwtToken : string) => {
             const registerResponse = await getUserReservationsRequest(jwtToken);
             dispatch(getReservation(registerResponse));
             dispatch(setReservationError(false));
-            console.log(registerResponse);
         }
         catch (err){
+            console.log(err);
             dispatch(setReservationError(true));
         }
         finally{
