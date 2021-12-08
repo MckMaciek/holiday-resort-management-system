@@ -1,4 +1,4 @@
-import { LoginActionPayloadInterface } from "../../Interfaces/LoginActionPayload";
+import { LoginActionPayloadInterface } from "../../Interfaces/ReduxInterfaces/LoginActionPayload";
 import {
     loginFetching, 
     loginAction, 

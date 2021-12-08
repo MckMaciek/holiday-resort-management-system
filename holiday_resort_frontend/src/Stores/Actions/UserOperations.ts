@@ -1,4 +1,4 @@
-import {UserActionLoginAttemptFailed} from '../../Interfaces/UserOperations';
+import {UserActionLoginAttemptFailed} from '../../Interfaces/ReduxInterfaces/UserOperations';
 import {UserOperationTypes} from '../ActionTypes/UserOperationsTypes';
 
 

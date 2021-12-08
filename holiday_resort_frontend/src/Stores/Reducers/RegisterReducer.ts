@@ -1,4 +1,4 @@
-import {RegisterGenericAction} from "../../Interfaces/AuthOperations"
+import {RegisterGenericAction} from "../../Interfaces/ReduxInterfaces/AuthOperations"
 import {errorInterface} from "../../Interfaces/ErrorHandling";
 import {AuthOperationRegisterTypes} from "../ActionTypes/AuthOperationTypes";
 import {RegisterResponse} from "../../Interfaces/RegisterResponse";

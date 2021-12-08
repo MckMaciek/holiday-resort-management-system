@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import {LoginActionPayloadInterface} from "../Interfaces/LoginActionPayload";
+import {LoginActionPayloadInterface} from "../Interfaces/ReduxInterfaces/LoginActionPayload";
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 
 import {Link} from "react-router-dom";

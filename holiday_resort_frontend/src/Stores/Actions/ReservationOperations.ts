@@ -8,7 +8,7 @@ import {
     DeleteAccommodation,
     DeleteAccommodationFetching,
 }
-from '../../Interfaces/ReservationOperations';
+from '../../Interfaces/ReduxInterfaces/ReservationOperations';
 
 export const getReservation = (payload : Array<ReservationInterface>) : FetchReservationInterface => ({
     type : ReservationOperationTypes.RESERVATION_FETCH,

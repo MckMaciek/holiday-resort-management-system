@@ -1,4 +1,4 @@
-import {LoginActionPayloadInterface} from '../Interfaces/LoginActionPayload';
+import {LoginActionPayloadInterface} from '../Interfaces/ReduxInterfaces/LoginActionPayload';
 import loginApiRequest from '../Stores/ApiRequests/LoginApiRequest';
 
 import { ThunkDispatch } from 'redux-thunk';
@@ -9,7 +9,7 @@ import { pink } from '@mui/material/colors';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 
-import {AlertActionType}  from '../Interfaces/AlertTypes';
+import {AlertActionType}  from '../Enums/AlertTypes';
 import {registerEmailSent} from '../Stores/Actions/EmailOperations';
 
 import {loginAttemptFailed} from '../Stores/Actions/UserOperations';

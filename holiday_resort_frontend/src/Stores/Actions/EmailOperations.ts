@@ -4,7 +4,7 @@ import
 {EmailActionSentInterface,
 EmailActionSentFetchingInterface
 
-} from '../../Interfaces/EmailOperations';
+} from '../../Interfaces/ReduxInterfaces/EmailOperations';
 
 export const registerEmailSent = (isSent : boolean) : EmailActionSentInterface => ({
     type : EmailOperationTypes.EMAIL_SENT,

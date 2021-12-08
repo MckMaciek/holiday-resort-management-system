@@ -10,7 +10,7 @@ import {LoginActionInterface,
     RegisterActionErrorInterface,
     RegisterActionFetchingInterface,
     RegisterActionIsSetInReducerInterface,
-    } from '../../Interfaces/AuthOperations';
+    } from '../../Interfaces/ReduxInterfaces/AuthOperations';
 import { LoginResponse } from '../../Interfaces/LoginResponse';
 import { RegisterResponse } from '../../Interfaces/RegisterResponse';
 

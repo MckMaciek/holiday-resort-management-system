@@ -1,5 +1,5 @@
 import {AuthOperationLoginTypes} from '../ActionTypes/AuthOperationTypes';
-import {LoginGenericAction} from "../../Interfaces/AuthOperations";
+import {LoginGenericAction} from "../../Interfaces/ReduxInterfaces/AuthOperations";
 import {errorInterface} from '../../Interfaces/ErrorHandling';
 
 interface INIT_STATE_LOGIN_INTERFACE {

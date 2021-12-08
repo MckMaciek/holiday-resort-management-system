@@ -6,7 +6,7 @@ import {
     AvailableResortObjectsAreFetching,
     AvailableResortObjectsError,
 
-} from '../../Interfaces/ResortObjectOperations';
+} from '../../Interfaces/ReduxInterfaces/ResortObjectOperations';
 
 
 export const getAvailableResortObjects = (resortObjectList : Array<ResortObjectInterface>) : GetAvailableResortObjects => ({

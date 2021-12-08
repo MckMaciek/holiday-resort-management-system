@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import { ThunkDispatch } from 'redux-thunk';
 
-import {RegisterActionPayloadInterface} from "../../Interfaces/RegisterActionPayload";
+import {RegisterActionPayloadInterface} from "../../Interfaces/ReduxInterfaces/RegisterActionPayload";
 import {RegisterResponse } from "../../Interfaces/RegisterResponse";
 import {registerAction,
         registerFetching,

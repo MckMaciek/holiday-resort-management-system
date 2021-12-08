@@ -4,7 +4,7 @@ import AdminPage from '../Pages/AdminPage';
 import PrivateRouter from '../Route/PrivateRouter';
 import { connect, ConnectedProps  } from 'react-redux';
 
-import {RolesTypes} from '../Interfaces/Roles';
+import {RolesTypes} from '../Enums/Roles';
 
 import {
     Switch

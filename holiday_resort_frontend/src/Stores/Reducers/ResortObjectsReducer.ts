@@ -1,6 +1,6 @@
 import { ResortObjectInterface } from "../../Interfaces/ResortObject";
 
-import {ResortObjectGenericAction} from '../../Interfaces/ResortObjectOperations';
+import {ResortObjectGenericAction} from '../../Interfaces/ReduxInterfaces/ResortObjectOperations';
 import {ResortObjectOperationTypes} from '../ActionTypes/ResortObjectOperationTypes';
 
 interface INIT_STATE {

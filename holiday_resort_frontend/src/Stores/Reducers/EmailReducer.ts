@@ -1,4 +1,4 @@
-import {EmailGenericAction} from '../../Interfaces/EmailOperations';
+import {EmailGenericAction} from '../../Interfaces/ReduxInterfaces/EmailOperations';
 import {EmailOperationTypes} from '../ActionTypes/EmailOperationTypes';
 
 interface INIT_STATE_EMAIL_INTERFACE {

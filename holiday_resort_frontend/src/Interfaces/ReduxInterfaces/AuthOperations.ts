@@ -1,9 +1,9 @@
-import {AuthOperationLoginTypes, AuthOperationRegisterTypes} from '../Stores/ActionTypes/AuthOperationTypes';
+import {AuthOperationLoginTypes, AuthOperationRegisterTypes} from '../../Stores/ActionTypes/AuthOperationTypes';
 import { RegisterActionPayloadInterface } from './RegisterActionPayload';
 
-import {errorInterface} from './ErrorHandling';
-import { LoginResponse } from './LoginResponse';
-import { RegisterResponse } from './RegisterResponse';
+import {errorInterface} from '../ErrorHandling';
+import { LoginResponse } from '../LoginResponse';
+import { RegisterResponse } from '../RegisterResponse';
 
 /* INTERFACES FOR ACTIONS DISPATCHED WHILE SIGN-IN PROCESS  */
 export type LoginActionInterface =  {

@@ -1,4 +1,4 @@
-import {EmailOperationTypes} from '../Stores/ActionTypes/EmailOperationTypes';
+import {EmailOperationTypes} from '../../Stores/ActionTypes/EmailOperationTypes';
 
 export type EmailActionSentInterface =  {
     type : typeof EmailOperationTypes.EMAIL_SENT,

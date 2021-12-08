@@ -1,4 +1,4 @@
-import {UserOperationTypes} from "../Stores/ActionTypes/UserOperationsTypes";
+import {UserOperationTypes} from "../../Stores/ActionTypes/UserOperationsTypes";
 
 
 export type UserActionLoginAttemptFailed = {

@@ -5,7 +5,7 @@ import {
 
 import PrivateRouter from '../Route/PrivateRouter';
 import { connect, ConnectedProps  } from 'react-redux';
-import {RolesTypes} from '../Interfaces/Roles';
+import {RolesTypes} from '../Enums/Roles';
 import {useRouteMatch } from 'react-router';
 import {Link} from "react-router-dom";
 

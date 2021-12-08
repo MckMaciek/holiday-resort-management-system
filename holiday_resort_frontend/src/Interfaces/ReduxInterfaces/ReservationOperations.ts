@@ -1,5 +1,5 @@
-import {ReservationOperationTypes} from '../Stores/ActionTypes/ReservationOperationTypes';
-import { ReservationInterface } from './Reservation';
+import {ReservationOperationTypes} from '../../Stores/ActionTypes/ReservationOperationTypes';
+import { ReservationInterface } from '../Reservation';
 
 export type FetchReservationInterface =  {
     type : typeof ReservationOperationTypes.RESERVATION_FETCH,

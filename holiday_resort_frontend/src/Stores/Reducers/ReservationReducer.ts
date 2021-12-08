@@ -1,5 +1,5 @@
 import {ReservationInterface} from "../../Interfaces/Reservation";
-import {ReservationGenericAction} from "../../Interfaces/ReservationOperations";
+import {ReservationGenericAction} from "../../Interfaces/ReduxInterfaces/ReservationOperations";
 
 import {ReservationOperationTypes} from '../ActionTypes/ReservationOperationTypes';
 

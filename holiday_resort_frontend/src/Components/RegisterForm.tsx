@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import "yup-phone";
 
-import {RegisterActionPayloadInterface} from "../Interfaces/RegisterActionPayload";
+import {RegisterActionPayloadInterface} from "../Interfaces/ReduxInterfaces/RegisterActionPayload";
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { pink } from '@mui/material/colors';

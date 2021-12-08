@@ -1,7 +1,7 @@
 import { ThunkDispatch } from 'redux-thunk';
 import { connect, ConnectedProps, useDispatch  } from 'react-redux';
 
-import {RegisterActionPayloadInterface} from '../Interfaces/RegisterActionPayload';
+import {RegisterActionPayloadInterface} from '../Interfaces/ReduxInterfaces/RegisterActionPayload';
 import registerApiRequest from "../Stores/ApiRequests/RegisterApiRequest";
 import {loginSetAuthenticated} from "../Stores/Actions/AuthOperations";
 
