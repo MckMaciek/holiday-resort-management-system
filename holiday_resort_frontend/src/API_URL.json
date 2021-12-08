@@ -3,5 +3,6 @@
     "LOGIN" : "/auth/sign-in",
     "ACCOMMODATION_REMOVE" : "/v1/accommodation/user/",
     "REGISTER" : "/auth/sign-up",
-    "USER_RESERVATIONS" : "/v1/reservation/user/all"
+    "USER_RESERVATIONS" : "/v1/reservation/user/all",
+    "GET_AVAILABLE_RESORT_OBJECTS" : "/v1/resort/available"
 }

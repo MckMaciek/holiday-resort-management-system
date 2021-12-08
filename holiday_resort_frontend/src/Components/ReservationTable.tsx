@@ -17,6 +17,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 import DialogConfirm from '../Components/DialogConfirm';
+import AccommodationDialogEdit from '../Components/AccommodationDialogEdit';
 
 import {TableContext} from '../Sections/ReservationSection';
 
@@ -27,16 +28,32 @@ const Row = ({row} : any) => {
 
   const [open, setOpen] = React.useState(false);
 
-  const DIALOG_CONFIRMATION_DEFAULT = {
+  interface DELETE_DIALOG_CONFIRMATION_INTERFACE {
+    isSet : boolean,
+    id : number,
+    propertyName : string,
+  }
+
+  interface EDIT_DIALOG_INTERFACE {
+    isSet : boolean,
+    id : number
+  }
+
+  const DELETE_DIALOG_CONFIRMATION_DEFAULT : DELETE_DIALOG_CONFIRMATION_INTERFACE = {
     isSet : false,
     id : -1,
     propertyName : "",
   }
-  const [dialogConfirmation, setDialogConfirmation] = React.useState(DIALOG_CONFIRMATION_DEFAULT);
+  const [deleteDialog, setDeleteDialog] = React.useState<DELETE_DIALOG_CONFIRMATION_INTERFACE>(DELETE_DIALOG_CONFIRMATION_DEFAULT);
   
+  const EDIT_DIALOG_DEFAULT : EDIT_DIALOG_INTERFACE = {
+    isSet : false,
+    id : -1,
+  }
+  const [editDialog, setEditDialog] = React.useState<EDIT_DIALOG_INTERFACE>(EDIT_DIALOG_DEFAULT)
 
 
-
+  
   const classes = useStyles();
   const TableContextImp = React.useContext(TableContext);
 
@@ -119,6 +136,12 @@ const Row = ({row} : any) => {
                     variant="contained"
                     disabled={row.reservationStatus !== "STARTED"}
                     className={classes.operationButton}
+                    onClick={() => {
+                      setEditDialog({
+                        isSet : true,
+                        id : innerRow.id,
+                      });
+                    }}
                     startIcon={<ModeEditIcon/>}
                     >
                         EDIT
@@ -130,7 +153,7 @@ const Row = ({row} : any) => {
                     type="submit"
                     disabled={row.reservationStatus !== "STARTED"}
                     onClick={() => { 
-                      setDialogConfirmation({
+                      setDeleteDialog({
                         isSet : true,
                         id : innerRow.id,
                         propertyName : innerRow.resortObject.objectName,
@@ -142,21 +165,27 @@ const Row = ({row} : any) => {
                     </Button>
 
                     <DialogConfirm
-                          isOpen={dialogConfirmation.isSet}
-                          closeHandler={() => setDialogConfirmation(DIALOG_CONFIRMATION_DEFAULT)}
-                          onAcceptHandler={
-                            () => {
-                              TableContextImp?.removeAccommodation_(TableContextImp.jwtToken_, dialogConfirmation.id)
-                              TableContextImp?.setComponentRerender_(true)
-                              setDialogConfirmation(DIALOG_CONFIRMATION_DEFAULT) 
-                            }  
-                          }
-                          dialogTitle="Are you sure to delete?"
-                          dialogDescription= {`Accommodation with ${dialogConfirmation.propertyName} will be deleted`}
-                          disagreeText="Back"
-                          agreeText="Delete"
+                        isOpen={deleteDialog.isSet}
+                        closeHandler={() => setDeleteDialog(DELETE_DIALOG_CONFIRMATION_DEFAULT)}
+                        onAcceptHandler={
+                          () => {
+                            TableContextImp?.removeAccommodation_(TableContextImp.jwtToken_, deleteDialog.id)
+                            TableContextImp?.setComponentRerender_(true)
+                            setDeleteDialog(DELETE_DIALOG_CONFIRMATION_DEFAULT) 
+                          }  
+                        }
+                        dialogTitle="Are you sure to delete?"
+                        dialogDescription= {`Accommodation with ${deleteDialog.propertyName} will be deleted`}
+                        disagreeText="Back"
+                        agreeText="Delete"
                     >
                     </DialogConfirm>
+
+                    <AccommodationDialogEdit
+                        isOpen={editDialog.isSet}
+                        propertyId={editDialog.id}
+                        closeHandler={() => setEditDialog(EDIT_DIALOG_DEFAULT)}
+                    />
 
                   </>
                   </TableCell>

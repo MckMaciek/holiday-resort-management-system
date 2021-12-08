@@ -4,9 +4,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import Draggable from 'react-draggable';
-
 
 interface DialogProps {
     isOpen : boolean,

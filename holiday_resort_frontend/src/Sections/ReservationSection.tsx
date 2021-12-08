@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { pink } from '@mui/material/colors';
+import Backdrop from '@mui/material/Backdrop';
 
 import { ThunkDispatch } from 'redux-thunk';
 import { connect, ConnectedProps  } from 'react-redux';
@@ -89,6 +90,9 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
             {reservation.length !== 0 ? (
                 <>
                     {reservationFetching ? (
+                    <Backdrop
+                    open={reservationFetching}
+                    >
                         <CircularProgress 
                         size='7vh'
                         sx={{
@@ -98,6 +102,7 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
                             },
                             }}
                         />
+                    </Backdrop>
                     ) : null}
                     <h1 className={classes.reservationHeader}> Reservation of Yours </h1>
 
