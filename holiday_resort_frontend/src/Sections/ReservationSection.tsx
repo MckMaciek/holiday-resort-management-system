@@ -69,7 +69,7 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
     }, [jwtToken])
 
     useEffect(() => {
-        if(jwtToken && jwtToken != ""){
+        if(jwtToken && jwtToken != "" && componentChanged){
             fetchReservations(jwtToken);
             setComponentChanged(false);
         }
