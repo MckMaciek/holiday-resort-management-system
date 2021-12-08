@@ -24,7 +24,7 @@ public class GenericAction<ContextClass, ContextClassRepo> {
             Optional<? extends ContextClass> associatedEntity = crudRepository.findById(id);
 
             if(associatedEntity.isEmpty()) throw new IllegalArgumentException(
-                    String.format("%s with id %s has no owner!", associatedEntity.getClass().toString(), id));
+                    String.format("Id of %s has not been found", id));
 
             if(!(associatedEntity.get() instanceof LoginDetailsLinked)){
                 throw new ClassCastException("Invalid cast");

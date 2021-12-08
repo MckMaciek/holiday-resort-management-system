@@ -1,6 +1,5 @@
 package holiday_resort.management_system.com.holiday_resort.Controllers;
 
-import holiday_resort.management_system.com.holiday_resort.Controllers.Exceptions.UserControllerExceptions;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
 import holiday_resort.management_system.com.holiday_resort.Services.LoginDetailsService;
 import holiday_resort.management_system.com.holiday_resort.Services.UserService;
@@ -49,7 +48,7 @@ public class LoginDetailsController {
     @RequestMapping(value = "/login-user/delete", method = RequestMethod.DELETE)
     public ResponseEntity<UserLoginResponse> deleteUser(@RequestParam(required = true) Long id) {
         if(!loginDetailsService.delete(id)){
-            throw new UserControllerExceptions.UserNotFoundException();
+            //throw new UserControllerExceptions.UserNotFoundException();
         }
 
         return ResponseEntity.ok(new UserLoginResponse.UserLoginResponseBuilder()

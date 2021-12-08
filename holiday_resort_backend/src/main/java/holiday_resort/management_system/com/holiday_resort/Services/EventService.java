@@ -70,13 +70,10 @@ public class EventService implements CrudOperations<EventDTO, Long>, Validate<Ev
 
             eventRepo.save(eventPatched);
 
-            } catch (JsonPatchException e) {
+            } catch (JsonPatchException | JsonProcessingException e) {
                 e.printStackTrace();
                 return false;
 
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-                return false;
             }
         }
 

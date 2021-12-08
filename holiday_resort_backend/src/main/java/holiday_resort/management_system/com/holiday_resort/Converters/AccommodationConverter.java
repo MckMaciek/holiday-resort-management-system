@@ -27,11 +27,13 @@ public class AccommodationConverter implements Converter<AccommodationDTO, Objec
             AccommodationRequest accommodationRequest = (AccommodationRequest) accommodationRequestObj;
             return convertAccommodationRequestToDTO(accommodationRequest);
         }
+
         else throw new ClassCastException("Object could not be casted to AccommodationDTO class");
     }
 
     private AccommodationDTO convertAccommodationRequestToDTO(AccommodationRequest accommodationRequest){
         AccommodationDTO accommodationDTO = new AccommodationDTO();
+        accommodationDTO.setId(null);
         accommodationDTO.setNumberOfPeople(accommodationRequest.getNumberOfPeople());
 
         Optional<ResortObjectDTO> resortObject = getResortObject(accommodationRequest.getResortObjectId());

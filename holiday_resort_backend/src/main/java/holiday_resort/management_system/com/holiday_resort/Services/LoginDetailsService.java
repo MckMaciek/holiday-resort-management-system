@@ -1,13 +1,10 @@
 package holiday_resort.management_system.com.holiday_resort.Services;
 
-import holiday_resort.management_system.com.holiday_resort.Controllers.Exceptions.UserControllerExceptions;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
 import holiday_resort.management_system.com.holiday_resort.Entities.User;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.CrudOperations;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.Validate;
 import holiday_resort.management_system.com.holiday_resort.Repositories.LoginDetailsRepository;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,7 +26,7 @@ public class LoginDetailsService implements UserDetailsService, CrudOperations<L
     private final UserService userService;
     private final RoleService roleService;
 
-    private static final Logger logger = LogManager.getLogger(UserControllerExceptions.class);
+    //private static final Logger logger = LogManager.getLogger(UserControllerExceptions.class);
 
     @Autowired
     public LoginDetailsService(LoginDetailsRepository _loginDetailsRepository,

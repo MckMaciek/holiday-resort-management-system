@@ -21,10 +21,10 @@ import java.time.LocalDateTime;
 public class ReservationRemarks implements LoginDetailsLinked {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @OneToOne
-    @MapsId
     private Reservation reservation;
 
     @Column(name="topic")

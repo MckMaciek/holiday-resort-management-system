@@ -26,6 +26,7 @@ public class Reservation implements LoginDetailsLinked {
     private Long id;
 
     @Column(name="reservation_status")
+    @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
 
     @Column(name="reservation_date")
@@ -34,10 +35,10 @@ public class Reservation implements LoginDetailsLinked {
     @Column(name="final_price")
     private BigDecimal finalPrice;
 
-    @OneToMany(fetch=FetchType.LAZY, mappedBy = "reservation")
+    @OneToMany(mappedBy = "reservation", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ReservationRemarks> reservationRemarks;
 
-    @OneToMany(fetch=FetchType.LAZY, mappedBy = "reservation")
+    @OneToMany(mappedBy = "reservation", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Accommodation> accommodationList;
 
     @OneToOne(fetch = FetchType.EAGER)

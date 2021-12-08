@@ -18,25 +18,23 @@ import javax.persistence.*;
 public class Accommodation implements LoginDetailsLinked {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name="number_of_people")
     private Long numberOfPeople;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Reservation reservation;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private ResortObject resortObject;
 
     @OneToOne
-    @MapsId
     private User user;
 
     public Accommodation(AccommodationDTO accommodationDTO){
-        this.id = accommodationDTO.getId();
         this.numberOfPeople = accommodationDTO.getNumberOfPeople();
-        this.resortObject = new ResortObject (accommodationDTO.getResortObject());
         this.user = accommodationDTO.getUser();
     }
 

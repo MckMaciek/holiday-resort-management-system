@@ -1,6 +1,5 @@
 package holiday_resort.management_system.com.holiday_resort.Controllers;
 
-import holiday_resort.management_system.com.holiday_resort.Controllers.Exceptions.UserControllerExceptions;
 import holiday_resort.management_system.com.holiday_resort.Dto.UserDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.User;
 import holiday_resort.management_system.com.holiday_resort.Services.UserService;
@@ -43,11 +42,11 @@ public class UserController extends Throwable{
     public ResponseEntity<UserDTO> getUser(@PathVariable(name = "id", required = true) Long id)
             throws InvalidParameterException {
 
-        return userService.findById(id)
+        /*return userService.findById(id)
                 .map(UserDTO::new)
                 .map(ResponseEntity::ok)
-                .orElseThrow(UserControllerExceptions.UserNotFoundException::new);
-
+                .orElseThrow(UserControllerExceptions.UserNotFoundException::new);*/
+        return null;
     }
 
     @PreAuthorize(ROLE_ADMIN)

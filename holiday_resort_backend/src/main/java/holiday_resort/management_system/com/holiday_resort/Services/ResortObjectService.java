@@ -8,6 +8,7 @@ import holiday_resort.management_system.com.holiday_resort.Repositories.Reservat
 import holiday_resort.management_system.com.holiday_resort.Repositories.ResortObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -60,6 +61,18 @@ public class ResortObjectService implements CrudOperations<ResortObjectDTO, Long
         return userObjectList;
     }
 
+    @Transactional
+    public List<ResortObject> mapDtoToEntity(ResortObjectDTO resortObjectDTOS){
+
+        List<ResortObject> resortObjectList = List.of(resortObjectDTOS).stream()
+                .map(DTO -> resortObjectRepository.findById(DTO.getId()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+
+        return resortObjectList;
+    }
+
     @Override
     public List<ResortObjectDTO> getAll() {
         return resortObjectRepository.findAll().stream()
@@ -75,8 +88,9 @@ public class ResortObjectService implements CrudOperations<ResortObjectDTO, Long
 
     @Override
     public void add(ResortObjectDTO resortObjectDTO) {
-        Optional<ResortObject> resortObject = resortObjectRepository.findById(resortObjectDTO.getId());
-        resortObject.ifPresent(obj -> resortObjectRepository.save(obj));
+
+        ResortObject resortObject = new ResortObject(resortObjectDTO);
+        resortObjectRepository.save(resortObject);
     }
 
     @Override

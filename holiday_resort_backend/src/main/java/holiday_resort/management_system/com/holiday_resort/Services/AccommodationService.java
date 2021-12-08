@@ -1,21 +1,22 @@
 package holiday_resort.management_system.com.holiday_resort.Services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import holiday_resort.management_system.com.holiday_resort.Converters.AccommodationConverter;
 import holiday_resort.management_system.com.holiday_resort.Dto.AccommodationDTO;
-import holiday_resort.management_system.com.holiday_resort.Entities.Accommodation;
-import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
-import holiday_resort.management_system.com.holiday_resort.Entities.User;
+import holiday_resort.management_system.com.holiday_resort.Entities.*;
+import holiday_resort.management_system.com.holiday_resort.Enums.ReservationStatus;
+import holiday_resort.management_system.com.holiday_resort.Enums.RoleTypes;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.CrudOperations;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.Validate;
 import holiday_resort.management_system.com.holiday_resort.Repositories.AccommodationRepository;
 import holiday_resort.management_system.com.holiday_resort.Requests.AccommodationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,11 +24,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
+//@Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class AccommodationService implements CrudOperations<AccommodationDTO, Long>, Validate<AccommodationDTO> {
 
     private final AccommodationRepository accommodationRepository;
     private final AccommodationConverter accommodationConverter;
+    private final ObjectMapper objectMapper;
 
     private final GenericAction<Accommodation, AccommodationRepository> accommodationContext;
 
@@ -37,15 +39,19 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
     public AccommodationService(AccommodationRepository accommodationRepository,
                                 AccommodationConverter accommodationConverter,
                                 ResortObjectService resortObjectService,
-                                GenericAction<Accommodation, AccommodationRepository> accommodationContext
+                                GenericAction<Accommodation, AccommodationRepository> accommodationContext,
+                                ObjectMapper objectMapper
                                 ){
         this.accommodationRepository = accommodationRepository;
         this.accommodationConverter = accommodationConverter;
         this.resortObjectService = resortObjectService;
         this.accommodationContext = accommodationContext;
+        this.objectMapper = objectMapper;
     }
 
     public AccommodationDTO getAccommodationForUser(Long accommodationId, LoginDetails loginDetails){
+
+        if(Objects.isNull(accommodationId)) throw new NullPointerException("Provided Id is invalid");
 
         Pair<LoginDetails, Accommodation> accommodationOwnerPair =
                 accommodationContext.getAssociatedUser(accommodationRepository, accommodationId);
@@ -57,6 +63,72 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
         }
 
         return new AccommodationDTO(accommodationOwnerPair.getSecond());
+    }
+
+    public void patchAccommodation(LoginDetails loginDetails, Long accommodationId, JsonMergePatch accommodationPatch){
+
+        if(Objects.isNull(accommodationId)) throw new NullPointerException("Provided Id is invalid");
+
+        Pair<LoginDetails, Accommodation> accommodationOwnerPair =
+                accommodationContext.getAssociatedUser(accommodationRepository, accommodationId);
+
+        if (!accommodationContext.checkIfOwnerAndUserRequestAreSame(accommodationOwnerPair.getFirst(), loginDetails)){
+            throw new IllegalArgumentException(
+                    String.format("Accommodation owner - %s and username in request - %s do not match!",
+                            accommodationOwnerPair.getFirst().getUsername(), loginDetails.getUsername()));
+        }
+
+        Accommodation accommodation = accommodationOwnerPair.getSecond();
+        ReservationStatus targetStatus = accommodation.getReservation().getReservationStatus();
+
+        if(targetStatus.equals(ReservationStatus.STARTED)){
+            try {
+                Accommodation accommodationPatched = applyPatchToAccommodation(accommodationPatch, accommodation);
+                accommodationRepository.save(accommodationPatched);
+
+            } catch (JsonPatchException | JsonProcessingException e) {
+                e.printStackTrace();
+                throw new IllegalArgumentException("Request could not be parsed");
+
+            }
+        } else throw new IllegalArgumentException(String.format("Accommodation with status %s cannot be modified by the user", targetStatus));
+    }
+
+    public void deleteAccommodation(LoginDetails loginDetails, Long accommodationId){
+
+        if(Objects.isNull(accommodationId)) throw new NullPointerException("Provided Id is invalid");
+
+        Pair<LoginDetails, Accommodation> accommodationOwnerPair =
+                accommodationContext.getAssociatedUser(accommodationRepository, accommodationId);
+
+        if (!accommodationContext.checkIfOwnerAndUserRequestAreSame(accommodationOwnerPair.getFirst(), loginDetails)){
+            throw new IllegalArgumentException(
+                    String.format("Accommodation owner - %s and username in request - %s do not match!",
+                            accommodationOwnerPair.getFirst().getUsername(), loginDetails.getUsername()));
+        }
+
+        Reservation userReservation = accommodationOwnerPair.getSecond().getReservation();
+        if(Objects.isNull(userReservation)) throw new NullPointerException(String.format("Accommodation with id of %s is not assigned to any reservation", accommodationId));
+
+        List<RoleTypes> userRoles = accommodationOwnerPair.getFirst().getRoles().getRoleTypesList();
+
+        if(userReservation.getReservationStatus() == ReservationStatus.STARTED){
+
+            accommodationOwnerPair.getSecond().setResortObject(null);
+            accommodationOwnerPair.getSecond().setReservation(null);
+            accommodationOwnerPair.getSecond().setUser(null);
+            accommodationRepository.delete(accommodationOwnerPair.getSecond());
+        }
+        else if (userReservation.getReservationStatus() != ReservationStatus.STARTED
+                && (userRoles.contains(RoleTypes.ADMIN) || userRoles.contains(RoleTypes.MANAGER))
+        ){
+
+            accommodationOwnerPair.getSecond().setResortObject(null);
+            accommodationOwnerPair.getSecond().setReservation(null);
+            accommodationOwnerPair.getSecond().setUser(null);
+            accommodationRepository.delete(accommodationOwnerPair.getSecond());
+        }
+        else throw new IllegalArgumentException("Only the privileged user is able to remove an accommodation with the status other than 'started'");
     }
 
     public List<AccommodationDTO> getAccommodationListForUser(LoginDetails loginDetails){
@@ -77,6 +149,20 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
         return accommodationConverter.convert(accommodationRequest);
     }
 
+    public Accommodation transformToEntity(AccommodationDTO accommodationDTO, Reservation reservation){
+
+        ResortObject resortObject = resortObjectService.mapDtoToEntity(accommodationDTO.getResortObject()).get(0);
+
+        Accommodation accommodation = new Accommodation();
+        accommodation.setId(null);
+        accommodation.setUser(accommodationDTO.getUser());
+        accommodation.setNumberOfPeople(accommodationDTO.getNumberOfPeople());
+        accommodation.setReservation(reservation);
+        accommodation.setResortObject(resortObject);
+
+        return accommodation;
+    }
+
     @Override
     public List<AccommodationDTO> getAll() {
         return accommodationRepository.findAll().stream().map(AccommodationDTO::new).collect(Collectors.toList());
@@ -88,16 +174,17 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
         return reservationOptional.map(AccommodationDTO::new);
     }
 
-    @Override
-    @Transactional
-    public void add(AccommodationDTO accommodationDTO) {
-        if(validate(accommodationDTO) && accommodationDTO.getId() != null){
-            Accommodation accommodation = new Accommodation(accommodationDTO);
-            resortObjectService.add(accommodationDTO.getResortObject());
 
-            accommodationRepository.save(accommodation);
-        }
+    public void add(Accommodation accommodation) { // BETTER TO USE ADD WITH RESERVATION
+        accommodationRepository.save(accommodation);
     }
+
+    @Override
+    public void add(AccommodationDTO accommodationDTO) { // BETTER TO USE ADD WITH RESERVATION
+        Accommodation accommodation = new Accommodation(accommodationDTO);
+        accommodationRepository.save(accommodation);
+    }
+
 
     @Override
     public Boolean delete(Long aLong) {
@@ -111,8 +198,14 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
 
     @Override
     public boolean validate(AccommodationDTO accommodationDTO) {
-        return accommodationDTO != null && accommodationDTO.getUser() != null
-                && accommodationDTO.getResortObject() != null && accommodationDTO.getNumberOfPeople() != null;
+        return accommodationDTO != null  && accommodationDTO.getResortObject() != null && accommodationDTO.getNumberOfPeople() != null;
+    }
+
+    private Accommodation applyPatchToAccommodation(
+            JsonMergePatch patch, Accommodation targetAccommodation) throws JsonPatchException, JsonProcessingException {
+
+        JsonNode patched = patch.apply(objectMapper.convertValue(targetAccommodation, JsonNode.class));
+        return objectMapper.treeToValue(patched, Accommodation.class);
     }
 
 }

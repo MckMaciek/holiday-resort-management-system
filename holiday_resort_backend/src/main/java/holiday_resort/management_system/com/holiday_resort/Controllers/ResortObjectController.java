@@ -3,6 +3,7 @@ package holiday_resort.management_system.com.holiday_resort.Controllers;
 
 import holiday_resort.management_system.com.holiday_resort.Dto.ResortObjectDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
+import holiday_resort.management_system.com.holiday_resort.Requests.ResortObjectResponse;
 import holiday_resort.management_system.com.holiday_resort.Services.ResortObjectService;
 import holiday_resort.management_system.com.holiday_resort.Context.UserContext;
 import io.swagger.annotations.Api;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static holiday_resort.management_system.com.holiday_resort.Enums.Access.ROLE_USER;
 
@@ -37,12 +39,16 @@ public class ResortObjectController {
 
     @PreAuthorize(ROLE_USER)
     @RequestMapping(value = "/resort/available", method = RequestMethod.GET)
-    public ResponseEntity<List<ResortObjectDTO>> getAvailableResortObjects() {
+    public ResponseEntity<List<ResortObjectResponse>> getAvailableResortObjects() {
 
         List<ResortObjectDTO> available = resortObjectService.getAvailableObjects();
         if(available.isEmpty()) return ResponseEntity.noContent().build();
 
-        return ResponseEntity.ok(available);
+        return ResponseEntity.ok(
+                available.stream()
+                .map(ResortObjectResponse::new)
+                .collect(Collectors.toList())
+        );
     }
 
     @PreAuthorize(ROLE_USER)

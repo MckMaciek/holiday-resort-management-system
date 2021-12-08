@@ -2,6 +2,7 @@ package holiday_resort.management_system.com.holiday_resort.Services;
 
 import holiday_resort.management_system.com.holiday_resort.Converters.ReservationRemarksConverter;
 import holiday_resort.management_system.com.holiday_resort.Dto.ReservationRemarksDTO;
+import holiday_resort.management_system.com.holiday_resort.Entities.Reservation;
 import holiday_resort.management_system.com.holiday_resort.Entities.ReservationRemarks;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.CrudOperations;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.Validate;
@@ -31,6 +32,19 @@ public class ReservationRemarksService implements CrudOperations<ReservationRema
         return reservationRemarksConverter.convert(reservationRemarksRequest);
     }
 
+    public ReservationRemarks transformToEntity(ReservationRemarksDTO reservationRemarksDTO, Reservation reservation){
+
+        ReservationRemarks reservationRemarks = new ReservationRemarks();
+            reservationRemarks.setCreationDate(reservationRemarksDTO.getCreationDate());
+            reservationRemarks.setDescription(reservationRemarksDTO.getDescription());
+            reservationRemarks.setTopic(reservationRemarksDTO.getTopic());
+            reservationRemarks.setModificationDate(reservationRemarksDTO.getModificationDate());
+            reservationRemarks.setReservation(reservation);
+
+        return reservationRemarks;
+    }
+
+
     @Override
     public List<ReservationRemarksDTO> getAll() {
         return null;
@@ -47,6 +61,10 @@ public class ReservationRemarksService implements CrudOperations<ReservationRema
             ReservationRemarks reservationRemarks = new ReservationRemarks(reservationRemarksDTO);
             reservationRemarksRepository.save(reservationRemarks);
         }
+    }
+
+    public void add(ReservationRemarks reservationRemarks) {
+        reservationRemarksRepository.save(reservationRemarks);
     }
 
     @Override

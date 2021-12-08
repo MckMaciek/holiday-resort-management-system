@@ -62,7 +62,7 @@ public class LoginDetails implements UserDetails, LoginDetailsLinked {
 
         this.username = registerRequest.getUsername();
         this.password = registerRequest.getPassword();
-        this.isEnabled = false;
+        this.isEnabled = true;
 
         this.user = new User.UserBuilder()
                 .creationDate(LocalDateTime.now())
