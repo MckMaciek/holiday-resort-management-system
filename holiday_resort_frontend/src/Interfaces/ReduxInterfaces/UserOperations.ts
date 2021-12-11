@@ -6,6 +6,11 @@ export type UserActionLoginAttemptFailed = {
     isFailed : boolean,
 }
 
+export type UserModifiedObject = {
+    type : typeof UserOperationTypes.OBJECT_MODIFIED,
+    isModified : boolean,
+}
+
 
 export type UserOperationGenericAction = 
-UserActionLoginAttemptFailed;
+UserActionLoginAttemptFailed | UserModifiedObject;

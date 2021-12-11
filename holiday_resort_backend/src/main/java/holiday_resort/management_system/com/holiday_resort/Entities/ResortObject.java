@@ -7,6 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "resort_object_tb")
@@ -43,6 +45,9 @@ public class ResortObject {
     @NotNull
     private Boolean isReserved;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Event> eventList;
+
     public ResortObject(ResortObjectDTO resortObjectDTO){
         this.id = resortObjectDTO.getId();
         this.objectName = resortObjectDTO.getObjectName();
@@ -51,6 +56,8 @@ public class ResortObject {
         this.pricePerPerson = resortObjectDTO.getPricePerPerson();
         this.unusedSpacePrice = resortObjectDTO.getUnusedSpacePrice();
         this.isReserved = resortObjectDTO.getIsReserved();
+
+        this.eventList = resortObjectDTO.getEventList().stream().map(Event::new).collect(Collectors.toList());
     }
 
 }

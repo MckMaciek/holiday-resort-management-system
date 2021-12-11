@@ -27,6 +27,9 @@ interface MapStateToProps {
     jwtToken : string,
     reservation : Array<ReservationInterface>,
     reservationFetching : boolean,
+    roles : Array<String>,
+
+    objectModified : boolean,
 }
 
 const mapDispatchToProps = (dispatch : ThunkDispatch<{}, {}, any>) : MapDispatcherToProps => ({
@@ -38,6 +41,9 @@ const mapStateToProps = (state : any) : MapStateToProps => ({
     jwtToken : state.LoginReducer.jwt,
     reservation : state.ReservationReducer.reservation,
     reservationFetching : state.ReservationReducer.isFetching,
+    roles : state.LoginReducer.roles,
+
+    objectModified : state.UserOperationsReducer.objectModified,
 });
 
 const connector =  connect(mapStateToProps, mapDispatchToProps);
@@ -45,8 +51,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface TableContextInterface {
     jwtToken_: string,
+    roles_ : Array<String>,
     removeAccommodation_ : (jwtToken : string, accommodationId : number) => void,
-    setComponentRerender_  : (set : boolean) => void;
 }
 
 export const TableContext = React.createContext<TableContextInterface | null> (null);
@@ -55,6 +61,8 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
     jwtToken,
     reservation,
     reservationFetching,
+    roles,
+    objectModified,
     fetchReservations,
     removeAccommodation,
 }) => {
@@ -69,41 +77,25 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
     }, [jwtToken])
 
     useEffect(() => {
-        if(jwtToken && jwtToken != "" && componentChanged){
+        if(jwtToken && jwtToken != ""){
             fetchReservations(jwtToken);
-            setComponentChanged(false);
         }
 
-    }, [componentChanged])
+    }, [objectModified])
 
     const classes = useStyles();
 
     // TABLE CONTEXT PO TO ŻEBY NIE PRZESYŁAĆ 2 RAZY PROPSY WGŁĄB DRZEWA TABELI
     const TableContextImp : TableContextInterface = { 
         jwtToken_ : jwtToken,
+        roles_ : roles, 
         removeAccommodation_ : removeAccommodation,
-        setComponentRerender_ : setComponentChanged,
     } 
 
     return(
         <div className={classes.root}>
             {reservation.length !== 0 ? (
                 <>
-                    {reservationFetching ? (
-                    <Backdrop
-                    open={reservationFetching}
-                    >
-                        <CircularProgress 
-                        size='7vh'
-                        sx={{
-                            color: pink[800],
-                            '&.Mui-checked': {
-                                color: pink[600],
-                            },
-                            }}
-                        />
-                    </Backdrop>
-                    ) : null}
                     <h1 className={classes.reservationHeader}> Reservation of Yours </h1>
 
                     <TableContext.Provider

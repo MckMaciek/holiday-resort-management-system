@@ -1,4 +1,4 @@
-package holiday_resort.management_system.com.holiday_resort.Requests;
+package holiday_resort.management_system.com.holiday_resort.Responses;
 
 import holiday_resort.management_system.com.holiday_resort.Dto.ReservationDTO;
 import holiday_resort.management_system.com.holiday_resort.Enums.ReservationStatus;

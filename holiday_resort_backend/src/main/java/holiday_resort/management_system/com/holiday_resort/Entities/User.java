@@ -68,8 +68,6 @@ public class User implements LoginDetailsLinked {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserRemarks> userRemarks;
 
-    @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
-    private List<Event> eventList;
 
     @Override
     public String toString() {
@@ -81,7 +79,6 @@ public class User implements LoginDetailsLinked {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", creationDate=" + creationDate +
                 ", modificationDate=" + modificationDate +
-                ", eventList=" + eventList +
                 '}';
     }
 

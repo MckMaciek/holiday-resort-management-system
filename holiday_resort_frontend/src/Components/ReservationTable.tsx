@@ -7,6 +7,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
+import Typography from '@mui/material/Typography';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -23,6 +24,7 @@ import {TableContext} from '../Sections/ReservationSection';
 
 import { ReservationInterface } from '../Interfaces/Reservation';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { RolesTypes } from '../Enums/Roles';
 
 const Row = ({row} : any) => {
 
@@ -59,7 +61,7 @@ const Row = ({row} : any) => {
 
   return (
     <React.Fragment>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      <TableRow key={row.key} sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
           <IconButton
             size="large"
@@ -134,7 +136,7 @@ const Row = ({row} : any) => {
                     color="primary" 
                     type="submit"
                     variant="contained"
-                    disabled={row.reservationStatus !== "STARTED"}
+                    disabled={row.reservationStatus !== "STARTED" && !TableContextImp?.roles_.includes(RolesTypes.ADMIN)}
                     className={classes.operationButton}
                     onClick={() => {
                       setEditDialog({
@@ -151,7 +153,7 @@ const Row = ({row} : any) => {
                     color="secondary"
                     variant="contained"
                     type="submit"
-                    disabled={row.reservationStatus !== "STARTED"}
+                    disabled={row.reservationStatus !== "STARTED" && !TableContextImp?.roles_.includes(RolesTypes.ADMIN)}
                     onClick={() => { 
                       setDeleteDialog({
                         isSet : true,
@@ -170,12 +172,11 @@ const Row = ({row} : any) => {
                         onAcceptHandler={
                           () => {
                             TableContextImp?.removeAccommodation_(TableContextImp.jwtToken_, deleteDialog.id)
-                            TableContextImp?.setComponentRerender_(true)
                             setDeleteDialog(DELETE_DIALOG_CONFIRMATION_DEFAULT) 
                           }  
                         }
                         dialogTitle="Are you sure to delete?"
-                        dialogDescription= {`Accommodation with ${deleteDialog.propertyName} will be deleted`}
+                        dialogDescription= {`Accommodation named ${deleteDialog.propertyName} will be deleted`}
                         disagreeText="Back"
                         agreeText="Delete"
                     >
@@ -185,7 +186,13 @@ const Row = ({row} : any) => {
                       <AccommodationDialogEdit
                           isOpen={editDialog.isSet}
                           propertyId={editDialog.id}
+                          resortObjectId={innerRow.resortObject.id}
                           closeHandler={() => setEditDialog(EDIT_DIALOG_DEFAULT)}
+                          onAcceptHandler={
+                            () => {
+                              setEditDialog(EDIT_DIALOG_DEFAULT) 
+                            }
+                          }
                       />
                     ): null}
 
@@ -193,6 +200,15 @@ const Row = ({row} : any) => {
                   </TableCell>
               </TableRow>
             ))}
+
+            <Typography
+            sx={{
+              marginTop : '3%'
+            }}
+            variant='h5'
+            >
+                Uwagi do zamowienia
+            </Typography>
             </TableBody>
             </Table>
             </Box>
@@ -212,6 +228,12 @@ const ReservationTable : React.FC<IMyProps> = ({
 }) : JSX.Element =>  {
 
 const classes = useStyles();
+
+  React.useEffect(() => {
+    //RERENDER WHEN RESERAVION LIST CHANGES
+  }, [reservationList])
+
+
   return (
     <div className={classes.table}>
         <TableContainer component={Paper}>

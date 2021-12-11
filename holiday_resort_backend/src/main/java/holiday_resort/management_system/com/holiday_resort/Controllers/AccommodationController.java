@@ -4,8 +4,11 @@ package holiday_resort.management_system.com.holiday_resort.Controllers;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import holiday_resort.management_system.com.holiday_resort.Context.UserContext;
 import holiday_resort.management_system.com.holiday_resort.Dto.AccommodationDTO;
+import holiday_resort.management_system.com.holiday_resort.Dto.EventDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
-import holiday_resort.management_system.com.holiday_resort.Requests.AccommodationResponse;
+import holiday_resort.management_system.com.holiday_resort.Requests.AccommodationRequest;
+import holiday_resort.management_system.com.holiday_resort.Responses.AccommodationResponse;
+import holiday_resort.management_system.com.holiday_resort.Responses.EventResponse;
 import holiday_resort.management_system.com.holiday_resort.Services.AccommodationService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,22 @@ public class AccommodationController {
     }
 
     @PreAuthorize(ROLE_USER)
+    @RequestMapping(value = "/accommodation/user/{accommodationId}", method = RequestMethod.POST)
+    public ResponseEntity<AccommodationResponse> putAccommodation(
+            @PathVariable(name = "accommodationId", required = true)  Long accommodationId,
+            @RequestBody(required = true) AccommodationRequest accommodationRequest
+            )
+            throws IllegalArgumentException, NullPointerException {
+
+        LoginDetails contextUser = userContext.getAssociatedUser();
+        System.out.println(accommodationRequest);
+        accommodationService.putAccommodationForUser(contextUser, accommodationId, accommodationRequest);
+
+        return ResponseEntity.ok().build();
+    }
+
+
+    @PreAuthorize(ROLE_USER)
     @RequestMapping(value = "/accommodation/{accommodationId}", method = RequestMethod.GET)
     public ResponseEntity<AccommodationResponse> getAccommodation(
             @PathVariable(name = "accommodationId", required = true) Long accommodationId)
@@ -45,6 +64,23 @@ public class AccommodationController {
         AccommodationDTO accommodationDTO = accommodationService.getAccommodationForUser(accommodationId, contextUser);
 
         return ResponseEntity.ok(new AccommodationResponse(accommodationDTO));
+    }
+
+    @PreAuthorize(ROLE_USER)
+    @RequestMapping(value = "/accommodation/{accommodationId}/events", method = RequestMethod.GET)
+    public ResponseEntity<List<EventResponse>> getResortObjectEvents(@NotNull @PathVariable(name = "accommodationId", required = true) Long accommodationId){
+
+        LoginDetails contextUser = userContext.getAssociatedUser();
+
+        List<EventDTO> userList = accommodationService.getResortObjectEvents(accommodationId, contextUser);
+        if(userList.isEmpty()) return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(
+                userList.stream()
+                        .map(EventResponse::new)
+                        .collect(Collectors.toList())
+        );
+
     }
 
     @PreAuthorize(ROLE_USER)

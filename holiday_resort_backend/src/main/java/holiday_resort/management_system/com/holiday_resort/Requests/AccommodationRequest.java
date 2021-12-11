@@ -1,16 +1,15 @@
 package holiday_resort.management_system.com.holiday_resort.Requests;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 
 @Getter
 @Setter
 @AllArgsConstructor
+@ToString
 @NoArgsConstructor
 public class AccommodationRequest {
 
@@ -18,4 +17,6 @@ public class AccommodationRequest {
     private Long numberOfPeople;
     @NotNull
     private Long resortObjectId;
+
+    private List<EventRequest> eventRequests;
 }

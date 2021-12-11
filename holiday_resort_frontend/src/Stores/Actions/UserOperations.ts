@@ -1,4 +1,7 @@
-import {UserActionLoginAttemptFailed} from '../../Interfaces/ReduxInterfaces/UserOperations';
+import {
+    UserActionLoginAttemptFailed,
+    UserModifiedObject,
+} from '../../Interfaces/ReduxInterfaces/UserOperations';
 import {UserOperationTypes} from '../ActionTypes/UserOperationsTypes';
 
 
@@ -6,3 +9,9 @@ export const loginAttemptFailed = (isFailed : boolean) : UserActionLoginAttemptF
     type : UserOperationTypes.LOGIN_ATTEMPT_FAILED,
     isFailed : isFailed,
 })
+
+export const objectModified = (isModified : boolean) : UserModifiedObject => ({
+    type : UserOperationTypes.OBJECT_MODIFIED,
+    isModified : isModified,
+})
+

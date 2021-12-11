@@ -1,16 +1,21 @@
 package holiday_resort.management_system.com.holiday_resort.CommandLRunner;
 
 
+import holiday_resort.management_system.com.holiday_resort.Controllers.AccommodationController;
 import holiday_resort.management_system.com.holiday_resort.Controllers.AuthController;
+import holiday_resort.management_system.com.holiday_resort.Controllers.ResortObjectController;
+import holiday_resort.management_system.com.holiday_resort.Dto.EventDTO;
 import holiday_resort.management_system.com.holiday_resort.Dto.ResortObjectDTO;
 import holiday_resort.management_system.com.holiday_resort.Emails.GmailMailService;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
 import holiday_resort.management_system.com.holiday_resort.Entities.ResortObject;
+import holiday_resort.management_system.com.holiday_resort.Enums.EventEnum;
 import holiday_resort.management_system.com.holiday_resort.Repositories.AccommodationRepository;
 import holiday_resort.management_system.com.holiday_resort.Repositories.LoginDetailsRepository;
 import holiday_resort.management_system.com.holiday_resort.Repositories.ResortObjectRepository;
 import holiday_resort.management_system.com.holiday_resort.Repositories.UserRepository;
 import holiday_resort.management_system.com.holiday_resort.Requests.*;
+import holiday_resort.management_system.com.holiday_resort.Responses.JwtResponse;
 import holiday_resort.management_system.com.holiday_resort.Services.ReservationService;
 import holiday_resort.management_system.com.holiday_resort.Services.ResortObjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +27,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +42,9 @@ public class Startup implements CommandLineRunner {
 
     private final AccommodationRepository accommodationRepository;
     private final AuthController authController;
+    private final ResortObjectController resortObjectController;
+    private final AccommodationController accommodationController;
+
     private final ReservationService reservationService;
 
     private final GmailMailService gmailMailService;
@@ -52,6 +61,8 @@ public class Startup implements CommandLineRunner {
                    ReservationService reservationService,
                    ResortObjectService resortObjectService,
                    ResortObjectRepository resortObjectRepository,
+                   ResortObjectController resortObjectController,
+                   AccommodationController accommodationController,
                    @Lazy PasswordEncoder _passwordEncoder) {
 
         this.userRepository = _userRepository;
@@ -63,6 +74,8 @@ public class Startup implements CommandLineRunner {
         this.reservationService = reservationService;
         this.resortObjectService = resortObjectService;
         this.resortObjectRepository = resortObjectRepository;
+        this.resortObjectController = resortObjectController;
+        this.accommodationController = accommodationController;
     }
 
     @Override
@@ -114,7 +127,23 @@ public class Startup implements CommandLineRunner {
                 .unusedSpacePrice(pricePerUnusedSpace)
                 .build();
 
-        resortObjectService.add(resortObjectDTO);
+        EventDTO eventDTO = EventDTO.builder()
+                .eventType(EventEnum.BUTLA_GAZOWA)
+                .durationDate(LocalDateTime.now())
+                .startingDate(LocalDateTime.now())
+                .priority(3)
+                .price(BigDecimal.TEN)
+                .build();
+
+        EventDTO eventDTO2 = EventDTO.builder()
+                .eventType(EventEnum.PRĄD)
+                .durationDate(LocalDateTime.now())
+                .startingDate(LocalDateTime.now())
+                .priority(3)
+                .price(BigDecimal.TEN)
+                .build();
+
+        resortObjectController.postResortObject(resortObjectDTO, List.of(eventDTO, eventDTO2));
     }
 
     private void setReservation(LoginDetails loginDetails){
@@ -122,9 +151,9 @@ public class Startup implements CommandLineRunner {
         ReservationRequest reservationRequest = new ReservationRequest();
 
         setResortObjectService("Domek letniskowy", "Dom", true, 11l, BigDecimal.ONE, BigDecimal.TEN);
-        setResortObjectService("Namiot XXL", "Namiot", false, 43l, BigDecimal.ONE, BigDecimal.TEN);
+        setResortObjectService("Namiot XXL", "Namiot", true, 43l, BigDecimal.ONE, BigDecimal.TEN);
         setResortObjectService("Domek", "Dom", true, 11l, BigDecimal.ONE, BigDecimal.TEN);
-        setResortObjectService("Maly namiot", "Namiot", false, 55l, BigDecimal.ONE, BigDecimal.TEN);
+        setResortObjectService("Maly namiot", "Namiot", true, 55l, BigDecimal.ONE, BigDecimal.TEN);
 
         List<ResortObject> resortObjectList = resortObjectRepository.findAll();
 
@@ -143,6 +172,10 @@ public class Startup implements CommandLineRunner {
         AccommodationRequest accommodationRequest3 = new AccommodationRequest();
         accommodationRequest3.setNumberOfPeople(11l);
         accommodationRequest3.setResortObjectId(resortObjectList.get(3).getId());
+
+        setResortObjectService("NIEZAREZERWOWANE", "Namiot", false, 55l, BigDecimal.ONE, BigDecimal.TEN);
+        setResortObjectService("NIEZAREZERWOWANE", "Namiot", false, 55l, BigDecimal.ONE, BigDecimal.TEN);
+        setResortObjectService("NIEZAREZERWOWANE", "Namiot", false, 55l, BigDecimal.ONE, BigDecimal.TEN);
 
         reservationRequest.setAccommodationRequestList(List.of(accommodationRequest, accommodationRequest1, accommodationRequest2, accommodationRequest3));
         reservationRequest.setReservationRemarksRequestList(Collections.emptyList());

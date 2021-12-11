@@ -6,7 +6,7 @@ import holiday_resort.management_system.com.holiday_resort.Entities.Verification
 import holiday_resort.management_system.com.holiday_resort.Enums.RoleTypes;
 import holiday_resort.management_system.com.holiday_resort.Repositories.LoginDetailsRepository;
 import holiday_resort.management_system.com.holiday_resort.Repositories.UserRepository;
-import holiday_resort.management_system.com.holiday_resort.Requests.JwtResponse;
+import holiday_resort.management_system.com.holiday_resort.Responses.JwtResponse;
 import holiday_resort.management_system.com.holiday_resort.Requests.LoginRequest;
 import holiday_resort.management_system.com.holiday_resort.Requests.RegisterRequest;
 import holiday_resort.management_system.com.holiday_resort.Services.LoginDetailsService;

@@ -5,6 +5,7 @@ import EmailReducer from './EmailReducer';
 import UserOperationsReducer from './UserOperationsReducer';
 import ReservationReducer from './ReservationReducer';
 import ResortObjectsReducer from './ResortObjectsReducer';
+import ResortObjectEventsReducer from './ResortObjectEventsReducer';
 
 const CombinedReducers = combineReducers({
     LoginReducer : LoginReducer,
@@ -13,6 +14,7 @@ const CombinedReducers = combineReducers({
     UserOperationsReducer : UserOperationsReducer,
     ReservationReducer : ReservationReducer,
     ResortObjectsReducer : ResortObjectsReducer,
+    ResortObjectEventsReducer : ResortObjectEventsReducer,
 });
 
 

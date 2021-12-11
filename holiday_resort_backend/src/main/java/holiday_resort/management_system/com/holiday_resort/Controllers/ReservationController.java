@@ -5,7 +5,7 @@ import holiday_resort.management_system.com.holiday_resort.Context.UserContext;
 import holiday_resort.management_system.com.holiday_resort.Dto.ReservationDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
 import holiday_resort.management_system.com.holiday_resort.Requests.ReservationRequest;
-import holiday_resort.management_system.com.holiday_resort.Requests.ReservationResponse;
+import holiday_resort.management_system.com.holiday_resort.Responses.ReservationResponse;
 import holiday_resort.management_system.com.holiday_resort.Services.ReservationService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;

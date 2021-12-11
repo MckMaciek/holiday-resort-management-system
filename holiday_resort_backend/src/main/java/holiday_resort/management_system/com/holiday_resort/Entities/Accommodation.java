@@ -6,6 +6,7 @@ import holiday_resort.management_system.com.holiday_resort.Interfaces.LoginDetai
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "accommodation_tb")
@@ -29,6 +30,9 @@ public class Accommodation implements LoginDetailsLinked {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private ResortObject resortObject;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Event> userEventList;
 
     @OneToOne
     private User user;

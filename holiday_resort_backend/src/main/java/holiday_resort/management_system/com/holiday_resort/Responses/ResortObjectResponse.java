@@ -1,9 +1,11 @@
-package holiday_resort.management_system.com.holiday_resort.Requests;
+package holiday_resort.management_system.com.holiday_resort.Responses;
 
 import holiday_resort.management_system.com.holiday_resort.Dto.ResortObjectDTO;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 @Getter
@@ -20,6 +22,8 @@ public class ResortObjectResponse {
     private BigDecimal unusedSpacePrice;
     private Boolean isReserved;
 
+    private List<EventResponse> eventResponseList;
+
     public ResortObjectResponse (ResortObjectDTO resortObjectDTO){
         this.id = resortObjectDTO.getId();
         this.objectName = resortObjectDTO.getObjectName();
@@ -28,5 +32,6 @@ public class ResortObjectResponse {
         this.pricePerPerson = resortObjectDTO.getPricePerPerson();
         this.unusedSpacePrice = resortObjectDTO.getUnusedSpacePrice();
         this.isReserved = resortObjectDTO.getIsReserved();
+        this.eventResponseList = resortObjectDTO.getEventList().stream().map(EventResponse::new).collect(Collectors.toList());
     }
 }

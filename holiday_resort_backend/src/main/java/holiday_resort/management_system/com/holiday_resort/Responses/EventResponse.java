@@ -1,8 +1,8 @@
-package holiday_resort.management_system.com.holiday_resort.Dto;
+package holiday_resort.management_system.com.holiday_resort.Responses;
 
+import holiday_resort.management_system.com.holiday_resort.Dto.EventDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.Event;
 import holiday_resort.management_system.com.holiday_resort.Enums.EventEnum;
-import holiday_resort.management_system.com.holiday_resort.Requests.EventRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,16 +15,16 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @AllArgsConstructor
-public class EventDTO {
+public class EventResponse {
 
     private Long id;
     private EventEnum eventType;
     private LocalDateTime startingDate;
     private LocalDateTime durationDate;
-    private BigDecimal price;
     private Integer priority;
+    private BigDecimal price;
 
-    public EventDTO(Event event){
+    public EventResponse(Event event){
         this.id = event.getId();
         this.eventType = event.getEventType();
         this.startingDate = event.getStartingDate();
@@ -33,8 +33,12 @@ public class EventDTO {
         this.price = event.getPrice();
     }
 
-    public EventDTO(EventRequest eventRequest){
-        this.id = eventRequest.getId();
-        this.price = eventRequest.getPrice();
+    public EventResponse(EventDTO eventDTO){
+        this.id = eventDTO.getId();
+        this.eventType = eventDTO.getEventType();
+        this.startingDate = eventDTO.getStartingDate();
+        this.durationDate = eventDTO.getDurationDate();
+        this.priority = eventDTO.getPriority();
+        this.price = eventDTO.getPrice();
     }
 }

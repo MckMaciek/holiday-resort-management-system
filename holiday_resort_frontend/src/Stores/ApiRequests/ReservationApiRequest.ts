@@ -1,6 +1,16 @@
 import { ReservationInterface } from "../../Interfaces/Reservation";
 import API_URL from '../../API_URL.json';
 
+import {AccommodationRequest} from '../../Interfaces/AccommodationRequest';
+
+import {
+    getResortObjectEvents,
+    areAvailableObjectsFetching
+
+} from '../Actions/ResortObjectEventsOperation';
+
+import {objectModified} from '../Actions/UserOperations';
+
 import {
     getReservation, 
     setFetching, 
@@ -11,6 +21,7 @@ import {
 
 import { ThunkDispatch } from 'redux-thunk';
 import Axios from 'axios';
+import { EventInterface } from "../../Interfaces/Event";
 
 
 const getUserReservationsRequest = async (jwtToken : string) : Promise<Array<ReservationInterface>> => {
@@ -66,15 +77,94 @@ export const deleteAccommodationApi = (jwtToken : string, accommodationId : numb
             
         try{
             dispatch(setRemoveAccommodationFetching(true));
-            const registerResponse = await deleteAccommodationRequest(jwtToken, accommodationId);
+            const deleteAccommodationStatus = await deleteAccommodationRequest(jwtToken, accommodationId);
+            if(deleteAccommodationStatus === 200){
+                dispatch(objectModified(true));
+                console.log("registerResponse 200");
+            }
 
-            console.log(registerResponse);
+            console.log(deleteAccommodationStatus);
         }
         catch (err){
         }
         finally{
+            dispatch(objectModified(false));
             setRemoveAccommodationFetching(false);
         }
         
     }
+}
+
+const putAccommodationRequest = async (jwtToken : string, accommodationId : number, accommodationRequest : AccommodationRequest) => {
+
+    const config = {
+        headers: { Authorization: `Bearer ${jwtToken}` },
+        'Content-Type': 'application/json',
+    };
+
+    const putStatus = await Axios.post(
+        `${API_URL.SERVER_URL}${API_URL.PUT_ACCOMMODATION}${accommodationId}`, accommodationRequest, config);
+    
+    return putStatus.status;
+}
+
+
+export const putAccommodationApi = (jwtToken : string, accommodationId : number, accommodationRequest : AccommodationRequest) => {
+
+    return async (dispatch : ThunkDispatch<{}, {}, any> ) => {
+            
+        try{
+            const accommodationChanged = await putAccommodationRequest(jwtToken, accommodationId, accommodationRequest);
+            if(accommodationChanged === 200){
+                dispatch(objectModified(true));
+            }
+            
+            console.log(accommodationChanged);
+        }
+        catch (err){
+        }
+        finally{
+            dispatch(objectModified(false));
+        }
+        
+    }
+}
+
+const getEventsWithAccommodationIdRequest = async (jwtToken : string, accommodationId : number) : Promise<Array<EventInterface>> => {
+
+    const config = {
+        headers: { Authorization: `Bearer ${jwtToken}` },
+        'Content-Type': 'application/json',
+    };
+
+    const resortObjectEvents = await Axios.get(
+        `${API_URL.SERVER_URL}${API_URL.GET_USER_EVENTS}${accommodationId}/events`, config);
+    
+    return resortObjectEvents.data;
+}
+
+
+export const getEventsForAccommodationId = (jwtToken : string, accommodationId : number) => {
+
+    return async (dispatch : ThunkDispatch<{}, {}, any> ) => {
+            
+        try{
+            const eventsFetched = await getEventsWithAccommodationIdRequest(jwtToken, accommodationId);
+
+            dispatch(areAvailableObjectsFetching(true));
+
+            if(eventsFetched.length !== 0){
+                dispatch(getResortObjectEvents(eventsFetched));
+            }
+            
+            console.log(eventsFetched);
+        }
+        catch (err){
+        }
+        finally{
+            dispatch(areAvailableObjectsFetching(false));
+        }
+        
+    }
+
 }

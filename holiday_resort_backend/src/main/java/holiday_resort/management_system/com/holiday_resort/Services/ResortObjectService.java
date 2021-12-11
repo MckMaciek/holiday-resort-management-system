@@ -1,5 +1,6 @@
 package holiday_resort.management_system.com.holiday_resort.Services;
 
+import holiday_resort.management_system.com.holiday_resort.Dto.EventDTO;
 import holiday_resort.management_system.com.holiday_resort.Dto.ResortObjectDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.*;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.CrudOperations;
@@ -22,12 +23,20 @@ public class ResortObjectService implements CrudOperations<ResortObjectDTO, Long
     private final ResortObjectRepository resortObjectRepository;
     private final ReservationRepository reservationRepository;
 
+    private final GenericAction<ResortObject, ResortObjectRepository> resortObjectContext;
+
+    private final EventService eventService;
+
     @Autowired
     public ResortObjectService(ResortObjectRepository resortObjectRepository,
-                               ReservationRepository reservationRepository
+                               ReservationRepository reservationRepository,
+                               EventService eventService,
+                               GenericAction<ResortObject, ResortObjectRepository> resortObjectContext
                                ){
         this.resortObjectRepository = resortObjectRepository;
         this.reservationRepository = reservationRepository;
+        this.eventService = eventService;
+        this.resortObjectContext = resortObjectContext;
     }
 
     private final Predicate<ResortObject> objectNotReservedFilter = obj -> !obj.getIsReserved();
@@ -62,6 +71,36 @@ public class ResortObjectService implements CrudOperations<ResortObjectDTO, Long
     }
 
     @Transactional
+    public void postObject(ResortObjectDTO resortObjectDTO, List<EventDTO> eventRequests){
+
+        if(Objects.nonNull(resortObjectDTO.getId())) throw new IllegalArgumentException("Id of object has to be null in order to add it");
+
+        List<Event> eventsForRO = null;
+        if(Objects.nonNull(eventRequests) && eventRequests.size() != 0){
+            eventsForRO = eventRequests.stream().map(Event::new).collect(Collectors.toList());
+            eventsForRO.forEach(event -> {
+
+                if(Objects.isNull(event.getId())){
+                    eventService.addEntity(event);
+                }
+
+            });
+        }
+
+        ResortObject resortObject = ResortObject.builder()
+                .unusedSpacePrice(resortObjectDTO.getUnusedSpacePrice())
+                .pricePerPerson(resortObjectDTO.getPricePerPerson())
+                .maxAmountOfPeople(resortObjectDTO.getMaxAmountOfPeople())
+                .objectType(resortObjectDTO.getObjectType())
+                .objectName(resortObjectDTO.getObjectName())
+                .isReserved(resortObjectDTO.getIsReserved())
+                .eventList(eventsForRO)
+                .build();
+
+        this.add(resortObject);
+    }
+
+    @Transactional
     public List<ResortObject> mapDtoToEntity(ResortObjectDTO resortObjectDTOS){
 
         List<ResortObject> resortObjectList = List.of(resortObjectDTOS).stream()
@@ -86,10 +125,17 @@ public class ResortObjectService implements CrudOperations<ResortObjectDTO, Long
         return resortObjectOpt.map(ResortObjectDTO::new);
     }
 
+    public Optional<ResortObject> getEntityById(Long aLong){
+        return resortObjectRepository.findById(aLong);
+    }
+
     @Override
     public void add(ResortObjectDTO resortObjectDTO) {
-
         ResortObject resortObject = new ResortObject(resortObjectDTO);
+        resortObjectRepository.save(resortObject);
+    }
+
+    public void add(ResortObject resortObject){
         resortObjectRepository.save(resortObject);
     }
 

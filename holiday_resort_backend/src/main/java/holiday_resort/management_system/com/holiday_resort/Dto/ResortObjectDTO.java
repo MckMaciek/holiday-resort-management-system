@@ -4,6 +4,8 @@ import holiday_resort.management_system.com.holiday_resort.Entities.ResortObject
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 @Getter
@@ -18,6 +20,7 @@ public class ResortObjectDTO {
     private Long maxAmountOfPeople;
     private BigDecimal pricePerPerson;
     private BigDecimal unusedSpacePrice;
+    private List<EventDTO> eventList;
     private Boolean isReserved;
 
     public ResortObjectDTO (ResortObject resortObject){
@@ -28,5 +31,9 @@ public class ResortObjectDTO {
         this.pricePerPerson = resortObject.getPricePerPerson();
         this.unusedSpacePrice = resortObject.getUnusedSpacePrice();
         this.isReserved = resortObject.getIsReserved();
+
+        this.eventList = resortObject.getEventList().stream()
+                .map(EventDTO::new)
+                .collect(Collectors.toList());
     }
 }

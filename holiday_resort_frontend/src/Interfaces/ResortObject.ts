@@ -1,3 +1,5 @@
+import {EventInterface} from '../Interfaces/Event';
+
 
 export interface ResortObjectInterface {
     id : number,
@@ -7,4 +9,5 @@ export interface ResortObjectInterface {
     pricePerPerson : number,
     unusedSpacePrice : number,
     isReserved : boolean,
+    eventResponseList : Array<EventInterface>,
 }

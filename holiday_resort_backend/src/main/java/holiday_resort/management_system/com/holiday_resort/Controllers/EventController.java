@@ -1,11 +1,11 @@
 package holiday_resort.management_system.com.holiday_resort.Controllers;
 
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
+import holiday_resort.management_system.com.holiday_resort.Context.UserContext;
 import holiday_resort.management_system.com.holiday_resort.Dto.EventDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
 import holiday_resort.management_system.com.holiday_resort.Repositories.LoginDetailsRepository;
 import holiday_resort.management_system.com.holiday_resort.Services.EventService;
-import holiday_resort.management_system.com.holiday_resort.Context.UserContext;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,8 +43,7 @@ public class EventController {
             throws InvalidParameterException {
 
         LoginDetails contextUser = userContext.getAssociatedUser();
-
-        return ResponseEntity.ok(eventService.findEventsForUser(contextUser));
+        return ResponseEntity.ok().build();
     }
 
     @PreAuthorize(ROLE_USER)
@@ -55,15 +54,8 @@ public class EventController {
         LoginDetails contextUser = userContext.getAssociatedUser();
         EventDTO eventDTO = null;
 
-        try{
-            eventDTO = eventService.findEventForUser(contextUser, eventId);
 
-        }catch(RuntimeException exception){
-            return ResponseEntity.badRequest().build();
-        }
-
-
-        return ResponseEntity.ok(eventDTO);
+        return ResponseEntity.ok().build();
     }
 
     @PreAuthorize(ROLE_USER)
@@ -74,13 +66,6 @@ public class EventController {
 
         LoginDetails contextUser = userContext.getAssociatedUser();
 
-        try{
-            eventService.patchEventUserAction(contextUser, eventId, patch);
-
-        }catch(RuntimeException exception){
-            return ResponseEntity.badRequest().build();
-        }
-
         return ResponseEntity.ok().build();
     }
 
@@ -89,10 +74,6 @@ public class EventController {
     public ResponseEntity<?> deleteEvent(@PathVariable(name = "eventId", required = true) Long eventId){
 
         LoginDetails contextUser = userContext.getAssociatedUser();
-        if(eventService.deleteEventUserAction(contextUser, eventId)){
-            return ResponseEntity.ok().build();
-        }
-
         return ResponseEntity.badRequest().build();
     }
 
@@ -101,14 +82,9 @@ public class EventController {
     public ResponseEntity<?> addEvent(@RequestBody(required = true) EventDTO eventDTO)
             throws InvalidParameterException {
 
-        LoginDetails contextUser = userContext.getAssociatedUser();
-        try{
-            eventService.addEventUserAction(contextUser, eventDTO);
 
-        }catch(RuntimeException exception){
-            return ResponseEntity.badRequest().build();
-        }
 
         return ResponseEntity.ok().build();
     }
+
 }
