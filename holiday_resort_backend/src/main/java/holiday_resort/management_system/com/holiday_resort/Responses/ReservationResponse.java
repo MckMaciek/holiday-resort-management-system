@@ -20,7 +20,9 @@ public class ReservationResponse {
 
     private Long id;
     private BigDecimal finalPrice;
+    private String reservationName;
     private LocalDateTime reservationDate;
+    private LocalDateTime reservationEndingDate;
     private ReservationStatus reservationStatus;
     private List<ReservationRemarksResponse> reservationRemarksResponse;
     private List<AccommodationResponse> accommodationResponses;
@@ -40,6 +42,8 @@ public class ReservationResponse {
                                                     .stream()
                                                     .map(ReservationRemarksResponse::new)
                                                     .collect(Collectors.toList());
+        this.reservationEndingDate = reservationDTO.getReservationEndingDate();
+        this.reservationName = reservationDTO.getReservationName();
     }
 
 

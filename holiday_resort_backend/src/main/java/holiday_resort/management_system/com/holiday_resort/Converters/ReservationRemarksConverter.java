@@ -27,6 +27,7 @@ public class ReservationRemarksConverter implements Converter<ReservationRemarks
                 .creationDate(LocalDateTime.now())
                 .description(reservationRemarksRequest.getDescription())
                 .topic(reservationRemarksRequest.getTopic())
+                .author("SYSTEM")
                 .build();
 
         return reservationRemarksDTO;

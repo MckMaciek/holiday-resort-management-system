@@ -40,6 +40,7 @@ public class ReservationRemarksService implements CrudOperations<ReservationRema
             reservationRemarks.setTopic(reservationRemarksDTO.getTopic());
             reservationRemarks.setModificationDate(reservationRemarksDTO.getModificationDate());
             reservationRemarks.setReservation(reservation);
+            reservationRemarks.setAuthor(reservationRemarksDTO.getAuthor());
 
         return reservationRemarks;
     }

@@ -14,12 +14,14 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Button from '@material-ui/core/Button';
 import TablePagination from '@mui/material/TablePagination';
+import SendIcon from '@mui/icons-material/Send';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 import DialogConfirm from '../Components/DialogConfirm';
 import AccommodationDialogEdit from '../Components/AccommodationDialogEdit';
+import SummaryDialog from '../Components/SummaryDialog';
 
 import ReservationRemarksTable from './ReservationRemarksTable'; 
 
@@ -46,6 +48,11 @@ const Row = ({row} : any) => {
     propertyName : string,
   }
 
+  interface SUMMARY_DIALOG_INTERFACE {
+    isSet : boolean,
+    id : number,
+  }
+
   const DELETE_DIALOG_CONFIRMATION_DEFAULT : DELETE_DIALOG_CONFIRMATION_INTERFACE = {
     isSet : false,
     id : -1,
@@ -58,8 +65,15 @@ const Row = ({row} : any) => {
     id : -1,
     propertyName : "",
   }
-  const [editDialog, setEditDialog] = React.useState<EDIT_DIALOG_INTERFACE>(EDIT_DIALOG_DEFAULT)
+  const [editDialog, setEditDialog] = React.useState<EDIT_DIALOG_INTERFACE>(EDIT_DIALOG_DEFAULT);
 
+
+  const SUMMARY_DIALOG_DEFAULT : SUMMARY_DIALOG_INTERFACE = {
+    isSet : false,
+    id : -1,
+  }
+
+  const [summaryDialog, setSummaryDialog] = React.useState<SUMMARY_DIALOG_INTERFACE>(SUMMARY_DIALOG_DEFAULT);
 
   
   const classes = useStyles();
@@ -79,11 +93,35 @@ const Row = ({row} : any) => {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          <p> {row.id} </p>
+          <p> {row.reservationName} </p>
         </TableCell>
         <TableCell align="center">{row.reservationDate}</TableCell>
+        <TableCell align="center">{row.reservationEndingDate}</TableCell>
         <TableCell align="center">{row.finalPrice}</TableCell>
         <TableCell align="center">{row.reservationStatus}</TableCell>
+        <TableCell align="center">
+            <Button variant="outlined" size="medium" color="secondary" endIcon={<SendIcon />}
+            onClick={() => setSummaryDialog(
+              {
+                isSet : true,
+                id : row.id,
+              }              
+              )}
+            >
+            Summary
+            </Button>
+
+            {summaryDialog.isSet && summaryDialog.id === row.id ? (
+                      <SummaryDialog
+                        submit="Send"
+                        cancel='Close'
+                        open={summaryDialog.isSet}
+                        reservation={row}
+                        handleClose={() => setSummaryDialog(SUMMARY_DIALOG_DEFAULT)}
+                      />
+            ) : null}
+
+        </TableCell> 
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
@@ -205,8 +243,7 @@ const Row = ({row} : any) => {
                           }
                       />
                     ): null}
-
-                  </>
+                 </>
                   </TableCell>
               </TableRow>
             ))}
@@ -279,10 +316,12 @@ const classes = useStyles();
             <TableHead>
             <TableRow>
                 <TableCell />
-                <TableCell  align="left"> Reservation Id</TableCell>
-                <TableCell  align="center"> Created</TableCell>
+                <TableCell  align="left"> Reservation name</TableCell>
+                <TableCell  align="center"> Starting</TableCell>
+                <TableCell  align="center"> Ending</TableCell>
                 <TableCell  align="center"> Final price</TableCell>
                 <TableCell  align="center"> Status</TableCell>
+                <TableCell  align="center"></TableCell>
             </TableRow>
             </TableHead>
             <TableBody>

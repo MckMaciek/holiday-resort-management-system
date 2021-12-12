@@ -28,8 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 
 @Component
@@ -190,6 +192,10 @@ public class Startup implements CommandLineRunner {
 
 
         reservationRequest.setReservationRemarksRequestList(List.of(reservationRemarksRequest, reservationRemarksRequest2));
+        reservationRequest.setReservationStartDate(LocalDateTime.now());
+        reservationRequest.setReservationEndingDate(LocalDateTime.now().plus(5, ChronoUnit.DAYS));
+        reservationRequest.setReservationName("MOJA-REZERWACJA" + new Random().nextInt(50));
+
 
         reservationService.setReservation(loginDetails, reservationRequest);
 

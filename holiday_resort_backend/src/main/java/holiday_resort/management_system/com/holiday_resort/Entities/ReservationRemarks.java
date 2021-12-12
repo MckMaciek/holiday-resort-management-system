@@ -34,6 +34,9 @@ public class ReservationRemarks implements LoginDetailsLinked {
     @Column(name="description")
     private String description;
 
+    @Column(name="author")
+    private String author;
+
     @Column(name="creation_date")
     @NotNull
     private LocalDateTime creationDate = LocalDateTime.now();
@@ -47,6 +50,7 @@ public class ReservationRemarks implements LoginDetailsLinked {
         this.modificationDate = reservationRemarksDTO.getModificationDate();
         this.description = reservationRemarksDTO.getDescription();
         this.topic = reservationRemarksDTO.getTopic();
+        this.author = reservationRemarksDTO.getAuthor();
     }
 
     @Override

@@ -17,6 +17,7 @@ public class ReservationRemarksResponse {
     private Long id;
     private String topic;
     private String description;
+    private String author;
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
 
@@ -26,5 +27,6 @@ public class ReservationRemarksResponse {
         this.description = reservationRemarksDTO.getDescription();
         this.creationDate = reservationRemarksDTO.getCreationDate();
         this.modificationDate = reservationRemarksDTO.getModificationDate();
+        this.author = reservationRemarksDTO.getAuthor();
     }
 }

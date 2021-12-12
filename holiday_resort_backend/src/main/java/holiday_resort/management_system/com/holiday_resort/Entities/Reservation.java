@@ -25,12 +25,18 @@ public class Reservation implements LoginDetailsLinked {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Column(name="reservation_name")
+    private String reservatonName;
+
     @Column(name="reservation_status")
     @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
 
     @Column(name="reservation_date")
     private LocalDateTime reservationDate;
+
+    @Column(name="reservation_ending_date")
+    private LocalDateTime reservationEndingDate;
 
     @Column(name="final_price")
     private BigDecimal finalPrice;
@@ -58,6 +64,8 @@ public class Reservation implements LoginDetailsLinked {
                 .collect(Collectors.toList());
 
         this.user = reservationDTO.getUser();
+        this.reservationEndingDate = reservationDTO.getReservationEndingDate();
+        this.reservatonName = reservationDTO.getReservationName();
     }
 
     @Override

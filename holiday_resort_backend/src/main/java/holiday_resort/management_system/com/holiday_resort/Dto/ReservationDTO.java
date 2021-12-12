@@ -20,8 +20,10 @@ import java.util.stream.Collectors;
 public class ReservationDTO {
 
     private Long id;
+    private String reservationName;
     private BigDecimal finalPrice;
     private LocalDateTime reservationDate;
+    private LocalDateTime reservationEndingDate;
     private ReservationStatus reservationStatus;
     private List<ReservationRemarksDTO> reservationRemarks;
     private List<AccommodationDTO> accommodationListDTO;
@@ -44,6 +46,8 @@ public class ReservationDTO {
                 .collect(Collectors.toList());
 
         this.user = reservation.getUser();
+        this.reservationEndingDate = reservation.getReservationEndingDate();
+        this.reservationName = reservation.getReservatonName();
     }
     public ReservationDTO(){}
 }

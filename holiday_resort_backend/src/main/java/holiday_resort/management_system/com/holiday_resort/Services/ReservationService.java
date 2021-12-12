@@ -17,7 +17,6 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -68,8 +67,10 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
 
         ReservationDTO reservationDTO = ReservationDTO.builder()
                 .accommodationListDTO(accommodationDTOS)
+                .reservationName(reservationReq.getReservationName())
+                .reservationEndingDate(reservationReq.getReservationEndingDate())
                 .reservationStatus(ReservationStatus.STARTED)
-                .reservationDate(LocalDateTime.now())
+                .reservationDate(reservationReq.getReservationStartDate())
                 .reservationRemarks(reservationRemarksDTOS)
                 .finalPrice(priceService.calculateFinalPrice())
                 .user(loginDetails.getUser())
@@ -130,6 +131,8 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
 
         reservation.setReservationStatus(reservationDTO.getReservationStatus());
         reservation.setReservationDate(reservationDTO.getReservationDate());
+        reservation.setReservationEndingDate(reservationDTO.getReservationEndingDate());
+        reservation.setReservatonName(reservationDTO.getReservationName());
         reservation.setUser(reservationDTO.getUser());
         reservation.setFinalPrice(reservationDTO.getFinalPrice());
 
