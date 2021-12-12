@@ -4,6 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
+import OutlinedInput from '@mui/material/OutlinedInput';
 
 import {EventRequest} from '../Interfaces/EventRequest';
 import {ResortObjectInterface} from '../Interfaces/ResortObject';
@@ -17,7 +18,7 @@ const ITEM_PADDING_TOP = 8;
 const MenuProps = {
     PaperProps: {
       style: {
-        maxHeight: ITEM_HEIGHT * 3.5 + ITEM_PADDING_TOP,
+        maxHeight: ITEM_HEIGHT * 5.5 + ITEM_PADDING_TOP,
         width: 270,
       },
     },
@@ -44,11 +45,15 @@ const SelectAccommodationEvents : React.FC<IProps> = ({
 
     return(
         <Box sx={{ minWidth: 120 }}>
-        <FormControl fullWidth>
-        <InputLabel>Additional accommodation</InputLabel>
+        <FormControl sx={{ m: 1, minWidth: 600}} >
+        <InputLabel id="chip-events-label">
+            Resources
+        </InputLabel>
         <Select
             multiple
+            labelId="chip-events-label"
             value={eventType}
+            input={<OutlinedInput id="chip-events-label" label="chip-events-label" />}
             onChange={handleChangeEvent}
             renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -69,9 +74,9 @@ const SelectAccommodationEvents : React.FC<IProps> = ({
             ))}
         </Select>
         {chosenEvents.length !== 0 ? (
-        <p> Additional price is : {
+        <p> Additional price for resources is : {
             chosenEvents.map(event => event.price).reduce((acc, sum) => acc + sum)
-        } </p>
+        } Zł </p>
         ) : null}
     
     </FormControl>

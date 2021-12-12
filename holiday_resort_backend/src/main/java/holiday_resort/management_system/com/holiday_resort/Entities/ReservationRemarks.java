@@ -47,8 +47,6 @@ public class ReservationRemarks implements LoginDetailsLinked {
         this.modificationDate = reservationRemarksDTO.getModificationDate();
         this.description = reservationRemarksDTO.getDescription();
         this.topic = reservationRemarksDTO.getTopic();
-
-        this.reservation = new Reservation(reservationRemarksDTO.getReservation());
     }
 
     @Override

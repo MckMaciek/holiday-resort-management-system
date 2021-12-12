@@ -13,12 +13,15 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Button from '@material-ui/core/Button';
+import TablePagination from '@mui/material/TablePagination';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 import DialogConfirm from '../Components/DialogConfirm';
 import AccommodationDialogEdit from '../Components/AccommodationDialogEdit';
+
+import ReservationRemarksTable from './ReservationRemarksTable'; 
 
 import {TableContext} from '../Sections/ReservationSection';
 
@@ -29,6 +32,7 @@ import { RolesTypes } from '../Enums/Roles';
 const Row = ({row} : any) => {
 
   const [open, setOpen] = React.useState(false);
+  const [remarksTableOpen, setRemarksTableOpen] = React.useState(false);
 
   interface DELETE_DIALOG_CONFIRMATION_INTERFACE {
     isSet : boolean,
@@ -38,7 +42,8 @@ const Row = ({row} : any) => {
 
   interface EDIT_DIALOG_INTERFACE {
     isSet : boolean,
-    id : number
+    id : number,
+    propertyName : string,
   }
 
   const DELETE_DIALOG_CONFIRMATION_DEFAULT : DELETE_DIALOG_CONFIRMATION_INTERFACE = {
@@ -51,6 +56,7 @@ const Row = ({row} : any) => {
   const EDIT_DIALOG_DEFAULT : EDIT_DIALOG_INTERFACE = {
     isSet : false,
     id : -1,
+    propertyName : "",
   }
   const [editDialog, setEditDialog] = React.useState<EDIT_DIALOG_INTERFACE>(EDIT_DIALOG_DEFAULT)
 
@@ -58,6 +64,8 @@ const Row = ({row} : any) => {
   
   const classes = useStyles();
   const TableContextImp = React.useContext(TableContext);
+
+  {console.log(row)}
 
   return (
     <React.Fragment>
@@ -142,6 +150,7 @@ const Row = ({row} : any) => {
                       setEditDialog({
                         isSet : true,
                         id : innerRow.id,
+                        propertyName : innerRow.resortObject.objectName,
                       });
                     }}
                     startIcon={<ModeEditIcon/>}
@@ -186,6 +195,7 @@ const Row = ({row} : any) => {
                       <AccommodationDialogEdit
                           isOpen={editDialog.isSet}
                           propertyId={editDialog.id}
+                          propertyName={editDialog.propertyName}
                           resortObjectId={innerRow.resortObject.id}
                           closeHandler={() => setEditDialog(EDIT_DIALOG_DEFAULT)}
                           onAcceptHandler={
@@ -200,16 +210,31 @@ const Row = ({row} : any) => {
                   </TableCell>
               </TableRow>
             ))}
-
-            <Typography
-            sx={{
-              marginTop : '3%'
-            }}
-            variant='h5'
-            >
-                Uwagi do zamowienia
-            </Typography>
+              <IconButton
+                sx={{
+                  marginTop : '2%',
+                }}
+                size="large"
+                onClick={() => setRemarksTableOpen(!remarksTableOpen)}
+              >
+              {remarksTableOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              <Typography
+              sx={{
+                  marginTop : '3%',
+                  marginLeft : '1%',
+              }}
+              variant='h5'
+              >
+                  Uwagi do zamówienia
+              </Typography>
+              </IconButton>
+            <Collapse in={remarksTableOpen} timeout="auto" unmountOnExit>
+              <ReservationRemarksTable
+                reservationRemarks={row.reservationRemarksResponse}
+              />
+            </Collapse>
             </TableBody>
+
             </Table>
             </Box>
           </Collapse>
@@ -234,6 +259,18 @@ const classes = useStyles();
   }, [reservationList])
 
 
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(15);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
   return (
     <div className={classes.table}>
         <TableContainer component={Paper}>
@@ -249,7 +286,7 @@ const classes = useStyles();
             </TableRow>
             </TableHead>
             <TableBody>
-            {reservationList.map((row) => (
+            {reservationList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                 <>
                 <Row 
                   key={row.id} 
@@ -259,6 +296,15 @@ const classes = useStyles();
             ))}
             </TableBody>
         </Table>
+        <TablePagination
+          rowsPerPageOptions={[1,5,15]}
+          component="div"
+          count={reservationList.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+      />
         </TableContainer>
     </div>
   );

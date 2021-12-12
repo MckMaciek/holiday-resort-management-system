@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -178,7 +177,19 @@ public class Startup implements CommandLineRunner {
         setResortObjectService("NIEZAREZERWOWANE", "Namiot", false, 55l, BigDecimal.ONE, BigDecimal.TEN);
 
         reservationRequest.setAccommodationRequestList(List.of(accommodationRequest, accommodationRequest1, accommodationRequest2, accommodationRequest3));
-        reservationRequest.setReservationRemarksRequestList(Collections.emptyList());
+
+        ReservationRemarksRequest reservationRemarksRequest = ReservationRemarksRequest.builder()
+                .topic("1WAZNY_TEMAT")
+                .description("1WAZNY_OPIS")
+                .build();
+
+        ReservationRemarksRequest reservationRemarksRequest2 = ReservationRemarksRequest.builder()
+                .topic("2WAZNY_TEMAT")
+                .description("2WAZNY_OPIS")
+                .build();
+
+
+        reservationRequest.setReservationRemarksRequestList(List.of(reservationRemarksRequest, reservationRemarksRequest2));
 
         reservationService.setReservation(loginDetails, reservationRequest);
 

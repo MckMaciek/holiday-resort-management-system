@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class ReservationRemarksDTO {
 
     private Long id;
-    private ReservationDTO reservation;
     private String topic;
     private String description;
     private LocalDateTime creationDate;
@@ -22,7 +21,6 @@ public class ReservationRemarksDTO {
 
     public ReservationRemarksDTO(ReservationRemarks reservationRemarks){
         this.id = reservationRemarks.getId();
-        this.reservation = new ReservationDTO(reservationRemarks.getReservation());
         this.topic = reservationRemarks.getTopic();
         this.description = reservationRemarks.getDescription();
         this.creationDate = reservationRemarks.getCreationDate();

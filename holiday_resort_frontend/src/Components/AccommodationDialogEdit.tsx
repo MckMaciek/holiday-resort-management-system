@@ -10,7 +10,6 @@ import { pink } from '@mui/material/colors';
 import { SelectChangeEvent } from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 
-
 import { AccommodationRequest } from '../Interfaces/AccommodationRequest';
 import {EventRequest} from '../Interfaces/EventRequest';
 
@@ -60,6 +59,7 @@ interface AccommodationDialogProps{
     isOpen : boolean,
     propertyId : number,
     resortObjectId : number,
+    propertyName : string,
     closeHandler : () => void,
     onAcceptHandler : () => void,
 }
@@ -77,6 +77,7 @@ const AccommodationDialogEdit : React.FC<Props> = ({
     propertyId,
     resortObjectId,
     resortObjectEvents,
+    propertyName,
     closeHandler,
     onAcceptHandler,
 }) => {
@@ -143,20 +144,12 @@ const AccommodationDialogEdit : React.FC<Props> = ({
                 open={isOpen} 
                 onClose={closeHandler}
                 fullWidth
-                maxWidth='lg'
+                maxWidth='md'
                 >
-                <DialogTitle> Accommodation with id {propertyId}</DialogTitle>
+                <DialogTitle> You are currently editing {propertyName}</DialogTitle>
                 <DialogContent
-                    style={{height:'30vh'}}
+                    style={{height:'15vh', marginTop:'3%'}}
                 >
-                    <DialogContentText
-                    sx={{
-                        marginBottom : '1%',
-                    }}
-                    >
-                        Edit
-                    </DialogContentText>
-
                     <SelectAccommodationEvents
                         eventType={eventType}
                         handleChangeEvent={handleChangeEvent}
@@ -167,7 +160,7 @@ const AccommodationDialogEdit : React.FC<Props> = ({
     
                     <FormControl
                         sx={{
-                            marginTop : '3%',
+                            marginTop : '1%',
                         }}
                         >
                         <NumericTextField
@@ -182,8 +175,10 @@ const AccommodationDialogEdit : React.FC<Props> = ({
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={closeHandler}>Cancel</Button>
-                    <Button onClick={() => {
-
+                    <Button 
+                    
+                    disabled={!!!numberOfPeople || numberOfPeople === -1}
+                    onClick={() => {
                         let putRequest : AccommodationRequest = {
                             numberOfPeople : numberOfPeople,
                             resortObjectId : resortObjectId,

@@ -22,7 +22,6 @@ const NumericTextField : React.FC<IProps> = ({
             label="Number of people"
             type="search"
             variant="filled"
-            //onChange={(event) => setNumberOfPeople(parseInt(event.target.value))}
             onChange={onChange}
         />
     );

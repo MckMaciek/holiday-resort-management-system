@@ -84,6 +84,9 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
             events.setPriority(3);
         });
 
+        accommodationOwnerPair.getSecond().setUserEventList(null);
+        this.add(accommodationOwnerPair.getSecond());
+
         Accommodation accommodation = Accommodation.builder()
                 .id(accommodationOwnerPair.getSecond().getId())
                 .reservation(accommodationOwnerPair.getSecond().getReservation())
