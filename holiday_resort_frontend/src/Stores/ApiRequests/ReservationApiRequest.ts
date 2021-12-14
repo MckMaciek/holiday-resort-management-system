@@ -147,7 +147,7 @@ const getEventsWithAccommodationIdRequest = async (jwtToken : string, accommodat
 export const getEventsForAccommodationId = (jwtToken : string, accommodationId : number) => {
 
     return async (dispatch : ThunkDispatch<{}, {}, any> ) => {
-            
+          
         try{
             const eventsFetched = await getEventsWithAccommodationIdRequest(jwtToken, accommodationId);
 
@@ -156,8 +156,6 @@ export const getEventsForAccommodationId = (jwtToken : string, accommodationId :
             if(eventsFetched.length !== 0){
                 dispatch(getResortObjectEvents(eventsFetched));
             }
-            
-            console.log(eventsFetched);
         }
         catch (err){
         }
@@ -166,5 +164,38 @@ export const getEventsForAccommodationId = (jwtToken : string, accommodationId :
         }
         
     }
+}
 
+const markReservationStartedRequest = async (jwtToken : string, reservationId : number)  => {
+
+    const config = {
+        headers: { Authorization: `Bearer ${jwtToken}` },
+        'Content-Type': 'application/json',
+    };
+
+    const reservationChangedStatus = await Axios.get(
+        `${API_URL.SERVER_URL}${API_URL.SET_RESERVATION_STARTED}${reservationId}/change-status`, config);
+    
+    return reservationChangedStatus.status;
+}
+
+export const markReservationStarted = async (jwtToken : string, reservationId : number) => {
+
+    return async (dispatch : ThunkDispatch<{}, {}, any> ) => {
+          
+        try{
+            const statusChanged = await markReservationStartedRequest(jwtToken, reservationId);
+            console.log(statusChanged)
+
+            if(statusChanged === 200){
+                dispatch(objectModified(true));
+            }
+        }
+        catch (err){
+            //todo
+        }
+        finally{
+            dispatch(objectModified(false));
+        } 
+    }
 }

@@ -2,7 +2,6 @@ import * as React from "react";
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { pink } from '@mui/material/colors';
-import Backdrop from '@mui/material/Backdrop';
 
 import { ThunkDispatch } from 'redux-thunk';
 import { connect, ConnectedProps  } from 'react-redux';
@@ -12,7 +11,8 @@ import { ReservationInterface } from '../Interfaces/Reservation';
 
 import {
     getReservations, 
-    deleteAccommodationApi
+    deleteAccommodationApi,
+    markReservationStarted,
 } from '../Stores/ApiRequests/ReservationApiRequest';
 
 import ReservationTable from '../Components/ReservationTable';
@@ -21,6 +21,7 @@ import { useEffect, useState } from 'react';
 interface MapDispatcherToProps {
     fetchReservations : (jwtToken : string) => void;
     removeAccommodation : (jwtToken : string, accommodationId : number) => void;
+    setReservationStarted : (jwtToken : string, reservationId : number) => void;
 }
 
 interface MapStateToProps {
@@ -35,6 +36,7 @@ interface MapStateToProps {
 const mapDispatchToProps = (dispatch : ThunkDispatch<{}, {}, any>) : MapDispatcherToProps => ({
     fetchReservations : (jwtToken : string) => dispatch(getReservations(jwtToken)),
     removeAccommodation : (jwtToken : string, accommodationId : number) => dispatch(deleteAccommodationApi(jwtToken, accommodationId)),
+    setReservationStarted : (jwtToken : string, reservationId : number) => dispatch(markReservationStarted(jwtToken, reservationId)),
 });
 
 const mapStateToProps = (state : any) : MapStateToProps => ({
@@ -53,6 +55,7 @@ interface TableContextInterface {
     jwtToken_: string,
     roles_ : Array<String>,
     removeAccommodation_ : (jwtToken : string, accommodationId : number) => void,
+    setReservationStarted_ : (jwtToken : string, reservationId : number) => void,
 }
 
 export const TableContext = React.createContext<TableContextInterface | null> (null);
@@ -65,6 +68,7 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
     objectModified,
     fetchReservations,
     removeAccommodation,
+    setReservationStarted,
 }) => {
 
     const [componentChanged, setComponentChanged] = useState(false);
@@ -90,6 +94,7 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
         jwtToken_ : jwtToken,
         roles_ : roles, 
         removeAccommodation_ : removeAccommodation,
+        setReservationStarted_ : setReservationStarted,
     } 
 
     return(

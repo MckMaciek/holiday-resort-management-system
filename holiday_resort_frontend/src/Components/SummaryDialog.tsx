@@ -8,7 +8,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 
+import {TableContext} from '../Sections/ReservationSection';
+
+import DialogConfirm from "./DialogConfirm";
 import {ReservationInterface} from "../Interfaces/Reservation";
+import ListComponent from "./ListComponent";
+import { Typography } from '@material-ui/core';
+import Box from '@mui/material/Box';
 
 
 const Transition = React.forwardRef(function Transition(
@@ -26,6 +32,7 @@ interface IProps {
     cancel : string,
     reservation : ReservationInterface
     handleClose : () => void,
+    handleAccept : () => void,
 }
 
 const SummaryDialog : React.FC<IProps> = ({
@@ -34,9 +41,22 @@ const SummaryDialog : React.FC<IProps> = ({
     cancel,
     handleClose,
     reservation,
+    handleAccept,
 }) => {
 
-    {console.log(reservation)}
+    
+  interface SEND_DIALOG_INTERFACE {
+    isSet : boolean,
+  }
+
+  const SEND_DIALOG_CONFIRMATION_DEFAULT : SEND_DIALOG_INTERFACE = {
+    isSet : false,
+  }
+  const [sendDialog, setSendDialog] = React.useState<SEND_DIALOG_INTERFACE>(SEND_DIALOG_CONFIRMATION_DEFAULT);
+
+  const TableContextImp = React.useContext(TableContext);
+
+  console.log(reservation)
 
     return(
         <Dialog
@@ -47,18 +67,51 @@ const SummaryDialog : React.FC<IProps> = ({
             onClose={handleClose}
             aria-describedby="alert-dialog-slide-description"
         >
-            <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+            <DialogTitle>SUMMARY OF - {reservation.reservationName}</DialogTitle>
             <DialogContent
                 style={{height:'70vh', marginTop:'3%'}}
             >
             <DialogContentText id="alert-dialog-slide-description">
-                Let Google help apps determine location. This means sending anonymous
-                location data to Google, even when no apps are running.
+
+                <Typography
+                    variant="h5"
+                    component="div"
+                >
+                    <strong> Reservation Starts </strong> : {reservation.reservationDate}
+                </Typography>
+
+                <Typography
+                    variant="h5"
+                    component="div"
+                >
+                    <strong> Reservation Ends </strong> : {reservation.reservationEndingDate}
+                </Typography>
+                <Typography
+                    variant="h5"
+                    style={{marginTop : '2%'}}
+                >
+                    Total of days : <strong>{ Math.ceil((new Date(reservation.reservationEndingDate).getTime() - new Date(reservation.reservationDate).getTime())
+                    / (1000 * 3600 * 24))} </strong>
+                </Typography>
+
+                <ListComponent
+                reservation={reservation}
+                sendDialog={sendDialog}
+                sendDialogCloseHandler={() => setSendDialog(SEND_DIALOG_CONFIRMATION_DEFAULT)}
+                sendDialogAcceptHandler={ () => {
+
+                    TableContextImp?.setReservationStarted_(TableContextImp.jwtToken_, reservation.id);
+                    setSendDialog(SEND_DIALOG_CONFIRMATION_DEFAULT);
+                }}
+                >
+                </ListComponent>
             </DialogContentText>
             </DialogContent>
             <DialogActions>
             <Button onClick={handleClose}> {cancel} </Button>
-            <Button onClick={handleClose}> {submit} </Button>
+            <Button onClick={() => setSendDialog({isSet : true})}> 
+                {submit} 
+            </Button>
             </DialogActions>
         </Dialog>
     );

@@ -3,11 +3,9 @@ package holiday_resort.management_system.com.holiday_resort.Services;
 import holiday_resort.management_system.com.holiday_resort.Dto.AccommodationDTO;
 import holiday_resort.management_system.com.holiday_resort.Dto.ReservationDTO;
 import holiday_resort.management_system.com.holiday_resort.Dto.ReservationRemarksDTO;
-import holiday_resort.management_system.com.holiday_resort.Entities.Accommodation;
-import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
-import holiday_resort.management_system.com.holiday_resort.Entities.Reservation;
-import holiday_resort.management_system.com.holiday_resort.Entities.ReservationRemarks;
+import holiday_resort.management_system.com.holiday_resort.Entities.*;
 import holiday_resort.management_system.com.holiday_resort.Enums.ReservationStatus;
+import holiday_resort.management_system.com.holiday_resort.Enums.RoleTypes;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.CrudOperations;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.Validate;
 import holiday_resort.management_system.com.holiday_resort.Repositories.ReservationRepository;
@@ -69,7 +67,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                 .accommodationListDTO(accommodationDTOS)
                 .reservationName(reservationReq.getReservationName())
                 .reservationEndingDate(reservationReq.getReservationEndingDate())
-                .reservationStatus(ReservationStatus.STARTED)
+                .reservationStatus(ReservationStatus.NEW)
                 .reservationDate(reservationReq.getReservationStartDate())
                 .reservationRemarks(reservationRemarksDTOS)
                 .finalPrice(priceService.calculateFinalPrice())
@@ -89,7 +87,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                     .collect(Collectors.toList());
     }
 
-    public void markReservationInProgress(LoginDetails loginDetails, Long reservationId){
+    public void changeReservationStatus(ReservationStatus reservationStatus, LoginDetails loginDetails, Long reservationId){
         reservationRepository.findById(reservationId);
 
         Pair<LoginDetails, Reservation> reservationOwnerPair =
@@ -102,7 +100,17 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         }
 
         Reservation reservation = reservationOwnerPair.getSecond();
-        reservation.setReservationStatus(ReservationStatus.PENDING); // sprawdzic czy dirty checking zadziala
+        if(!ReservationStatus.NEW.equals(reservationStatus)){
+            List<RoleTypes> userRoles = reservationOwnerPair.getFirst().getRoles().getRoleTypesList();
+
+            if(userRoles.contains(RoleTypes.MANAGER) || userRoles.contains(RoleTypes.ADMIN)){
+                reservation.setReservationStatus(reservationStatus);
+            }
+        }
+        else{
+            reservation.setReservationStatus(ReservationStatus.NEW);
+        }
+
     }
 
     @Override

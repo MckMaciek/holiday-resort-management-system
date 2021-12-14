@@ -79,7 +79,6 @@ const Row = ({row} : any) => {
   const classes = useStyles();
   const TableContextImp = React.useContext(TableContext);
 
-  {console.log(row)}
 
   return (
     <React.Fragment>
@@ -118,6 +117,7 @@ const Row = ({row} : any) => {
                         open={summaryDialog.isSet}
                         reservation={row}
                         handleClose={() => setSummaryDialog(SUMMARY_DIALOG_DEFAULT)}
+                        handleAccept={() => setSummaryDialog(SUMMARY_DIALOG_DEFAULT)}
                       />
             ) : null}
 
@@ -182,8 +182,8 @@ const Row = ({row} : any) => {
                     color="primary" 
                     type="submit"
                     variant="contained"
-                    disabled={row.reservationStatus !== "STARTED" && !TableContextImp?.roles_.includes(RolesTypes.ADMIN)}
-                    className={classes.operationButton}
+                    disabled={(row.reservationStatus !== "NEW" || row.reservationStatus !== "DRAFT") && !TableContextImp?.roles_.includes(RolesTypes.ADMIN)}
+                    className={classes.editButton}
                     onClick={() => {
                       setEditDialog({
                         isSet : true,
@@ -200,7 +200,8 @@ const Row = ({row} : any) => {
                     color="secondary"
                     variant="contained"
                     type="submit"
-                    disabled={row.reservationStatus !== "STARTED" && !TableContextImp?.roles_.includes(RolesTypes.ADMIN)}
+                    className={classes.deleteButton}
+                    disabled={(row.reservationStatus !== "NEW" || row.reservationStatus !== "DRAFT") && !TableContextImp?.roles_.includes(RolesTypes.ADMIN)}
                     onClick={() => { 
                       setDeleteDialog({
                         isSet : true,
@@ -356,8 +357,13 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         width : '87vw',
     },
 
-    operationButton : {
+    editButton : {
       marginRight : '1vw',
+      marginTop : '3%',
+    },
+
+    deleteButton : {
+      marginTop : '3%',
     }
 
   }));

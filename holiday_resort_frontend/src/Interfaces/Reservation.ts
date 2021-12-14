@@ -1,7 +1,7 @@
 import {AccommodationInterface} from './Accommodation';
 
 export interface ReservationInterface {
-    id : number | null,
+    id : number,
     reservationName : string,
     finalPrice : number,
     reservationDate : Date,

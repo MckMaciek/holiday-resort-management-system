@@ -4,6 +4,7 @@ package holiday_resort.management_system.com.holiday_resort.Controllers;
 import holiday_resort.management_system.com.holiday_resort.Context.UserContext;
 import holiday_resort.management_system.com.holiday_resort.Dto.ReservationDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
+import holiday_resort.management_system.com.holiday_resort.Enums.ReservationStatus;
 import holiday_resort.management_system.com.holiday_resort.Requests.ReservationRequest;
 import holiday_resort.management_system.com.holiday_resort.Responses.ReservationResponse;
 import holiday_resort.management_system.com.holiday_resort.Services.ReservationService;
@@ -88,19 +89,14 @@ public class ReservationController {
         );
     }
 
+
     @PreAuthorize(ROLE_USER)
     @RequestMapping(value = "/reservation/user/{reservationId}/change-status", method = RequestMethod.GET)
     public ResponseEntity<?> markReservationInProgress(@NotNull @PathVariable(name = "reservationId", required = true) Long reservationId){
 
         LoginDetails contextUser = userContext.getAssociatedUser();
 
-        try{
-            reservationService.markReservationInProgress(contextUser, reservationId);
-
-        }catch(RuntimeException exception){
-            System.out.println(exception);
-            return ResponseEntity.badRequest().build();
-        }
+        reservationService.changeReservationStatus(ReservationStatus.PENDING,contextUser, reservationId);
 
         return ResponseEntity.ok().build();
     }

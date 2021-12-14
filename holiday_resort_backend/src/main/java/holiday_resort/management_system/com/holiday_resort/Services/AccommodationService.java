@@ -76,27 +76,25 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
 
         ResortObject resortObject = chosenResortObjectOpt.get();
 
-        List<Event> userChosenEvents = eventService.assignListOfEvents(accommodationRequest.getEventRequests());
-        List<Event> commonProduct = resortObject.getEventList().stream().filter(userChosenEvents::contains).collect(Collectors.toList());
+        Accommodation userAccommodation = accommodationOwnerPair.getSecond();
 
-        commonProduct.forEach(events -> {
-            events.setStartingDate(LocalDateTime.now());
-            events.setPriority(3);
-        });
+        userAccommodation.setResortObject(resortObject);
+        userAccommodation.setNumberOfPeople(accommodationRequest.getNumberOfPeople());
 
-        accommodationOwnerPair.getSecond().setUserEventList(null);
-        this.add(accommodationOwnerPair.getSecond());
+        if(accommodationRequest.getEventRequests().size() != 0){
 
-        Accommodation accommodation = Accommodation.builder()
-                .id(accommodationOwnerPair.getSecond().getId())
-                .reservation(accommodationOwnerPair.getSecond().getReservation())
-                .resortObject(resortObject)
-                .userEventList(commonProduct)
-                .user(loginDetails.getUser())
-                .numberOfPeople(accommodationRequest.getNumberOfPeople())
-                .build();
+            List<Event> userChosenEvents = eventService.assignListOfEvents(accommodationRequest.getEventRequests());
+            List<Event> commonProduct = resortObject.getEventList().stream().filter(userChosenEvents::contains).collect(Collectors.toList());
 
-        this.add(accommodation);
+            commonProduct.forEach(events -> {
+                events.setStartingDate(LocalDateTime.now());
+                events.setPriority(3);
+            });
+            userAccommodation.setUserEventList(commonProduct);
+
+        } else userAccommodation.setUserEventList(null);
+
+        this.add(userAccommodation);
     }
 
     public List<EventDTO> getResortObjectEvents (Long accommodationId, LoginDetails loginDetails){
@@ -121,7 +119,7 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
         Accommodation accommodation = accommodationOwnerPair.getSecond();
         ReservationStatus targetStatus = accommodation.getReservation().getReservationStatus();
 
-        if(targetStatus.equals(ReservationStatus.STARTED)){
+        if(targetStatus.equals(ReservationStatus.NEW) || targetStatus.equals(ReservationStatus.DRAFT) ){
             try {
                 Accommodation accommodationPatched = applyPatchToAccommodation(accommodationPatch, accommodation);
                 accommodationRepository.save(accommodationPatched);
@@ -145,14 +143,14 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
 
         List<RoleTypes> userRoles = accommodationOwnerPair.getFirst().getRoles().getRoleTypesList();
 
-        if(userReservation.getReservationStatus() == ReservationStatus.STARTED){
+        if(userReservation.getReservationStatus() == ReservationStatus.DRAFT || userReservation.getReservationStatus() == ReservationStatus.NEW){
 
             accommodationOwnerPair.getSecond().setResortObject(null);
             accommodationOwnerPair.getSecond().setReservation(null);
             accommodationOwnerPair.getSecond().setUser(null);
             accommodationRepository.delete(accommodationOwnerPair.getSecond());
         }
-        else if (userReservation.getReservationStatus() != ReservationStatus.STARTED
+        else if ((userReservation.getReservationStatus() != ReservationStatus.DRAFT || userReservation.getReservationStatus() != ReservationStatus.NEW)
                 && (userRoles.contains(RoleTypes.ADMIN) || userRoles.contains(RoleTypes.MANAGER))
         ){
 

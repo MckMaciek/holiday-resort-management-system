@@ -1,7 +1,10 @@
 import {ResortObjectInterface} from './ResortObject';
+import {EventInterface} from "./Event";
 
 export interface AccommodationInterface{
     id : number,
     numberOfPeople : number,
-    resortObjectDTO : ResortObjectInterface,
+    eventResponseList : Array<EventInterface>,
+
+    resortObject : ResortObjectInterface,
 }
