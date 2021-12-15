@@ -6,8 +6,15 @@ import { pink } from '@mui/material/colors';
 import { ThunkDispatch } from 'redux-thunk';
 import { connect, ConnectedProps  } from 'react-redux';
 import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+
 
 import { ReservationInterface } from '../Interfaces/Reservation';
+
+import Box from '@mui/material/Box';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 
 import {
     getReservations, 
@@ -73,6 +80,18 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
 
     const [componentChanged, setComponentChanged] = useState(false);
 
+    interface operationAlertInterface {
+        isSet : boolean,
+        message : string,
+    }
+
+    const OPERATION_ALERT_DEFAULT : operationAlertInterface  = {
+        isSet : false,
+        message : '',
+    }
+
+    const [operationAlert, setOperationAlert] = useState<operationAlertInterface>(OPERATION_ALERT_DEFAULT)
+
     useEffect(() => {
         if(jwtToken && jwtToken != ""){
             fetchReservations(jwtToken);
@@ -83,6 +102,13 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
     useEffect(() => {
         if(jwtToken && jwtToken != ""){
             fetchReservations(jwtToken);
+
+            if(objectModified === true){
+                setOperationAlert({
+                    isSet : true,
+                    message : 'Edited with success'
+                })
+            }
         }
 
     }, [objectModified])
@@ -98,34 +124,70 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
     } 
 
     return(
-        <div className={classes.root}>
-            {reservation.length !== 0 ? (
-                <>
-                    <h1 className={classes.reservationHeader}> Reservation of Yours </h1>
+        <>
+            <div className={classes.root}>
+                {reservation.length !== 0 ? (
+                    <>
+                        {operationAlert.isSet ? (
+                            <Alert 
+                                sx={{width : '40vw', marginBottom : '1vh', marginTop : '5vh'}}
+                                onClose={() => {
+                                    setOperationAlert(OPERATION_ALERT_DEFAULT); 
+                                }}
+                                variant="filled" 
+                                severity="success"
+                                >
+                                    {operationAlert.message}
+                            </Alert>
+                        ) : null}
 
-                    <TableContext.Provider
-                        value={TableContextImp}
-                    >
-                        <ReservationTable 
-                            reservationList={reservation}
+                        <h1 className={classes.reservationHeader}> Reservation of <span style={{color : 'red'}}> Yours </span> </h1>
+                            
+                        <TableContext.Provider
+                            value={TableContextImp}
+                        >
+                            <ReservationTable 
+                                reservationList={reservation}
+                            />
+                        </TableContext.Provider>
+                    </>
+                ) : (
+                    <>
+                        <h1 className={classes.reservationHeader}> Loading Reservation of Yours </h1>
+                        <CircularProgress 
+                        size='7vh'
+                        sx={{
+                            color: pink[800],
+                            '&.Mui-checked': {
+                                color: pink[600],
+                            },
+                            }}
                         />
-                    </TableContext.Provider>
-                </>
-            ) : (
-                <>
-                    <h1 className={classes.reservationHeader}> Loading Reservation of Yours </h1>
-                    <CircularProgress 
-                    size='7vh'
-                    sx={{
-                        color: pink[800],
-                        '&.Mui-checked': {
-                            color: pink[600],
-                        },
-                        }}
-                    />
-                </>
-            )}
-        </div>
+                    </>
+                )}
+            </div>
+            <Box sx={{ 
+                '& > :not(style)': { m: 1 }, 
+                'display' : 'flex',
+                'justifyContent' : 'flex-end',
+                'marginRight' : '6vw',
+
+                }}>
+                <Fab 
+                    color="primary" 
+                    aria-label="add" 
+                    style={{
+                        height : '8vh', 
+                        width : '4vw',
+                        background : '#161a31',
+                        marginBottom : '4vh',
+                    }}
+
+                >
+                    <AddIcon />
+                </Fab>
+            </Box>
+        </>
     );
 
 }
@@ -141,7 +203,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         paddingBottom : '10vh',
     },
     reservationHeader : {
-        marginBottom : 'vh',
+        marginBottom : '15vh',
     }
   }));
 

@@ -56,8 +56,6 @@ const SummaryDialog : React.FC<IProps> = ({
 
   const TableContextImp = React.useContext(TableContext);
 
-  console.log(reservation)
-
     return(
         <Dialog
             open={open}
@@ -109,7 +107,10 @@ const SummaryDialog : React.FC<IProps> = ({
             </DialogContent>
             <DialogActions>
             <Button onClick={handleClose}> {cancel} </Button>
-            <Button onClick={() => setSendDialog({isSet : true})}> 
+            <Button 
+            disabled={reservation.reservationStatus !== "DRAFT"}
+            onClick={() => setSendDialog({isSet : true})}
+            > 
                 {submit} 
             </Button>
             </DialogActions>

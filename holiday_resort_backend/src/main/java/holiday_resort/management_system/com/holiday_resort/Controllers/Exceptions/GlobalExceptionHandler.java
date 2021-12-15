@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(value = {IllegalArgumentException.class, NullPointerException.class})
+    @ExceptionHandler(value = {IllegalArgumentException.class, NullPointerException.class, UnsupportedOperationException.class})
     public ResponseEntity<ApiErrorException> illegalArgumentProvided(
             IllegalArgumentException ex, WebRequest request) {
 

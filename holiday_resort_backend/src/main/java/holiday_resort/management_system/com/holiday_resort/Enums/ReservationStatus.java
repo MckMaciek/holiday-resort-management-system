@@ -1,7 +1,7 @@
 package holiday_resort.management_system.com.holiday_resort.Enums;
 
 public enum ReservationStatus {
-    FINALIZED, PENDING, ARCHIVED, DRAFT, CANCELLED, ACCEPTED, NEW // zamiast STARTED dac HEW
+    FINALIZED, ARCHIVED, DRAFT, CANCELLED, ACCEPTED, NEW
 }
 
 

@@ -3,7 +3,10 @@ package holiday_resort.management_system.com.holiday_resort.Services;
 import holiday_resort.management_system.com.holiday_resort.Dto.AccommodationDTO;
 import holiday_resort.management_system.com.holiday_resort.Dto.ReservationDTO;
 import holiday_resort.management_system.com.holiday_resort.Dto.ReservationRemarksDTO;
-import holiday_resort.management_system.com.holiday_resort.Entities.*;
+import holiday_resort.management_system.com.holiday_resort.Entities.Accommodation;
+import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
+import holiday_resort.management_system.com.holiday_resort.Entities.Reservation;
+import holiday_resort.management_system.com.holiday_resort.Entities.ReservationRemarks;
 import holiday_resort.management_system.com.holiday_resort.Enums.ReservationStatus;
 import holiday_resort.management_system.com.holiday_resort.Enums.RoleTypes;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.CrudOperations;
@@ -15,6 +18,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -30,6 +34,10 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
     private final AccommodationService accommodationService;
     private final ReservationRemarksService reservationRemarksService;
     private final PriceService priceService;
+
+    private final static String SYSTEM_AUTHOR = "SYSTEM";
+    private final static String STATUS_CHANGED = "Status changed";
+
 
     @Autowired
     public ReservationService(ReservationRepository reservationRepository,
@@ -67,7 +75,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                 .accommodationListDTO(accommodationDTOS)
                 .reservationName(reservationReq.getReservationName())
                 .reservationEndingDate(reservationReq.getReservationEndingDate())
-                .reservationStatus(ReservationStatus.NEW)
+                .reservationStatus(ReservationStatus.DRAFT)
                 .reservationDate(reservationReq.getReservationStartDate())
                 .reservationRemarks(reservationRemarksDTOS)
                 .finalPrice(priceService.calculateFinalPrice())
@@ -88,7 +96,6 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
     }
 
     public void changeReservationStatus(ReservationStatus reservationStatus, LoginDetails loginDetails, Long reservationId){
-        reservationRepository.findById(reservationId);
 
         Pair<LoginDetails, Reservation> reservationOwnerPair =
                 reservationContext.getAssociatedUser(reservationRepository, reservationId);
@@ -100,17 +107,34 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         }
 
         Reservation reservation = reservationOwnerPair.getSecond();
-        if(!ReservationStatus.NEW.equals(reservationStatus)){
+        if(!ReservationStatus.DRAFT.equals(reservation.getReservationStatus())){
             List<RoleTypes> userRoles = reservationOwnerPair.getFirst().getRoles().getRoleTypesList();
 
             if(userRoles.contains(RoleTypes.MANAGER) || userRoles.contains(RoleTypes.ADMIN)){
                 reservation.setReservationStatus(reservationStatus);
+                flushReservationRemarks(reservation, reservationStatus, loginDetails);
             }
-        }
-        else{
-            reservation.setReservationStatus(ReservationStatus.NEW);
-        }
+            else throw new UnsupportedOperationException("User is not privileged enough to change status");
 
+        }
+        else if(ReservationStatus.DRAFT.equals(reservation.getReservationStatus())){
+            reservation.setReservationStatus(reservationStatus);
+            flushReservationRemarks(reservation, reservationStatus, loginDetails);
+        }
+    }
+
+    private void flushReservationRemarks(Reservation reservation, ReservationStatus reservationStatus, LoginDetails loginDetails){
+
+        ReservationRemarks reservationRemarks = ReservationRemarks.builder()
+                .reservation(reservation)
+                .author(SYSTEM_AUTHOR)
+                .creationDate(LocalDateTime.now())
+                .topic(STATUS_CHANGED)
+                .description(String.format("Reservation set to %s", reservationStatus))
+                .build();
+
+        reservationRemarksService.updateReservationRemarks(List.of(reservationRemarks),loginDetails, reservation.getId());
+        reservationRepository.save(reservation);
     }
 
     @Override

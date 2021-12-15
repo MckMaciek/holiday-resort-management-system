@@ -15,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,10 +40,11 @@ public class ReservationController {
 
     @PreAuthorize(ROLE_USER)
     @RequestMapping(value = "/reservation/user", method = RequestMethod.POST)
-    public ResponseEntity<?> postReservationForUser(@RequestBody(required = true) ReservationRequest reservationRequest) {
+    public ResponseEntity<?> postReservationForUser(@RequestBody(required = true) ReservationRequest reservationRequest)
+    throws IllegalArgumentException, NullPointerException
+    {
 
         LoginDetails contextUser = userContext.getAssociatedUser();
-
         reservationService.setReservation(contextUser, reservationRequest);
 
         return ResponseEntity.ok().build();
@@ -55,14 +55,8 @@ public class ReservationController {
     public ResponseEntity<?> getReservationForUser(@NotNull @PathVariable(name = "reservationId", required = true) Long reservationId){
 
         LoginDetails contextUser = userContext.getAssociatedUser();
-        Optional<ReservationDTO> reservationDTO;
-
-        try{
-            reservationDTO = reservationService.findById(reservationId);
-
-        }catch(RuntimeException exception){
-            return ResponseEntity.badRequest().build();
-        }
+        Optional<ReservationDTO> reservationDTO = reservationService.findById(reservationId);
+        //TODO
 
         return ResponseEntity.ok(new ReservationResponse(reservationDTO.get()));
     }
@@ -72,15 +66,7 @@ public class ReservationController {
     public ResponseEntity<?> getReservationsForUser(){
 
         LoginDetails contextUser = userContext.getAssociatedUser();
-        List<ReservationDTO> reservationDTOList = Collections.emptyList();
-
-        try{
-            reservationDTOList = reservationService.getUserReservations(contextUser);
-
-        }catch(RuntimeException exception){
-            System.out.println(exception);
-            return ResponseEntity.badRequest().build();
-        }
+        List<ReservationDTO> reservationDTOList = reservationService.getUserReservations(contextUser);
 
         return ResponseEntity.ok(
                 reservationDTOList.stream()
@@ -92,11 +78,12 @@ public class ReservationController {
 
     @PreAuthorize(ROLE_USER)
     @RequestMapping(value = "/reservation/user/{reservationId}/change-status", method = RequestMethod.GET)
-    public ResponseEntity<?> markReservationInProgress(@NotNull @PathVariable(name = "reservationId", required = true) Long reservationId){
+    public ResponseEntity<?> markReservationInProgress(@NotNull @PathVariable(name = "reservationId", required = true) Long reservationId)
+    throws IllegalArgumentException, UnsupportedOperationException
+    {
 
         LoginDetails contextUser = userContext.getAssociatedUser();
-
-        reservationService.changeReservationStatus(ReservationStatus.PENDING,contextUser, reservationId);
+        reservationService.changeReservationStatus(ReservationStatus.NEW, contextUser, reservationId);
 
         return ResponseEntity.ok().build();
     }

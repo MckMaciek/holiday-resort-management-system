@@ -179,7 +179,7 @@ const markReservationStartedRequest = async (jwtToken : string, reservationId : 
     return reservationChangedStatus.status;
 }
 
-export const markReservationStarted = async (jwtToken : string, reservationId : number) => {
+export const markReservationStarted =  (jwtToken : string, reservationId : number) => {
 
     return async (dispatch : ThunkDispatch<{}, {}, any> ) => {
           

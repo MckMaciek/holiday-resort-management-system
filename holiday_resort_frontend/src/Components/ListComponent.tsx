@@ -20,7 +20,7 @@ import DialogConfirm from "./DialogConfirm";
 interface IProps {
     reservation : ReservationInterface,
     sendDialog : {isSet : boolean}
-    
+
     sendDialogCloseHandler : () => void,
     sendDialogAcceptHandler : () => void,
 }

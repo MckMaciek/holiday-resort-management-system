@@ -63,7 +63,7 @@ const Navbar : React.FC<PropsFromRedux> = ({
             <AppBar 
             position="static"
             sx={{
-                background : '#311b92',
+                background : '#161a31',
             }}
             >
                 <Toolbar>

@@ -13,7 +13,7 @@ const DefaultMiddleSection = () => {
 
     return(
         <div className={classes.root}>
-            <h1> DEFAULT MIDDLE SECTION ! </h1>
+            <h1 className={classes.mainHeader}> DEFAULT MIDDLE SECTION ! </h1>
             <Link 
             style={{ textDecoration: 'none', color : 'white', marginTop : '4vh' }} 
             to={`${path}reservations`}
@@ -21,12 +21,13 @@ const DefaultMiddleSection = () => {
                 <Button 
                     style={
                         {
-                        background : '#311b92', 
                         color : 'white',
+                        background : '#161a31',
                         }
                     }
                     size="large"
                     variant="contained" 
+                    color='secondary'
                     type="submit"
                     >
                     See my reservations!
@@ -47,6 +48,10 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         alignItems : 'center',
         color : 'white',
     },
+
+    mainHeader : {
+        marginBottom : '25vh',
+    }
 
   }));
 

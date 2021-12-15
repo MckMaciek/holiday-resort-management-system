@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         justifyContent : 'center',
         alignItems : 'center',
         color : 'white',
-        paddingTop : '5vh',
         paddingBottom : '5vh',
         background : theme.palette.background.paper,
     },

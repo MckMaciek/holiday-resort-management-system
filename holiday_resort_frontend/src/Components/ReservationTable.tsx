@@ -182,7 +182,7 @@ const Row = ({row} : any) => {
                     color="primary" 
                     type="submit"
                     variant="contained"
-                    disabled={(row.reservationStatus !== "NEW" || row.reservationStatus !== "DRAFT") && !TableContextImp?.roles_.includes(RolesTypes.ADMIN)}
+                    disabled={(row.reservationStatus !== "DRAFT")} //&& !TableContextImp?.roles_.includes(RolesTypes.ADMIN)
                     className={classes.editButton}
                     onClick={() => {
                       setEditDialog({
@@ -201,7 +201,7 @@ const Row = ({row} : any) => {
                     variant="contained"
                     type="submit"
                     className={classes.deleteButton}
-                    disabled={(row.reservationStatus !== "NEW" || row.reservationStatus !== "DRAFT") && !TableContextImp?.roles_.includes(RolesTypes.ADMIN)}
+                    disabled={(row.reservationStatus !== "DRAFT")} //&& !TableContextImp?.roles_.includes(RolesTypes.ADMIN)
                     onClick={() => { 
                       setDeleteDialog({
                         isSet : true,
