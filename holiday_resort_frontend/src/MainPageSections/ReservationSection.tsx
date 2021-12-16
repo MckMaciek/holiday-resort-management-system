@@ -9,7 +9,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 
-
 import { ReservationInterface } from '../Interfaces/Reservation';
 
 import Box from '@mui/material/Box';
@@ -23,6 +22,7 @@ import {
 } from '../Stores/ApiRequests/ReservationApiRequest';
 
 import ReservationTable from '../Components/ReservationTable';
+import NewReservationDialog from "../Components/NewReservationDialog";
 import { useEffect, useState } from 'react';
 
 interface MapDispatcherToProps {
@@ -92,6 +92,16 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
 
     const [operationAlert, setOperationAlert] = useState<operationAlertInterface>(OPERATION_ALERT_DEFAULT)
 
+    interface NewReservationDialogInterface {
+        isSet : boolean,
+    }
+
+    const NEW_RESERVATION_DIALOG_DEFAULT : NewReservationDialogInterface = {
+        isSet : false,
+    }
+
+    const [newReservationDialog, setNewReservationDialog] = useState<NewReservationDialogInterface>(NEW_RESERVATION_DIALOG_DEFAULT);
+
     useEffect(() => {
         if(jwtToken && jwtToken != ""){
             fetchReservations(jwtToken);
@@ -126,6 +136,15 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
     return(
         <>
             <div className={classes.root}>
+
+                {newReservationDialog && newReservationDialog.isSet ? (
+                    <NewReservationDialog
+                        isOpen={newReservationDialog.isSet}
+                        handleClose={() => setNewReservationDialog(NEW_RESERVATION_DIALOG_DEFAULT)}
+                        handleAccept={() => setNewReservationDialog(NEW_RESERVATION_DIALOG_DEFAULT)}
+                    />
+                ) : null}
+
                 {reservation.length !== 0 ? (
                     <>
                         {operationAlert.isSet ? (
@@ -176,13 +195,13 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
                 <Fab 
                     color="primary" 
                     aria-label="add" 
+                    onClick={() => setNewReservationDialog({isSet : true})}
                     style={{
                         height : '8vh', 
                         width : '4vw',
                         background : '#161a31',
                         marginBottom : '4vh',
                     }}
-
                 >
                     <AddIcon />
                 </Fab>

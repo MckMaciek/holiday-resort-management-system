@@ -9,8 +9,8 @@ import {RolesTypes} from '../Enums/Roles';
 import {useRouteMatch } from 'react-router';
 import {Link} from "react-router-dom";
 
-import ReservationSection from '../Sections/ReservationSection';
-import DefaultMiddleSection from '../Sections/DefaultMiddleSection';
+import ReservationSection from '../MainPageSections/ReservationSection';
+import DefaultMiddleSection from '../MainPageSections/DefaultMiddleSection';
 
 interface MapStateToProps {
     isAuthenticated : boolean,

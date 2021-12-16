@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 
-import {TableContext} from '../Sections/ReservationSection';
+import {TableContext} from '../MainPageSections/ReservationSection';
 
 import DialogConfirm from "./DialogConfirm";
 import {ReservationInterface} from "../Interfaces/Reservation";
@@ -67,9 +67,17 @@ const SummaryDialog : React.FC<IProps> = ({
         >
             <DialogTitle>SUMMARY OF - {reservation.reservationName}</DialogTitle>
             <DialogContent
-                style={{height:'70vh', marginTop:'3%'}}
+                style={{height:'70vh', marginTop:'1%'}}
             >
             <DialogContentText id="alert-dialog-slide-description">
+
+            <Typography
+                    variant="h5"
+                    component="div"
+                    style={{marginBottom : '1vh'}}
+                >
+                    <strong> Reservation Status </strong> : {reservation.reservationStatus}
+                </Typography>
 
                 <Typography
                     variant="h5"

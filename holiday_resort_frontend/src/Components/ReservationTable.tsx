@@ -25,7 +25,7 @@ import SummaryDialog from '../Components/SummaryDialog';
 
 import ReservationRemarksTable from './ReservationRemarksTable'; 
 
-import {TableContext} from '../Sections/ReservationSection';
+import { TableContext } from '../MainPageSections/ReservationSection';
 
 import { ReservationInterface } from '../Interfaces/Reservation';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
