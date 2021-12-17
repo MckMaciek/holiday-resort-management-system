@@ -169,7 +169,8 @@ const AccommodationDialogEdit : React.FC<Props> = ({
                             id = "filled-search"
                             label = "Number of people"
                             type = "search"
-                            variant = "filled"
+                            optWidth='27%'
+                            defaultValue=''
                             onChange={(event) => setNumberOfPeople(parseInt(event.target.value))}
                         />
                     </FormControl> 

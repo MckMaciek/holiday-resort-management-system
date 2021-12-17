@@ -10,6 +10,7 @@ import {LoginActionInterface,
     RegisterActionErrorInterface,
     RegisterActionFetchingInterface,
     RegisterActionIsSetInReducerInterface,
+    RegisterActionSetDetails,
     } from '../../Interfaces/ReduxInterfaces/AuthOperations';
 import { LoginResponse } from '../../Interfaces/LoginResponse';
 import { RegisterResponse } from '../../Interfaces/RegisterResponse';
@@ -62,5 +63,10 @@ export const registerSetReducer = (isSet : boolean) : RegisterActionIsSetInReduc
 export const registerSetError = (error : errorInterface) : RegisterActionErrorInterface => ({
     type : AuthOperationRegisterTypes.REGISTER_PROCESS_ERROR,
     error : error,
+})
+
+export const registerSetDetails = (userDetails : {firstName : string, lastName : string, phoneNumber : string}) : RegisterActionSetDetails => ({
+    type : AuthOperationRegisterTypes.REGISTER_SET_DETAILS,
+    userDetails : userDetails,
 })
 

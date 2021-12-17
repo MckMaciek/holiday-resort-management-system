@@ -4,24 +4,27 @@ interface IProps {
     id : string,
     label : string,
     type : string,
-    variant : string,
     onChange : (event : any) => void,
+    defaultValue : string,
+    optWidth : string,
 }
 
 const NumericTextField : React.FC<IProps> = ({
     id,
     label,
     type,
-    variant,
     onChange,
+    defaultValue,
+    optWidth,
 }) => {
 
     return(
         <TextField
-            id="filled-search"
-            label="Number of people"
-            type="search"
-            variant="filled"
+            id={id}
+            sx={{width : optWidth ,marginTop : '1.5%', marginRight : '1.9%', marginBottom : '1.3%'}}
+            label={label}
+            defaultValue={defaultValue ? defaultValue : ''}
+            type={type}
             onChange={onChange}
         />
     );

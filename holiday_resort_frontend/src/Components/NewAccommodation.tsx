@@ -123,26 +123,33 @@ const NewAccommodation : React.FC<ComponentProps> = ({
             </DialogTitle>
             <DialogContent            
             >
-                
-            <SelectAccommodations                      
-                availableResortObjects={resortObjects}
-                choosenResortId={resortObject.id}
-                handleChange={(event) => setResortObject({id : event.target.value, isSent : false})}
-            />
-
-            {fetchedEvents && resortObject.id !== '' ? (
-                <SelectAccommodationEvents
-                    eventType={eventType}
-                    handleChangeEvent={handleChangeEvent}
-                    chosenEvents={chosenEvents}
-                    resortObjectEvents={fetchedEvents}
+            
+            <div style={{display : 'flex', justifyContent : 'center', alignItems : 'center', flexDirection : 'column'}}>
+                <SelectAccommodations                      
+                    availableResortObjects={resortObjects}
+                    choosenResortId={resortObject.id}
+                    handleChange={(event) => setResortObject({id : event.target.value, isSent : false})}
                 />
-            ) : null}
+
+                {fetchedEvents && resortObject.id !== '' ? (
+                    <SelectAccommodationEvents
+                        eventType={eventType}
+                        handleChangeEvent={handleChangeEvent}
+                        chosenEvents={chosenEvents}
+                        resortObjectEvents={fetchedEvents}
+                    />
+                ) : null}               
+            </div>
 
             </DialogContent>
             
             <DialogActions>
-                <Button onClick={closeHandler}> cancel </Button>
+                <Button onClick={() => {
+                    setEventType([]);
+                    setChosenEvents([])
+                    setResortObject(RESORT_OBJECT_REQUEST_DEFAULT)
+                    closeHandler();
+                }}> Cancel </Button>
                 <Button onClick={acceptHandler} autoFocus>
                     submit
                 </Button>

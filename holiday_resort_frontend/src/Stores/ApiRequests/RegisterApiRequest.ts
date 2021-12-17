@@ -6,6 +6,7 @@ import {RegisterResponse } from "../../Interfaces/RegisterResponse";
 import {registerAction,
         registerFetching,
         registerSetError, 
+        registerSetDetails,
         registerSetReducer} from "../Actions/AuthOperations";
 import {registerEmailSent,
         registerEmailFetching,
@@ -27,8 +28,9 @@ const registerApiRequest = (registerModel : RegisterActionPayloadInterface) => {
             dispatch(registerFetching(true));
 
             const registerResponse = await sendRegisterRequest(registerModel);
-            dispatch(registerEmailFetching(true));
             
+            dispatch(registerEmailFetching(true));
+
             dispatch(registerEmailSent(true));
             dispatch(registerAction(registerResponse));
             dispatch(registerSetReducer(true));

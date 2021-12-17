@@ -21,7 +21,7 @@ const SelectAccommodations : React.FC<Iprops> = ({
 }) => {
 
     return(
-            <Box sx={{padding : '25%'}}>
+            <Box sx={{padding : '10%', width : '86%'}}>
                 <FormControl fullWidth>
                     <InputLabel>Resort Objects</InputLabel>
                     <Select

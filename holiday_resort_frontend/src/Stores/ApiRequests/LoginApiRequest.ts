@@ -5,7 +5,10 @@ import {
     loginSetReducer, 
     loginSetError, 
     loginSetAuthenticated} from "../Actions/AuthOperations";
+
+import {registerSetDetails} from "../Actions/AuthOperations";
 import {LoginResponse} from "../../Interfaces/LoginResponse";
+import { UserInfoResponse } from "../../Interfaces/UserInfoResponse";
 import {loginAttemptFailed} from '../Actions/UserOperations';
 
 import API_URL from '../../API_URL.json';
@@ -30,7 +33,7 @@ const validateLoginResponse = (loginResponse : LoginResponse) : boolean => {
         )
 }
 
-const loginApiRequest = (loginModel : LoginActionPayloadInterface ) => {
+export const loginApiRequest = (loginModel : LoginActionPayloadInterface ) => {
     return async (dispatch : ThunkDispatch<{}, {}, any> ) => {
         try{
             dispatch(loginFetching(true));
@@ -59,25 +62,33 @@ const loginApiRequest = (loginModel : LoginActionPayloadInterface ) => {
 
     }
 }
-export default loginApiRequest;
+
+const sendUserInfoRequest =  async (jwtToken : string) : Promise<UserInfoResponse> => {
+
+    const config = {
+        headers: { Authorization: `Bearer ${jwtToken}` },
+        'Content-Type': 'application/json',
+    };
+
+    const userInfoResponse = await Axios.get(`${API_URL.SERVER_URL}${API_URL.GET_USER_INFO}`, config);
+    return userInfoResponse.data as UserInfoResponse;
+}
 
 
-const setLocalStorageVar = (loginResonse : LoginResponse) : void => {
-    setJwtToken(loginResonse.jwt);
-    setUserId(loginResonse.userId);
-    setUserRoles(loginResonse.roles);
-    setUsername(loginResonse.username);
-}
+export const getUserInfo = (jwtToken : string) => {
+    return async (dispatch : ThunkDispatch<{}, {}, any> ) => {
 
-const setJwtToken = (jwtToken : string) : void => {
-    localStorage.setItem('token', jwtToken);
-}
-const setUserId = (userId : string) : void => {
-    localStorage.setItem('userId', userId)
-}
-const setUsername = (username : string) : void => {
-    localStorage.setItem('username', username);
-}
-const setUserRoles = (roles : Array<string>) : void => {
-    localStorage.setItem('role', JSON.stringify(roles));
+        try{
+            const userInfo = await sendUserInfoRequest(jwtToken);
+            dispatch(registerSetDetails(userInfo));
+
+        }catch(err){
+            console.log(err);
+        }
+        finally{
+
+
+        }
+
+    }
 }

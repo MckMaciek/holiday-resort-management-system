@@ -59,8 +59,18 @@ export type RegisterActionErrorInterface = {
     error : errorInterface,
 }
 
+export type RegisterActionSetDetails = {
+    type : typeof AuthOperationRegisterTypes.REGISTER_SET_DETAILS,
+    userDetails : {
+        firstName : string,
+        lastName : string,
+        phoneNumber : string
+    }
+}
+
 export type RegisterGenericAction = 
     RegisterActionInterface | 
     RegisterActionFetchingInterface | 
     RegisterActionIsSetInReducerInterface | 
-    RegisterActionErrorInterface;
+    RegisterActionErrorInterface |
+    RegisterActionSetDetails;

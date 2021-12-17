@@ -8,7 +8,13 @@ interface INIT_STATE_REGISTER_INTERFACE {
     isRegisterInReducer : boolean,
     isRegisterFetching : boolean,
     registerStatusCode : RegisterResponse | null,
-    error : errorInterface | null
+    error : errorInterface | null,
+
+    userDetails : {
+        firstName : string,
+        lastName : string,
+        phoneNumber : string,
+    }
 };
 
 const INIT_STATE_REGISTER : INIT_STATE_REGISTER_INTERFACE = {
@@ -16,7 +22,13 @@ const INIT_STATE_REGISTER : INIT_STATE_REGISTER_INTERFACE = {
     isRegisterInReducer : false,
     isRegisterFetching : false,
     registerStatusCode : null, 
-    error : null
+    error : null,
+
+    userDetails : {
+        firstName : '',
+        lastName : '',
+        phoneNumber : '',
+    }
 }
 
 
@@ -32,6 +44,10 @@ const RegisterReducer = (state : INIT_STATE_REGISTER_INTERFACE = INIT_STATE_REGI
         case AuthOperationRegisterTypes.REGISTER_SET_IN_REDUCER : {
             return {...state, isRegisterInReducer : action.isSet}
         }
+        case AuthOperationRegisterTypes.REGISTER_SET_DETAILS : {
+            return {...state, userDetails : action.userDetails}
+        }
+
         case AuthOperationRegisterTypes.REGISTER_PROCESS_ERROR : {
             return {...state, error : action.error}
         }

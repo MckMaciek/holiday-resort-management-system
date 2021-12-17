@@ -1,5 +1,5 @@
 import {LoginActionPayloadInterface} from '../Interfaces/ReduxInterfaces/LoginActionPayload';
-import loginApiRequest from '../Stores/ApiRequests/LoginApiRequest';
+import {loginApiRequest} from '../Stores/ApiRequests/LoginApiRequest';
 
 import { ThunkDispatch } from 'redux-thunk';
 import { connect, ConnectedProps, useDispatch  } from 'react-redux';
