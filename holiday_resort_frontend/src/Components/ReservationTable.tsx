@@ -107,7 +107,7 @@ const Row = ({row} : any) => {
               }              
               )}
             >
-            Summary
+            Show
             </Button>
 
             {summaryDialog.isSet && summaryDialog.id === row.id ? (

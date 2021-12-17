@@ -5,6 +5,7 @@ import holiday_resort.management_system.com.holiday_resort.Context.UserContext;
 import holiday_resort.management_system.com.holiday_resort.Dto.EventDTO;
 import holiday_resort.management_system.com.holiday_resort.Dto.ResortObjectDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
+import holiday_resort.management_system.com.holiday_resort.Responses.EventResponse;
 import holiday_resort.management_system.com.holiday_resort.Responses.ResortObjectResponse;
 import holiday_resort.management_system.com.holiday_resort.Services.ResortObjectService;
 import io.swagger.annotations.Api;
@@ -67,6 +68,18 @@ public class ResortObjectController {
         );
 
     }
+
+    @PreAuthorize(ROLE_USER)
+    @RequestMapping(value = "/resort/{resortObjectId}/events", method = RequestMethod.GET)
+    public List<EventResponse> getResortObjectEvents(@NotNull @PathVariable(name = "resortObjectId", required = true) Long resortObjectId){
+
+        List<EventDTO> resortObjectEvents = resortObjectService.getEvents(resortObjectId);
+
+        return resortObjectEvents.stream()
+                .map(EventResponse::new)
+                .collect(Collectors.toList());
+    }
+
 
 
     @PreAuthorize(ROLE_ADMIN)

@@ -10,9 +10,18 @@ import { TransitionProps } from '@mui/material/transitions';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 
+import { ThunkDispatch } from 'redux-thunk';
+import { connect } from 'react-redux';
+
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
+
+import { ResortObjectInterface } from '../Interfaces/ResortObject';
+import {AccommodationRequest} from "../Interfaces/AccommodationRequest";
+
+import NewAccommodation from "../Components/NewAccommodation";
+import {getAvailableResortObjectsApi} from "../Stores/ApiRequests/ResortObjectApiRequest";
 
 
 const Transition = React.forwardRef(function Transition(
@@ -24,17 +33,47 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
   });
 
-interface IProps {
+
+interface MapDispatcherToProps {
+    fetchAvailableResortObj : (jwtToken : string) => void,
+}
+
+interface MapStateToProps {
+
+    jwtToken : string,
+    resortObjects : Array<ResortObjectInterface>,
+}
+
+const mapDispatchToProps = (dispatch : ThunkDispatch<{}, {}, any>) : MapDispatcherToProps => ({
+
+    fetchAvailableResortObj : (jwtToken : string) => dispatch(getAvailableResortObjectsApi(jwtToken)),
+});
+
+const mapStateToProps = (state : any, accommodationProps : ComponentProps) : MapStateToProps => ({
+
+    jwtToken : state.LoginReducer.jwt,
+    resortObjects : state.ResortObjectsReducer.availableResortObjects,
+});
+
+
+interface ComponentProps {
     isOpen : boolean,
     handleClose : () => void,
     handleAccept : () => void,
 }
 
-const NewReservationDialog : React.FC<IProps> = ({
+type Props = MapStateToProps & MapDispatcherToProps & ComponentProps
+
+const NewReservationDialog : React.FC<Props> = ({
     isOpen,
     handleClose,
-    handleAccept
+    handleAccept,
+
+    resortObjects,
+    jwtToken,
+    fetchAvailableResortObj,
 }) => {
+
 
     const handleSelect = (ranges : {selection : {startDate : Date, endDate : Date}}) => {
         setDateRange({
@@ -45,21 +84,55 @@ const NewReservationDialog : React.FC<IProps> = ({
         })
       }
 
-      interface DateRangeInterface {
-        startDate : Date,
-        endDate : Date,
-        disappear : boolean,
-        key : string,
-      }
+    interface DateRangeInterface {
+    startDate : Date,
+    endDate : Date,
+    disappear : boolean,
+    key : string,
+    }
 
-      const DATE_RANGE_DEFAULT_STATE : DateRangeInterface = {
-        startDate : new Date(),
-        endDate : new Date(),
-        disappear : false,
-        key : 'selection',
-      }
+    const DATE_RANGE_DEFAULT_STATE : DateRangeInterface = {
+    startDate : new Date(),
+    endDate : new Date(),
+    disappear : false,
+    key : 'selection',
+    }
 
-      const [dateRange, setDateRange] = React.useState<DateRangeInterface>(DATE_RANGE_DEFAULT_STATE);
+    const [dateRange, setDateRange] = React.useState<DateRangeInterface>(DATE_RANGE_DEFAULT_STATE);
+
+    interface NewReservationRequest {
+        reservationEndingDate : Date,
+        reservationStartingDate : Date,
+        reservationName : string,
+        accommodationRequestList : Array<AccommodationRequest>,
+        reservationRemarksRequestList : Array<any>,
+    }
+
+    const NEW_RESERVATION_DEFAULT : NewReservationRequest = {
+        reservationEndingDate : new Date(),
+        reservationStartingDate : new Date(),
+        reservationName : '',
+        accommodationRequestList : [],
+        reservationRemarksRequestList : [],
+    }
+
+    const [newReservation, setNewReservation] = React.useState<NewReservationRequest>(NEW_RESERVATION_DEFAULT);
+
+    interface NewAccommodation {
+        isSet : boolean,
+    }
+
+    const NEW_ACCOMMODATION_DEFAULT : NewAccommodation = {
+        isSet : false,
+    }
+
+    const [newAccommodationDialog, setNewAccommodationDialog] = React.useState<NewAccommodation>(NEW_ACCOMMODATION_DEFAULT);
+
+    React.useEffect(() => {
+        if(jwtToken && jwtToken !== ""){
+            fetchAvailableResortObj(jwtToken);
+        }
+    }, [])
 
     return(
 
@@ -84,7 +157,10 @@ const NewReservationDialog : React.FC<IProps> = ({
                     <Divider />
                 </DialogTitle>
                 <DialogContent
-                    style={{marginTop:'1%'}}
+                    style={ dateRange.disappear 
+                        ? {marginTop:'1%', width : '40vw', height : '40vh'}
+                        : {marginTop:'1%'}
+                    }
                 >
 
                 {dateRange && !dateRange.disappear ? (
@@ -106,7 +182,25 @@ const NewReservationDialog : React.FC<IProps> = ({
                 </div>
                 ) : (
                     <div>
-                        <p> TODO DALEJ </p>
+                        {resortObjects && resortObjects.length !== 0 ? (
+
+                            <>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => setNewAccommodationDialog({isSet : true})}
+                                >  
+                                Add accommodation
+                                </Button>
+
+                                <NewAccommodation
+                                    isOpen={newAccommodationDialog.isSet}
+                                    closeHandler={() => setNewAccommodationDialog(NEW_ACCOMMODATION_DEFAULT)}
+                                    acceptHandler={() => {}}
+                                    resortObjects={resortObjects}
+                                    jwtToken={jwtToken}
+                                />
+                            </>
+                        ) : null}
                     </div>
                 )}
 
@@ -120,4 +214,7 @@ const NewReservationDialog : React.FC<IProps> = ({
 
     );
 }
-export default NewReservationDialog;
+export default connect<MapStateToProps, MapDispatcherToProps, ComponentProps>(
+    mapStateToProps,
+    mapDispatchToProps
+  )(React.memo(NewReservationDialog))

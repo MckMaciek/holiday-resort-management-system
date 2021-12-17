@@ -29,7 +29,6 @@ interface IProps {
     eventType : string[],
     handleChangeEvent : (event: any) => void,
     chosenEvents : Array<EventRequest>,
-    choosenResortObjectId : number,
     resortObjectEvents : Array<EventInterface>
 }
 
@@ -37,50 +36,52 @@ const SelectAccommodationEvents : React.FC<IProps> = ({
     eventType,
     handleChangeEvent,
     chosenEvents,
-    choosenResortObjectId,
     resortObjectEvents,
 
 }) => {
 
-
     return(
-        <Box sx={{ minWidth: 120 }}>
-        <FormControl sx={{ m: 1, minWidth: 600}} >
-        <InputLabel id="chip-events-label">
-            Resources
-        </InputLabel>
-        <Select
-            multiple
-            labelId="chip-events-label"
-            value={eventType}
-            input={<OutlinedInput id="chip-events-label" label="chip-events-label" />}
-            onChange={handleChangeEvent}
-            renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {selected.map((value) => (
-                    <Chip key={value} label={value} />
-                ))}
-                </Box>
-            )}
-            MenuProps={MenuProps}
-            >
-            {    
-            resortObjectEvents.map((event) => (
-                <MenuItem 
-                value={event.eventType}
+        <div>
+        {resortObjectEvents ? (
+            <Box sx={{ minWidth: 120 }}>
+            <FormControl sx={{ m: 1, minWidth: 500}} >
+            <InputLabel id="chip-events-label">
+                Resources
+            </InputLabel>
+            <Select
+                multiple
+                labelId="chip-events-label"
+                value={eventType}
+                input={<OutlinedInput id="chip-events-label" label="chip-events-label" />}
+                onChange={handleChangeEvent}
+                renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                        <Chip key={value} label={value} />
+                    ))}
+                    </Box>
+                )}
+                MenuProps={MenuProps}
                 >
-                    {event.eventType} - Costs {event.price} Zł
-                </MenuItem>
-            ))}
-        </Select>
-        {chosenEvents.length !== 0 ? (
-        <p> Additional price for resources is : {
-            chosenEvents.map(event => event.price).reduce((acc, sum) => acc + sum)
-        } Zł </p>
-        ) : null}
-    
-    </FormControl>
-    </Box>
+                {    
+                resortObjectEvents.map((event) => (
+                    <MenuItem 
+                    value={event.eventType}
+                    >
+                        {event.eventType} - Costs {event.price} Zł
+                    </MenuItem>
+                ))}
+            </Select>
+            {chosenEvents.length !== 0 ? (
+            <p> Additional price for resources is : {
+                chosenEvents.map(event => event.price).reduce((acc, sum) => acc + sum)
+            } Zł </p>
+            ) : null}
+        
+        </FormControl>
+        </Box>
+    ) : null}
+    </div>
     );
 }
 

@@ -147,21 +147,27 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
 
                 {reservation.length !== 0 ? (
                     <>
-                        {operationAlert.isSet ? (
-                            <Alert 
-                                sx={{width : '40vw', marginBottom : '1vh', marginTop : '5vh'}}
+
+                        <h1 className={classes.reservationHeader}> Reservation of <span style={{color :  'red'}}> Yours </span> </h1>
+                            
+                        {true ? (
+                            <Snackbar
+                            open={operationAlert.isSet}
+                            autoHideDuration={3000}
+                            >
+                                <Alert 
+                                sx={{width : '40vw', marginBottom : '2vh', marginTop : '1vh'}}
                                 onClose={() => {
                                     setOperationAlert(OPERATION_ALERT_DEFAULT); 
                                 }}
                                 variant="filled" 
                                 severity="success"
                                 >
-                                    {operationAlert.message}
-                            </Alert>
+                                        {operationAlert.message}
+                                </Alert>
+                            </Snackbar>
                         ) : null}
 
-                        <h1 className={classes.reservationHeader}> Reservation of <span style={{color : 'red'}}> Yours </span> </h1>
-                            
                         <TableContext.Provider
                             value={TableContextImp}
                         >

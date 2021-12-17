@@ -110,8 +110,11 @@ const AccommodationDialogEdit : React.FC<Props> = ({
 
 
     useEffect(() => {
-        let choosenEvents_ = findEventIdsFromObjectName();
-        setChosenEvents(choosenEvents_);
+
+        if(resortObjectEvents){
+            let choosenEvents_ = findEventIdsFromObjectName();
+            setChosenEvents(choosenEvents_);
+        }
 
     }, [eventType])
 
@@ -129,7 +132,7 @@ const AccommodationDialogEdit : React.FC<Props> = ({
 
     return(
         <>
-            {isFetching && resortObjectEvents.length !== 0 ? (
+            {isFetching && (resortObjectEvents === undefined || resortObjectEvents.length === 0) ? (
                 <CircularProgress 
                     size='7vh'
                     sx={{
@@ -154,7 +157,6 @@ const AccommodationDialogEdit : React.FC<Props> = ({
                         eventType={eventType}
                         handleChangeEvent={handleChangeEvent}
                         chosenEvents={chosenEvents}
-                        choosenResortObjectId={resortObjectId}
                         resortObjectEvents={resortObjectEvents}
                     />
     

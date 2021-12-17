@@ -7,5 +7,6 @@
     "GET_AVAILABLE_RESORT_OBJECTS" : "/v1/resort/available",
     "PUT_ACCOMMODATION" : "/v1/accommodation/user/",
     "GET_USER_EVENTS" : "/v1/accommodation/",
-    "SET_RESERVATION_STARTED" : "/v1/reservation/user/"
+    "SET_RESERVATION_STARTED" : "/v1/reservation/user/",
+    "GET_RESORT_OBJECT_EVENTS" : "/v1/resort/"
 }

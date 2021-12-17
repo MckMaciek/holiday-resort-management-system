@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -68,6 +69,18 @@ public class ResortObjectService implements CrudOperations<ResortObjectDTO, Long
                 .collect(Collectors.toList());
 
         return userObjectList;
+    }
+
+    public List<EventDTO> getEvents(Long resortObjectId){
+
+        Optional<ResortObject> resortObject = resortObjectRepository.findById(resortObjectId);
+        if(resortObject.isEmpty()) throw new InvalidParameterException(String.format("Resort object with if of %s has not been found", resortObjectId));
+
+        return resortObject.get()
+                .getEventList()
+                .stream()
+                .map(EventDTO::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional

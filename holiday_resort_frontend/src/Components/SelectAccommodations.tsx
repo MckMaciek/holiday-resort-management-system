@@ -9,32 +9,32 @@ import { ResortObjectInterface } from '../Interfaces/ResortObject';
 
 
 interface Iprops {
-    handleChange : () => void,
+    handleChange : (event : any) => void,
     availableResortObjects : Array<ResortObjectInterface>,
-    choosenResortObjectId : number,
+    choosenResortId : string,
 }
 
 const SelectAccommodations : React.FC<Iprops> = ({
     handleChange,
     availableResortObjects,
-    choosenResortObjectId,
+    choosenResortId,
 }) => {
 
     return(
-            <Box sx={{ minWidth: 120 }}>
+            <Box sx={{padding : '25%'}}>
                 <FormControl fullWidth>
-                    <InputLabel>Resort Objects Available</InputLabel>
+                    <InputLabel>Resort Objects</InputLabel>
                     <Select
-                    value={choosenResortObjectId}
-                    label="Object"
+                    value={choosenResortId}
                     onChange={handleChange}
-                    sx={{
-                        marginBottom : '5%'
-                    }}
                     >
                     {availableResortObjects.map(rO => {
                         return (
-                            <MenuItem value={rO.id}>{rO.objectName}</MenuItem>
+                            <MenuItem 
+                            value={rO.id}
+                            >
+                                {rO.objectName}      
+                            </MenuItem>
                         );
                     })}
                     </Select>
