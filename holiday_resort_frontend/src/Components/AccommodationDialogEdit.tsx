@@ -169,7 +169,7 @@ const AccommodationDialogEdit : React.FC<Props> = ({
                             id = "filled-search"
                             label = "Number of people"
                             type = "search"
-                            optWidth='27%'
+                            optWidth='100%'
                             defaultValue=''
                             onChange={(event) => setNumberOfPeople(parseInt(event.target.value))}
                         />
@@ -191,7 +191,7 @@ const AccommodationDialogEdit : React.FC<Props> = ({
                         {console.log(putRequest)}
 
                         sendAccommodationPut(jwtToken, propertyId, putRequest);
-                        onAcceptHandler();
+                        closeHandler();
                     }}>Approve</Button>
                 </DialogActions>
             </Dialog> 

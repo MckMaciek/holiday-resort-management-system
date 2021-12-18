@@ -10,6 +10,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 
+
 import { differenceInDays } from "date-fns"
 import { ThunkDispatch } from 'redux-thunk';
 import { connect } from 'react-redux';
@@ -18,6 +19,10 @@ import { format } from 'date-fns'
 import {UserInfoResponse} from "../Interfaces/UserInfoResponse";
 
 import {getUserInfo} from "../Stores/ApiRequests/LoginApiRequest";
+
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
@@ -102,13 +107,19 @@ const NewReservationDialog : React.FC<Props> = ({
 
     }, [userDetails])
 
-    const handleSelect = (ranges : {selection : {startDate : Date, endDate : Date}}) => {
+    const handleDateSelect = (ranges : {selection : {startDate : Date, endDate : Date}}) => {
         setDateRange({
             startDate : ranges.selection.startDate,
             endDate : ranges.selection.endDate,
             disappear : false,
             key : 'selection',
         })
+
+        setNewReservation(reservation => ({
+            ...reservation, 
+            reservationEndingDate : ranges.selection.endDate,
+            reservationStartingDate : ranges.selection.startDate,
+        }));
       }
 
     interface DateRangeInterface {
@@ -175,6 +186,11 @@ const NewReservationDialog : React.FC<Props> = ({
             return ` ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`
         }
     } 
+    
+    const transformROIdToName = (resortObjectId : number) => {
+        let resortObj = resortObjects.filter(rO => rO.id === resortObjectId)[0];
+        return resortObj.objectName;
+    }
 
     return(
 
@@ -209,7 +225,7 @@ const NewReservationDialog : React.FC<Props> = ({
                 <div style={{display : 'flex', flexDirection : 'column', alignItems : 'center', justifyContent : 'center'}}>
                     <DateRange
                         ranges={[dateRange]}
-                        onChange={handleSelect}
+                        onChange={handleDateSelect}
                         moveRangeOnFirstSelection={false}
                         minDate={new Date()}
                     />
@@ -306,15 +322,32 @@ const NewReservationDialog : React.FC<Props> = ({
 
                                 <NewAccommodation
                                     isOpen={newAccommodationDialog.isSet}
+                                    modifyReservation={setNewReservation}
                                     closeHandler={() => {
-
                                         setNewAccommodationDialog(NEW_ACCOMMODATION_DEFAULT)
                                         }
                                     }
-                                    acceptHandler={() => {}}
+                                    acceptHandler={() => {
+                                        setNewAccommodationDialog(NEW_ACCOMMODATION_DEFAULT)
+                                    }}
                                     resortObjects={resortObjects}
                                     jwtToken={jwtToken}
                                 />
+
+                                {newReservation.accommodationRequestList.length !== 0 ? (
+
+                                <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                                    {newReservation.accommodationRequestList.map(accommodation => (
+                                        <ListItem>
+                                            <ListItemText
+                                                primary={`Object name : ${transformROIdToName(accommodation.resortObjectId)}`}
+                                                secondary={`People : ${accommodation.numberOfPeople.toString()}`}
+                                            />
+                                        </ListItem>
+                                    ))}
+                                </List>
+
+                                ) : null}
 
                                 <Button
                                     variant="outlined"

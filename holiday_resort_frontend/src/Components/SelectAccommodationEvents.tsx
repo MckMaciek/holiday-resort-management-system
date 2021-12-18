@@ -44,7 +44,7 @@ const SelectAccommodationEvents : React.FC<IProps> = ({
         <div>
         {resortObjectEvents ? (
             <Box sx={{ minWidth: 6 }}>
-            <FormControl sx={{ m: 0.5, minWidth: 500}} >
+            <FormControl sx={{ m: 2.5, minWidth: 500}} >
             <InputLabel id="chip-events-label">
                 Resources
             </InputLabel>
