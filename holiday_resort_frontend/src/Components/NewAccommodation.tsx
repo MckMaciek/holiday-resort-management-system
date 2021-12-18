@@ -102,8 +102,9 @@ const NewAccommodation : React.FC<ComponentProps> = ({
 
     const resertForm = () => {
         setEventType([]);
-        setChosenEvents([])
-        setResortObject(RESORT_OBJECT_REQUEST_DEFAULT)
+        setChosenEvents([]);
+        setNewAccommodation(NEW_SET_NEW_ACCOMMODATION_DEFAULT);
+        setResortObject(RESORT_OBJECT_REQUEST_DEFAULT);
     }
 
 
