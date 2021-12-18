@@ -14,7 +14,10 @@ import Divider from '@mui/material/Divider';
 import { differenceInDays } from "date-fns"
 import { ThunkDispatch } from 'redux-thunk';
 import { connect } from 'react-redux';
-import { format } from 'date-fns'
+import HomeIcon from '@mui/icons-material/Home';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import {UserInfoResponse} from "../Interfaces/UserInfoResponse";
 
@@ -186,10 +189,27 @@ const NewReservationDialog : React.FC<Props> = ({
             return ` ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`
         }
     } 
+
+    const transformRoToEvents = (eventId : number) => {
+        let resortObjEvents = resortObjects.flatMap(rO => rO.eventResponseList.filter(event => event.id === eventId));
+        return resortObjEvents;
+    }
     
     const transformROIdToName = (resortObjectId : number) => {
         let resortObj = resortObjects.filter(rO => rO.id === resortObjectId)[0];
         return resortObj.objectName;
+    }
+
+    const removeResortObj = (resortObjectId : number) => {
+        let resortObj = resortObjects.filter(rO => rO.id === resortObjectId)[0];
+
+        newReservation.accommodationRequestList.filter(accommodation => accommodation.resortObjectId !== resortObj.id);
+        setNewReservation(reservation => 
+            ({...reservation, 
+                accommodationRequestList : 
+                newReservation.accommodationRequestList
+                        .filter(accDelete => accDelete.resortObjectId !== resortObj.id)
+            }));
     }
 
     return(
@@ -336,12 +356,47 @@ const NewReservationDialog : React.FC<Props> = ({
 
                                 {newReservation.accommodationRequestList.length !== 0 ? (
 
-                                <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                                <List>
                                     {newReservation.accommodationRequestList.map(accommodation => (
-                                        <ListItem>
+                                        <ListItem
+                                        
+                                        sx={{ 
+                                            marginTop : '1.8%',
+                                            borderRadius : '3%',
+                                            padding : '4%', 
+                                            width: '100%', 
+                                            maxWidth: 360, 
+                                            bgcolor: 'background.paper', 
+                                            borderStyle : 'groove' 
+                                        }}
+                                        >
+                                            <ListItemAvatar>
+                                                <Avatar>
+                                                    <HomeIcon/>
+                                                </Avatar>
+                                            </ListItemAvatar>
                                             <ListItemText
                                                 primary={`Object name : ${transformROIdToName(accommodation.resortObjectId)}`}
-                                                secondary={`People : ${accommodation.numberOfPeople.toString()}`}
+                                                secondary={
+                                                    <div>
+                                                        <p> People {accommodation.numberOfPeople.toString()} </p> 
+                                                        <p> Added : </p>
+                                                        {accommodation.eventRequests.map((event) => (
+                                                                <span> {transformRoToEvents(event.id)[0].eventType} , </span>
+                                                        ))}
+                                                    <div>                                            
+                                                            <Button 
+                                                                variant="outlined" 
+                                                                color="secondary"
+                                                                style={{marginTop : '5%'}}
+                                                                startIcon={<DeleteIcon />}
+                                                                onClick={() => removeResortObj(accommodation.resortObjectId)}
+                                                            >
+                                                                Delete
+                                                            </Button>     
+                                                        </div>   
+                                                    </div>
+                                                }
                                             />
                                         </ListItem>
                                     ))}
