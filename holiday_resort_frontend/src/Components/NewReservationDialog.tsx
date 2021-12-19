@@ -10,6 +10,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 
+import AddExternalServiceDialog from './AddExternalServiceDialog';
 
 import { differenceInDays } from "date-fns"
 import { ThunkDispatch } from 'redux-thunk';
@@ -159,15 +160,25 @@ const NewReservationDialog : React.FC<Props> = ({
 
     const [newReservation, setNewReservation] = React.useState<NewReservationRequest>(NEW_RESERVATION_DEFAULT);
 
-    interface NewAccommodation {
+    interface NewAccommodationDialog {
         isSet : boolean,
     }
 
-    const NEW_ACCOMMODATION_DEFAULT : NewAccommodation = {
+    const NEW_ACCOMMODATION_DEFAULT : NewAccommodationDialog = {
         isSet : false,
     }
 
-    const [newAccommodationDialog, setNewAccommodationDialog] = React.useState<NewAccommodation>(NEW_ACCOMMODATION_DEFAULT);
+    const [newAccommodationDialog, setNewAccommodationDialog] = React.useState<NewAccommodationDialog>(NEW_ACCOMMODATION_DEFAULT);
+
+    interface NewExternalServiceDialog {
+        isSet : boolean,
+    }
+    
+    const NEW_EXTERNAL_SERVICE_DIALOG : NewExternalServiceDialog = {
+        isSet : false,
+    }
+
+    const [newExternalServiceDialog, setNewExternalServiceDialog] = React.useState<NewExternalServiceDialog>(NEW_EXTERNAL_SERVICE_DIALOG);
 
 
     const USER_DETAILS_DEFAULT : UserInfoResponse= {
@@ -340,6 +351,22 @@ const NewReservationDialog : React.FC<Props> = ({
                                     Add accommodation
                                 </Button>
 
+                                <Button
+                                    variant="outlined"
+                                    color ="secondary"
+                                    style={{marginTop : '1%', width : '30%'}}
+                                    onClick={() => setNewExternalServiceDialog({isSet : true})}
+                                >  
+                                    Add External Service
+                                </Button>
+
+                                <AddExternalServiceDialog
+                                    isOpen={newExternalServiceDialog.isSet}
+                                    jwtToken={jwtToken}
+                                    closeHandler={() => setNewExternalServiceDialog({isSet : false})}
+                                    acceptHandler={() => setNewExternalServiceDialog({isSet : false})}
+                                />
+
                                 <NewAccommodation
                                     isOpen={newAccommodationDialog.isSet}
                                     modifyReservation={setNewReservation}
@@ -379,8 +406,10 @@ const NewReservationDialog : React.FC<Props> = ({
                                                 primary={`Object name : ${transformROIdToName(accommodation.resortObjectId)}`}
                                                 secondary={
                                                     <div>
-                                                        <p> People {accommodation.numberOfPeople.toString()} </p> 
-                                                        <p> Added : </p>
+                                                        <p> Choosen people {accommodation.numberOfPeople.toString()} </p> 
+                                                        {accommodation.eventRequests.length !== 0 ? (
+                                                                <p> Added : </p>
+                                                        ) : null}
                                                         {accommodation.eventRequests.map((event) => (
                                                                 <span> {transformRoToEvents(event.id)[0].eventType} , </span>
                                                         ))}

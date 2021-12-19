@@ -47,6 +47,9 @@ public class Reservation implements LoginDetailsLinked {
     @OneToMany(mappedBy = "reservation", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Accommodation> accommodationList;
 
+    @OneToMany(mappedBy = "reservation", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ExternalService> externalServiceList;
+
     @OneToOne(fetch = FetchType.EAGER)
     @NotNull
     private User user;

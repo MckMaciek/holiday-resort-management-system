@@ -19,6 +19,7 @@ public class ReservationRequest {
     private List<AccommodationRequest> accommodationRequestList;
 
     private List<ReservationRemarksRequest> reservationRemarksRequestList;
+    private List<ExternalServicesRequest> externalServicesRequests;
 
     private String reservationName;
 

@@ -27,9 +27,11 @@ public class ReservationDTO {
     private ReservationStatus reservationStatus;
     private List<ReservationRemarksDTO> reservationRemarks;
     private List<AccommodationDTO> accommodationListDTO;
+    private List<ExternalServiceDTO> externalServiceDTOS;
     private User user;
 
     public ReservationDTO(Reservation reservation){
+
         this.id = reservation.getId();
         this.finalPrice = reservation.getFinalPrice();
         this.reservationStatus = reservation.getReservationStatus();
@@ -43,6 +45,11 @@ public class ReservationDTO {
         this.accommodationListDTO = reservation.getAccommodationList()
                 .stream()
                 .map(AccommodationDTO::new)
+                .collect(Collectors.toList());
+
+        this.externalServiceDTOS = reservation.getExternalServiceList()
+                .stream()
+                .map(ExternalServiceDTO::new)
                 .collect(Collectors.toList());
 
         this.user = reservation.getUser();

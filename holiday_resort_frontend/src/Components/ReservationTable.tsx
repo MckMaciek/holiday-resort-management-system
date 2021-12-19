@@ -133,11 +133,7 @@ const Row = ({row} : any) => {
             <TableRow>
                 <TableCell  align="left"> Object Name</TableCell>
                 <TableCell  align="center"> Object Type</TableCell>
-                <TableCell  align="center"> Choosen Amount of People</TableCell>
-                <TableCell  align="center"> Max Amount of People</TableCell>
-                <TableCell  align="center"> Price Per Person</TableCell>
-                <TableCell  align="center"> Price Per Unused Space</TableCell>
-                <TableCell  align="center"> Operations </TableCell>
+                <TableCell  align="center"> People</TableCell>
             </TableRow>
             </TableHead>
             <TableBody>
@@ -159,25 +155,8 @@ const Row = ({row} : any) => {
                   >
                       {innerRow.numberOfPeople}
                   </TableCell>
-                  <TableCell 
-                  align="center"
-                  >
-                      {innerRow.resortObject.maxAmountOfPeople}
-                  </TableCell>
-                  <TableCell 
-                  align="center"
-                  > 
-                    {innerRow.resortObject.pricePerPerson}
-                  </TableCell>
-                  <TableCell 
-                  align="center"
-                  > 
-                    {innerRow.resortObject.unusedSpacePrice}
-                  </TableCell>
-                  <TableCell 
-                  align="center"
-                  > 
-                  <>
+
+                  <div style={{marginLeft : '6%'}}>
                     <Button
                     color="primary" 
                     type="submit"
@@ -244,8 +223,7 @@ const Row = ({row} : any) => {
                           }
                       />
                     ): null}
-                 </>
-                  </TableCell>
+                 </div>
               </TableRow>
             ))}
               <IconButton
@@ -308,6 +286,8 @@ const classes = useStyles();
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  {console.log(reservationList)}
 
   return (
     <div className={classes.table}>

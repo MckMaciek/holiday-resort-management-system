@@ -69,9 +69,8 @@ const NewAccommodation : React.FC<ComponentProps> = ({
 
     const [resortObject, setResortObject] = useState<ResortObjectRequest>(RESORT_OBJECT_REQUEST_DEFAULT);
 
+
     const [eventType, setEventType] = useState<string[]>([]);
-
-
     const [chosenEvents, setChosenEvents] = useState<Array<EventRequest>>([{id : -1, price : -1}]);
     const [fetchedEvents, setFetchedEvents] = useState<Array<EventInterface>>([]);
 

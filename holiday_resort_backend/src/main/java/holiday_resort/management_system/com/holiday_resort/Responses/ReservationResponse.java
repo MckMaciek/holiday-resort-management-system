@@ -24,8 +24,11 @@ public class ReservationResponse {
     private LocalDateTime reservationDate;
     private LocalDateTime reservationEndingDate;
     private ReservationStatus reservationStatus;
+
     private List<ReservationRemarksResponse> reservationRemarksResponse;
     private List<AccommodationResponse> accommodationResponses;
+    private List<ExternalServiceResponse> externalServiceResponses;
+
 
     public ReservationResponse(ReservationDTO reservationDTO){
 
@@ -42,6 +45,12 @@ public class ReservationResponse {
                                                     .stream()
                                                     .map(ReservationRemarksResponse::new)
                                                     .collect(Collectors.toList());
+
+        this.externalServiceResponses = reservationDTO.getExternalServiceDTOS()
+                                                    .stream()
+                                                    .map(ExternalServiceResponse::new)
+                                                    .collect(Collectors.toList());
+
         this.reservationEndingDate = reservationDTO.getReservationEndingDate();
         this.reservationName = reservationDTO.getReservationName();
     }

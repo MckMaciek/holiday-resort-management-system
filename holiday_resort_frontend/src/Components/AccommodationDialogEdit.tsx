@@ -188,8 +188,6 @@ const AccommodationDialogEdit : React.FC<Props> = ({
                             eventRequests : chosenEvents,
                         }
                         
-                        {console.log(putRequest)}
-
                         sendAccommodationPut(jwtToken, propertyId, putRequest);
                         closeHandler();
                     }}>Approve</Button>

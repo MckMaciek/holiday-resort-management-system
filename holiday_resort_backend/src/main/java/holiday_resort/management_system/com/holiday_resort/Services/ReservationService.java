@@ -1,12 +1,10 @@
 package holiday_resort.management_system.com.holiday_resort.Services;
 
 import holiday_resort.management_system.com.holiday_resort.Dto.AccommodationDTO;
+import holiday_resort.management_system.com.holiday_resort.Dto.ExternalServiceDTO;
 import holiday_resort.management_system.com.holiday_resort.Dto.ReservationDTO;
 import holiday_resort.management_system.com.holiday_resort.Dto.ReservationRemarksDTO;
-import holiday_resort.management_system.com.holiday_resort.Entities.Accommodation;
-import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
-import holiday_resort.management_system.com.holiday_resort.Entities.Reservation;
-import holiday_resort.management_system.com.holiday_resort.Entities.ReservationRemarks;
+import holiday_resort.management_system.com.holiday_resort.Entities.*;
 import holiday_resort.management_system.com.holiday_resort.Enums.ReservationStatus;
 import holiday_resort.management_system.com.holiday_resort.Enums.RoleTypes;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.CrudOperations;
@@ -33,6 +31,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
 
     private final AccommodationService accommodationService;
     private final ReservationRemarksService reservationRemarksService;
+    private final ExternalServiceService externalServiceService;
     private final PriceService priceService;
 
     private final static String SYSTEM_AUTHOR = "SYSTEM";
@@ -44,6 +43,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                               AccommodationService accommodationService,
                               PriceService priceService,
                               ReservationRemarksService reservationRemarksService,
+                              ExternalServiceService externalServiceService,
                               GenericAction<Reservation, ReservationRepository> reservationContext
     ){
         this.reservationRepository = reservationRepository;
@@ -51,6 +51,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         this.priceService = priceService;
         this.reservationRemarksService = reservationRemarksService;
         this.reservationContext = reservationContext;
+        this.externalServiceService = externalServiceService;
     }
 
     @Transactional
@@ -58,6 +59,11 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
 
         if(!validateReservationRequest(reservationReq)) throw new IllegalArgumentException("Invalid Reservation Request!");
         if(Objects.isNull(loginDetails.getUser())) throw new NullPointerException("User cannot be null!");
+
+        List<ExternalServiceDTO> externalServiceDTOS = reservationReq.getExternalServicesRequests()
+                .stream()
+                .map(externalServiceService::convertRequestToDTO)
+                .collect(Collectors.toList());
 
         List<AccommodationDTO> accommodationDTOS =  reservationReq.getAccommodationRequestList()
                 .stream()
@@ -77,6 +83,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                 .reservationEndingDate(reservationReq.getReservationEndingDate())
                 .reservationStatus(ReservationStatus.DRAFT)
                 .reservationDate(reservationReq.getReservationStartDate())
+                .externalServiceDTOS(externalServiceDTOS)
                 .reservationRemarks(reservationRemarksDTOS)
                 .finalPrice(priceService.calculateFinalPrice())
                 .user(loginDetails.getUser())
@@ -84,6 +91,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
 
         this.add(reservationDTO);
     }
+
 
     public List<ReservationDTO> getUserReservations(LoginDetails loginDetails){
 
@@ -178,9 +186,16 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                 .map(reservationRemarksDTO -> reservationRemarksService.transformToEntity(reservationRemarksDTO, reservation))
                 .collect(Collectors.toList());
 
+        List<ExternalService> externalServiceList = reservationDTO.getExternalServiceDTOS()
+                .stream()
+                .map(externalServiceDTO -> externalServiceService.transformToEntity(externalServiceDTO, reservation))
+                .collect(Collectors.toList());
+
+
         //accommodationList.forEach(accommodationService::add);
         reservation.setAccommodationList(accommodationList);
         reservation.setReservationRemarks(reservationRemarksList);
+        reservation.setExternalServiceList(externalServiceList);
         //reservationRemarksList.forEach(reservationRemarksService::add);
 
         return reservation;

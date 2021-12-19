@@ -1,4 +1,5 @@
 import {AccommodationInterface} from './Accommodation';
+import {ExternalService} from './ExternalService';
 
 export interface ReservationInterface {
     id : number,
@@ -9,6 +10,7 @@ export interface ReservationInterface {
     reservationStatus : string,
     reservationRemarksResponse : Array<ReservationRemarksInterface>,
     accommodationResponses : Array<AccommodationInterface>,
+    externalServiceResponses : Array<ExternalService>,
 }
 
 export interface ReservationRemarksInterface{
