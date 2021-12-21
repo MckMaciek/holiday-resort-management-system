@@ -8,7 +8,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,10 +33,10 @@ public class Reservation implements LoginDetailsLinked {
     private ReservationStatus reservationStatus;
 
     @Column(name="reservation_date")
-    private LocalDateTime reservationDate;
+    private Date reservationDate;
 
     @Column(name="reservation_ending_date")
-    private LocalDateTime reservationEndingDate;
+    private Date reservationEndingDate;
 
     @Column(name="final_price")
     private BigDecimal finalPrice;

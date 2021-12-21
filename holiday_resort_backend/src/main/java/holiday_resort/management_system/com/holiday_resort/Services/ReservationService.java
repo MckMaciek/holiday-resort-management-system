@@ -10,13 +10,15 @@ import holiday_resort.management_system.com.holiday_resort.Enums.RoleTypes;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.CrudOperations;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.Validate;
 import holiday_resort.management_system.com.holiday_resort.Repositories.ReservationRepository;
+import holiday_resort.management_system.com.holiday_resort.Requests.ReservationRemarksRequest;
 import holiday_resort.management_system.com.holiday_resort.Requests.ReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.sql.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -72,6 +74,21 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
 
         accommodationDTOS.forEach(accommodationDTO -> accommodationDTO.setUser(loginDetails.getUser()));
 
+
+        ReservationRemarksRequest welcomingMessage = ReservationRemarksRequest.builder()
+                .creationDate(Date.from(Instant.now()))
+                .topic("Welcome!")
+                .description("Thank You for Your reservation!")
+                .build();
+
+        ReservationRemarksRequest reservationRemarksRequest = ReservationRemarksRequest.builder()
+                .creationDate(Date.from(Instant.now()))
+                .topic("Status change")
+                .description("Changed status to DRAFT")
+                .build();
+
+        reservationReq.setReservationRemarksRequestList(List.of(welcomingMessage, reservationRemarksRequest));
+
         List<ReservationRemarksDTO> reservationRemarksDTOS = reservationReq.getReservationRemarksRequestList()
                 .stream()
                 .map(reservationRemarksService::convertRequestToDTO)
@@ -82,7 +99,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                 .reservationName(reservationReq.getReservationName())
                 .reservationEndingDate(reservationReq.getReservationEndingDate())
                 .reservationStatus(ReservationStatus.DRAFT)
-                .reservationDate(reservationReq.getReservationStartDate())
+                .reservationDate(reservationReq.getReservationStartingDate())
                 .externalServiceDTOS(externalServiceDTOS)
                 .reservationRemarks(reservationRemarksDTOS)
                 .finalPrice(priceService.calculateFinalPrice())
@@ -92,6 +109,30 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         this.add(reservationDTO);
     }
 
+    public void deleteReservation(LoginDetails loginDetails, Long reservationId){
+        if(reservationId == null) throw new NullPointerException("Invalid reservationId parameter");
+
+        Optional<Reservation> reservationOpt = reservationRepository.findById(reservationId);
+        if(reservationOpt.isEmpty()) throw new IllegalArgumentException(String.format("Reservation with id of %s not found", reservationId));
+
+        Reservation reservation = reservationOpt.get();
+
+        if (!reservationContext.checkIfOwnerAndUserRequestAreSame(reservation.getLinkedLoginDetails(), loginDetails)){
+            throw new IllegalArgumentException(
+                    String.format("Reservation owner - %s and username in request - %s do not match!",
+                            reservation.getLinkedLoginDetails().getUsername(), loginDetails.getUsername()));
+        }
+
+        List<Accommodation> accommodationList = reservation.getAccommodationList();
+        if(!accommodationList.isEmpty()){
+            accommodationList.forEach(accommodation -> {
+                accommodation.setResortObject(null);
+                accommodation.setUserEventList(null);
+            });
+        }
+
+        reservationRepository.delete(reservation);
+    }
 
     public List<ReservationDTO> getUserReservations(LoginDetails loginDetails){
 
@@ -136,7 +177,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         ReservationRemarks reservationRemarks = ReservationRemarks.builder()
                 .reservation(reservation)
                 .author(SYSTEM_AUTHOR)
-                .creationDate(LocalDateTime.now())
+                .creationDate(Date.from(Instant.now()))
                 .topic(STATUS_CHANGED)
                 .description(String.format("Reservation set to %s", reservationStatus))
                 .build();

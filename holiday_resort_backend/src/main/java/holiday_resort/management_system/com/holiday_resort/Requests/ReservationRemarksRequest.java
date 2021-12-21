@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -19,6 +19,5 @@ public class ReservationRemarksRequest {
     @NotBlank
     private String description;
 
-    @NotNull
-    private LocalDateTime creationDate = LocalDateTime.now();
+    private Date creationDate = Date.from(Instant.now());
 }

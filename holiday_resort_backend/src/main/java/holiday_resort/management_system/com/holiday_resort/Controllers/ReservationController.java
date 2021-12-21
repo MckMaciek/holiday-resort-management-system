@@ -51,6 +51,18 @@ public class ReservationController {
     }
 
     @PreAuthorize(ROLE_USER)
+    @RequestMapping(value = "/reservation/user/{reservationId}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteReservationForUser(@NotNull @PathVariable(name = "reservationId", required = true) Long reservationId)
+            throws IllegalArgumentException, NullPointerException
+    {
+
+        LoginDetails contextUser = userContext.getAssociatedUser();
+        reservationService.deleteReservation(contextUser, reservationId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize(ROLE_USER)
     @RequestMapping(value = "/reservation/user/{reservationId}", method = RequestMethod.GET)
     public ResponseEntity<?> getReservationForUser(@NotNull @PathVariable(name = "reservationId", required = true) Long reservationId){
 

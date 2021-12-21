@@ -28,8 +28,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.time.Instant;
 import java.util.*;
 
 
@@ -153,16 +152,16 @@ public class Startup implements CommandLineRunner {
 
         EventDTO eventDTO = EventDTO.builder()
                 .eventType(EventEnum.BUTLA_GAZOWA)
-                .durationDate(LocalDateTime.now())
-                .startingDate(LocalDateTime.now())
+                .durationDate(Date.from(Instant.now()))
+                .startingDate(Date.from(Instant.now()))
                 .priority(3)
                 .price(BigDecimal.TEN)
                 .build();
 
         EventDTO eventDTO2 = EventDTO.builder()
                 .eventType(EventEnum.PRĄD)
-                .durationDate(LocalDateTime.now())
-                .startingDate(LocalDateTime.now())
+                .durationDate(Date.from(Instant.now()))
+                .startingDate(Date.from(Instant.now()))
                 .priority(3)
                 .price(BigDecimal.TEN)
                 .build();
@@ -232,8 +231,8 @@ public class Startup implements CommandLineRunner {
 
 
         reservationRequest.setReservationRemarksRequestList(List.of(reservationRemarksRequest, reservationRemarksRequest2));
-        reservationRequest.setReservationStartDate(LocalDateTime.now());
-        reservationRequest.setReservationEndingDate(LocalDateTime.now().plus(5, ChronoUnit.DAYS));
+        reservationRequest.setReservationStartingDate(Date.from(Instant.now()));
+        reservationRequest.setReservationEndingDate(Date.from(Instant.now()));
         reservationRequest.setReservationName("MOJA-REZERWACJA" + new Random().nextInt(50));
         reservationRequest.setExternalServicesRequests(externalServicesRequests);
 

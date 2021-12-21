@@ -7,7 +7,6 @@ import Chip from '@mui/material/Chip';
 import OutlinedInput from '@mui/material/OutlinedInput';
 
 import {EventRequest} from '../Interfaces/EventRequest';
-import {ResortObjectInterface} from '../Interfaces/ResortObject';
 
 import {EventInterface} from "../Interfaces/Event";
 

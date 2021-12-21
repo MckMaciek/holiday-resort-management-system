@@ -15,6 +15,7 @@ import holiday_resort.management_system.com.holiday_resort.Requests.EventRequest
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -47,6 +48,23 @@ public class EventService implements CrudOperations<EventDTO, Long>, Validate<Ev
                 .map(Optional::get)
                 .collect(Collectors.toList());
 
+    }
+
+    public List<Event> mapDtoToEntity(List<EventDTO> eventDTOList){
+
+        List<Event> eventLis= new ArrayList<>();
+
+        if(eventDTOList != null){
+            eventDTOList.forEach(eventDTO -> {
+
+                Optional<Event> eventOpt = eventRepo.findById(eventDTO.getId());
+                if(eventOpt.isEmpty()) throw new NullPointerException(String.format("Event with id of %s not found", eventDTO.getId()));
+                else eventLis.add(eventOpt.get());
+
+            });
+        }
+
+        return eventLis;
     }
 
     @Override

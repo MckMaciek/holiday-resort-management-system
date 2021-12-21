@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Builder
 @Getter
@@ -18,8 +18,8 @@ public class ReservationRemarksResponse {
     private String topic;
     private String description;
     private String author;
-    private LocalDateTime creationDate;
-    private LocalDateTime modificationDate;
+    private Date creationDate;
+    private Date modificationDate;
 
     public ReservationRemarksResponse(ReservationRemarksDTO reservationRemarksDTO){
         this.id = reservationRemarksDTO.getId();

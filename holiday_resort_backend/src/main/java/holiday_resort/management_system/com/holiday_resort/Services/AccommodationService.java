@@ -20,7 +20,8 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.sql.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -87,7 +88,7 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
             List<Event> commonProduct = resortObject.getEventList().stream().filter(userChosenEvents::contains).collect(Collectors.toList());
 
             commonProduct.forEach(events -> {
-                events.setStartingDate(LocalDateTime.now());
+                events.setStartingDate(Date.from(Instant.now()));
                 events.setPriority(3);
             });
             userAccommodation.setUserEventList(commonProduct);
@@ -183,6 +184,7 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
     public Accommodation transformToEntity(AccommodationDTO accommodationDTO, Reservation reservation){
 
         ResortObject resortObject = resortObjectService.mapDtoToEntity(accommodationDTO.getResortObject()).get(0);
+        List<Event> eventList = eventService.mapDtoToEntity(accommodationDTO.getEventDTOS());
 
         Accommodation accommodation = new Accommodation();
         accommodation.setId(null);
@@ -190,6 +192,7 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
         accommodation.setNumberOfPeople(accommodationDTO.getNumberOfPeople());
         accommodation.setReservation(reservation);
         accommodation.setResortObject(resortObject);
+        accommodation.setUserEventList(eventList);
 
         return accommodation;
     }

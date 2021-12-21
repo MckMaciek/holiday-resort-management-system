@@ -43,6 +43,7 @@ const SelectExternalService : React.FC<ComponentProps> = ({
         }
         
     }, [])
+
     
     const sendValue = (index : any, operation : string) => {
 
@@ -60,47 +61,64 @@ const SelectExternalService : React.FC<ComponentProps> = ({
         let selectedCheckBox = externalServicesCheckboxValues.filter(checkbox => checkbox.id === parseInt(event.target.name));
         let index = externalServicesCheckboxValues.indexOf(selectedCheckBox[0]);
 
-        await setExternalServicesCheckboxValues(ext => [...ext.slice(0,index),{
-                id : selectedCheckBox[0].id,
-                isSet : event.target.checked,
-                cost : selectedCheckBox[0].cost,
-                serviceName : selectedCheckBox[0].serviceName,
-                amountOfPeople : selectedCheckBox[0].amountOfPeople,
-            }, ...ext.slice(++index)]);
+        if(selectedCheckBox[0].id === parseInt(event.target.name)){
+
+            if(event.target.checked === true){
+                await setExternalServicesCheckboxValues(ext => [...ext.slice(0,index),{
+                    ...selectedCheckBox[0],
+                    isSet : event.target.checked,
+                }, ...ext.slice(++index)]);
+            }
+            else {
+                await setExternalServicesCheckboxValues(ext => [...ext.slice(0,index),{
+                    ...selectedCheckBox[0],
+                    isSet : event.target.checked,
+                    amountOfPeople : 0,
+                }, ...ext.slice(++index)]);
+            }
+        }
     }
 
-    
-    console.log(externalServicesCheckboxValues)
+
     return(
 
         <div>
 
             {externalServicesCheckboxValues && externalServicesCheckboxValues.length === externalServices.length ? (
                 
-                <FormControl component="fieldset">
+                <FormControl 
+                    component="fieldset"
+                    sx={{display : 'flex'}}
+                >
 
                     <FormLabel 
                         component="legend"
                         sx={{marginTop : '5%', marginBottom : '5%'}}
                         >
-                            Choose available External Services
+                            <Typography
+                            >
+                                Available External Services :
+                            </Typography>  
                     </FormLabel>
                     <FormGroup>
                     <>
                         {externalServicesCheckboxValues.map((externalServicesChkbx, index) => (
                             <>
                                 
-                                <FormControlLabel
-                                control={
-                                    <Switch 
+                            <FormControlLabel
+                            control={
+                                <Switch 
                                     checked={externalServicesChkbx.isSet} 
                                     onChange={handleSelectChange} 
+                                    sx={{marginTop : '5%', marginBottom : '5%', marginRight : '1.7%'}}
                                     name={externalServicesChkbx.id.toString()} 
                                     size="medium"
-                                    />
-                                }
-                                label={`${externalServicesChkbx.serviceName} - costs ${externalServicesChkbx.cost} zł`}
+                                    edge="end"
+                                    color="secondary"
                                 />
+                            }
+                            label={`${externalServicesChkbx.serviceName} - costs ${externalServicesChkbx.cost} zł per person`}
+                            />
 
                             <ButtonGroup
                                 disabled={!externalServicesChkbx.isSet}
@@ -123,16 +141,16 @@ const SelectExternalService : React.FC<ComponentProps> = ({
                                 </Button>
 
                                 <span
-                                    style={{marginLeft : '55%'}}
+                                    style={{marginLeft : '5%'}}
                                 >   
                                     {externalServicesChkbx.amountOfPeople}  People 
                                 </span>    
                             </ButtonGroup>
-
-           
                             </>     
                         ))}
                     </>
+                    </FormGroup>
+                    <FormGroup>
                     </FormGroup>
                 </FormControl>
 

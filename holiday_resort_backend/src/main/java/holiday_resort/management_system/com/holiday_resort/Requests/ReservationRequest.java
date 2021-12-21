@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -23,7 +23,7 @@ public class ReservationRequest {
 
     private String reservationName;
 
-    private LocalDateTime reservationEndingDate;
-    private LocalDateTime reservationStartDate;
+    private Date reservationEndingDate;
+    private Date reservationStartingDate;
 
 }

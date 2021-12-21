@@ -11,7 +11,9 @@ import {ExternalServiceResponse} from '../Interfaces/ExternalServiceResponse';
 import CircularProgress from '@mui/material/CircularProgress';
 import { pink } from '@mui/material/colors';
 import Button from '@mui/material/Button';
-import SendIcon from '@material-ui/icons/Send'
+import { Dispatch, SetStateAction } from "react";
+import {NewReservationRequest} from '../Interfaces/NewReservationRequest';
+import {ExternalServiceRequest} from '../Interfaces/ExternalServiceRequest';
 
 import SelectExternalService from './SelectExternalService';
 
@@ -34,6 +36,7 @@ interface ComponentProps {
     closeHandler : () => void,
     acceptHandler : () => void,
     jwtToken : string,
+    modifyReservation : Dispatch<SetStateAction<NewReservationRequest>>,
 }
 
 const AddExternalServiceDialog : React.FC<ComponentProps> = ({
@@ -41,6 +44,7 @@ const AddExternalServiceDialog : React.FC<ComponentProps> = ({
     jwtToken,
     closeHandler,
     acceptHandler,
+    modifyReservation,
 })  => {
 
     React.useEffect(() => {
@@ -58,11 +62,32 @@ const AddExternalServiceDialog : React.FC<ComponentProps> = ({
         isSet : boolean,
         amountOfPeople : number,
     }
+    
 
     const [externalServicesCheckboxValues, setExternalServicesCheckboxValues] = React.useState<Array<ExternalServicesCheckBox>>([])
 
+    const addExternalServiceToReservation = () => {
 
-    
+        let externalServicesRequest : Array<ExternalServiceRequest> = []
+
+        externalServicesCheckboxValues.forEach(externalService => {
+
+            if(externalService.isSet){
+                let externalServiceObj : ExternalServiceRequest = {
+                    serviceRequestId : externalService.id,
+                    amountOfPeople : externalService.amountOfPeople,
+                    remarks : '',
+                }
+                externalServicesRequest.push(externalServiceObj);
+            }
+        });
+
+        modifyReservation(reservation => ({
+            ...reservation,
+            externalServicesRequests : externalServicesRequest
+        }));
+    }
+
     return(
         <Dialog
         open={isOpen}
@@ -88,7 +113,6 @@ const AddExternalServiceDialog : React.FC<ComponentProps> = ({
                         setExternalServicesCheckboxValues={setExternalServicesCheckboxValues}
                         externalServicesCheckboxValues={externalServicesCheckboxValues}
                     />
-
                 </div>
             ) : (
             <CircularProgress 
@@ -101,6 +125,20 @@ const AddExternalServiceDialog : React.FC<ComponentProps> = ({
                 }}
             />
             )}
+            {externalServices.length !== 0 ? (
+                <Button
+                    aria-label="reduce"
+                    sx={{marginTop : '4%'}}
+                    onClick={() => {
+                        
+                        addExternalServiceToReservation();
+                        acceptHandler();
+                    }
+                    }
+                >
+                    Ok
+                </Button>
+            ) : null}
 
         </DialogContent>
         <DialogActions>

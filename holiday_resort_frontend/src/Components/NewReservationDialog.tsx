@@ -31,14 +31,17 @@ import ListItemText from '@mui/material/ListItemText';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
+import {ExternalServiceRequest} from '../Interfaces/ExternalServiceRequest';
 
 import { ResortObjectInterface } from '../Interfaces/ResortObject';
 import {AccommodationRequest} from "../Interfaces/AccommodationRequest";
+import { NewReservationRequest } from '../Interfaces/NewReservationRequest';
 
 import NumericTextField from './NumericTextField';
 
 import NewAccommodation from "../Components/NewAccommodation";
 import {getAvailableResortObjectsApi} from "../Stores/ApiRequests/ResortObjectApiRequest";
+import {postReservation} from "../Stores/ApiRequests/ReservationApiRequest";
 
 
 const Transition = React.forwardRef(function Transition(
@@ -54,6 +57,7 @@ const Transition = React.forwardRef(function Transition(
 interface MapDispatcherToProps {
     fetchAvailableResortObj : (jwtToken : string) => void,
     fetchUserInfo : (jwtToken : string) => void,
+    sendReservation : (jwtToken : string, reservationRequest : NewReservationRequest) => void,
 }
 
 interface MapStateToProps {
@@ -67,6 +71,7 @@ const mapDispatchToProps = (dispatch : ThunkDispatch<{}, {}, any>) : MapDispatch
 
     fetchAvailableResortObj : (jwtToken : string) => dispatch(getAvailableResortObjectsApi(jwtToken)),
     fetchUserInfo : (jwtToken : string) => dispatch(getUserInfo(jwtToken)),
+    sendReservation : (jwtToken : string, reservationRequest : NewReservationRequest) => dispatch(postReservation(jwtToken, reservationRequest)),
 });
 
 const mapStateToProps = (state : any, accommodationProps : ComponentProps) : MapStateToProps => ({
@@ -95,6 +100,7 @@ const NewReservationDialog : React.FC<Props> = ({
     fetchAvailableResortObj,
     fetchUserInfo,
     userDetails,
+    sendReservation,
 }) => {
 
     React.useEffect(() => {
@@ -121,44 +127,47 @@ const NewReservationDialog : React.FC<Props> = ({
 
         setNewReservation(reservation => ({
             ...reservation, 
-            reservationEndingDate : ranges.selection.endDate,
-            reservationStartingDate : ranges.selection.startDate,
+            reservationEndingDate : ranges.selection.endDate.getTime(),
+            reservationStartingDate : ranges.selection.startDate.getTime(),
         }));
-      }
+    }
+
+
+    interface NewReservationRequest {
+        reservationEndingDate : number,
+        reservationStartingDate : number,
+        reservationName : string,
+        accommodationRequestList : Array<AccommodationRequest>,
+        externalServicesRequests : Array<ExternalServiceRequest>,
+        reservationRemarksRequestList : Array<any>,
+    }
+    
+    const NEW_RESERVATION_DEFAULT : NewReservationRequest = {
+        reservationEndingDate : 0,
+        reservationStartingDate : 0,
+        reservationName : '',
+        accommodationRequestList : [],
+        externalServicesRequests : [],
+        reservationRemarksRequestList : [],
+    }
+    
+    const [newReservation, setNewReservation] = React.useState<NewReservationRequest>(NEW_RESERVATION_DEFAULT);
 
     interface DateRangeInterface {
-    startDate : Date,
-    endDate : Date,
-    disappear : boolean,
-    key : string,
+        startDate : Date,
+        endDate : Date,
+        disappear : boolean,
+        key : string,
     }
 
     const DATE_RANGE_DEFAULT_STATE : DateRangeInterface = {
-    startDate : new Date(),
-    endDate : new Date(),
-    disappear : false,
-    key : 'selection',
+        startDate : new Date(),
+        endDate : new Date(),
+        disappear : false,
+        key : 'selection',
     }
 
     const [dateRange, setDateRange] = React.useState<DateRangeInterface>(DATE_RANGE_DEFAULT_STATE);
-
-    interface NewReservationRequest {
-        reservationEndingDate : Date,
-        reservationStartingDate : Date,
-        reservationName : string,
-        accommodationRequestList : Array<AccommodationRequest>,
-        reservationRemarksRequestList : Array<any>,
-    }
-
-    const NEW_RESERVATION_DEFAULT : NewReservationRequest = {
-        reservationEndingDate : new Date(),
-        reservationStartingDate : new Date(),
-        reservationName : '',
-        accommodationRequestList : [],
-        reservationRemarksRequestList : [],
-    }
-
-    const [newReservation, setNewReservation] = React.useState<NewReservationRequest>(NEW_RESERVATION_DEFAULT);
 
     interface NewAccommodationDialog {
         isSet : boolean,
@@ -223,6 +232,13 @@ const NewReservationDialog : React.FC<Props> = ({
             }));
     }
 
+    const postReservation = () => {
+        if(newReservation.accommodationRequestList.length !== 0 && jwtToken){
+            sendReservation(jwtToken, newReservation);
+        }
+    }
+
+    console.log(newReservation);
     return(
 
         <Dialog
@@ -362,6 +378,7 @@ const NewReservationDialog : React.FC<Props> = ({
 
                                 <AddExternalServiceDialog
                                     isOpen={newExternalServiceDialog.isSet}
+                                    modifyReservation={setNewReservation}
                                     jwtToken={jwtToken}
                                     closeHandler={() => setNewExternalServiceDialog({isSet : false})}
                                     acceptHandler={() => setNewExternalServiceDialog({isSet : false})}
@@ -383,16 +400,22 @@ const NewReservationDialog : React.FC<Props> = ({
 
                                 {newReservation.accommodationRequestList.length !== 0 ? (
 
-                                <List>
+                                <List
+                                    sx={{
+                                        width : '100%', 
+                                        alignItems : 'flex-start',
+                                        justifyContent : 'flex-start',
+                                        flexDirection : 'row', 
+                                        flex : '1',
+                                        flexWrap : 'wrap'}}
+                                >
                                     {newReservation.accommodationRequestList.map(accommodation => (
                                         <ListItem
                                         
                                         sx={{ 
                                             marginTop : '1.8%',
                                             borderRadius : '3%',
-                                            padding : '4%', 
-                                            width: '100%', 
-                                            maxWidth: 360, 
+                                            padding : '4.2%', 
                                             bgcolor: 'background.paper', 
                                             borderStyle : 'groove' 
                                         }}
@@ -408,16 +431,23 @@ const NewReservationDialog : React.FC<Props> = ({
                                                     <div>
                                                         <p> Choosen people {accommodation.numberOfPeople.toString()} </p> 
                                                         {accommodation.eventRequests.length !== 0 ? (
-                                                                <p> Added : </p>
+                                                                <p> Comes with : </p>
                                                         ) : null}
+                                                        <li>
                                                         {accommodation.eventRequests.map((event) => (
-                                                                <span> {transformRoToEvents(event.id)[0].eventType} , </span>
-                                                        ))}
+                                                            <ul
+                                                            style={{padding: '0', listStyle: 'none'}}
+                                                            > 
+                                                            <strong>{transformRoToEvents(event.id)[0].eventType.toLowerCase()}, </strong> 
+                                                            </ul> 
+                                                                                                                
+                                                            ))}
+                                                        </li>
                                                     <div>                                            
                                                             <Button 
                                                                 variant="outlined" 
                                                                 color="secondary"
-                                                                style={{marginTop : '5%'}}
+                                                                style={{marginTop : '3%'}}
                                                                 startIcon={<DeleteIcon />}
                                                                 onClick={() => removeResortObj(accommodation.resortObjectId)}
                                                             >
@@ -437,6 +467,10 @@ const NewReservationDialog : React.FC<Props> = ({
                                     variant="outlined"
                                     color ="secondary"
                                     style={{marginTop : '5%', width : '30%'}}
+                                    onClick={() => {
+                                        postReservation();
+                                        handleAccept();
+                                    }}
                                 >  
                                     Save
                                 </Button>

@@ -19,6 +19,7 @@ import {
     getReservations, 
     deleteAccommodationApi,
     markReservationStarted,
+    deleteReservationApi,
 } from '../Stores/ApiRequests/ReservationApiRequest';
 
 import ReservationTable from '../Components/ReservationTable';
@@ -26,6 +27,7 @@ import NewReservationDialog from "../Components/NewReservationDialog";
 import { useEffect, useState } from 'react';
 
 interface MapDispatcherToProps {
+    removeReservation : (jwtToken : string, reservationId : number) => void,
     fetchReservations : (jwtToken : string) => void;
     removeAccommodation : (jwtToken : string, accommodationId : number) => void;
     setReservationStarted : (jwtToken : string, reservationId : number) => void;
@@ -41,6 +43,7 @@ interface MapStateToProps {
 }
 
 const mapDispatchToProps = (dispatch : ThunkDispatch<{}, {}, any>) : MapDispatcherToProps => ({
+    removeReservation : (jwtToken : string, reservationId) => dispatch(deleteReservationApi(jwtToken, reservationId)),
     fetchReservations : (jwtToken : string) => dispatch(getReservations(jwtToken)),
     removeAccommodation : (jwtToken : string, accommodationId : number) => dispatch(deleteAccommodationApi(jwtToken, accommodationId)),
     setReservationStarted : (jwtToken : string, reservationId : number) => dispatch(markReservationStarted(jwtToken, reservationId)),
@@ -63,6 +66,7 @@ interface TableContextInterface {
     roles_ : Array<String>,
     removeAccommodation_ : (jwtToken : string, accommodationId : number) => void,
     setReservationStarted_ : (jwtToken : string, reservationId : number) => void,
+    removeReservation_ : (jwtToken : string, reservationId : number) => void,
 }
 
 export const TableContext = React.createContext<TableContextInterface | null> (null);
@@ -76,6 +80,7 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
     fetchReservations,
     removeAccommodation,
     setReservationStarted,
+    removeReservation,
 }) => {
 
     const [componentChanged, setComponentChanged] = useState(false);
@@ -131,6 +136,7 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
         roles_ : roles, 
         removeAccommodation_ : removeAccommodation,
         setReservationStarted_ : setReservationStarted,
+        removeReservation_ : removeReservation,
     } 
 
     return(

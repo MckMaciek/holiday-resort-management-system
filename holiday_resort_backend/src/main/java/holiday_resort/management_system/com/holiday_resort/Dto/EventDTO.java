@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -19,8 +19,8 @@ public class EventDTO {
 
     private Long id;
     private EventEnum eventType;
-    private LocalDateTime startingDate;
-    private LocalDateTime durationDate;
+    private Date startingDate;
+    private Date durationDate;
     private BigDecimal price;
     private Integer priority;
 

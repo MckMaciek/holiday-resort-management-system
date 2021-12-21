@@ -1,9 +1,11 @@
 import {AccommodationRequest} from "./AccommodationRequest";
+import { ExternalServiceRequest } from "./ExternalServiceRequest";
 
 export interface NewReservationRequest {
-    reservationEndingDate : Date,
-    reservationStartingDate : Date,
+    reservationEndingDate : number,
+    reservationStartingDate : number,
     reservationName : string,
     accommodationRequestList : Array<AccommodationRequest>,
+    externalServicesRequests : Array<ExternalServiceRequest>
     reservationRemarksRequestList : Array<any>,
 }

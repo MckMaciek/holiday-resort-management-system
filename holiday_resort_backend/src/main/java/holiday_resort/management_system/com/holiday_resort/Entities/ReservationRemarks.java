@@ -7,8 +7,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.Date;
 
 @Entity
 @Table(name = "reservation_remarks_tb")
@@ -38,11 +38,10 @@ public class ReservationRemarks implements LoginDetailsLinked {
     private String author;
 
     @Column(name="creation_date")
-    @NotNull
-    private LocalDateTime creationDate = LocalDateTime.now();
+    private Date creationDate = Date.from(Instant.now());
 
     @Column(name="modification_date")
-    private LocalDateTime modificationDate;
+    private Date modificationDate;
 
     public ReservationRemarks(ReservationRemarksDTO reservationRemarksDTO){
         this.id = reservationRemarksDTO.getId();

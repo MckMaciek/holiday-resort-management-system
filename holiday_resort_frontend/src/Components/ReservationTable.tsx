@@ -94,6 +94,7 @@ const Row = ({row} : any) => {
         <TableCell component="th" scope="row">
           <p> {row.reservationName} </p>
         </TableCell>
+        <TableCell align="center">{row.id}</TableCell>
         <TableCell align="center">{row.reservationDate}</TableCell>
         <TableCell align="center">{row.reservationEndingDate}</TableCell>
         <TableCell align="center">{row.finalPrice}</TableCell>
@@ -109,6 +110,43 @@ const Row = ({row} : any) => {
             >
             Show
             </Button>
+
+            <Button 
+              variant="outlined" 
+              size="medium" 
+              color="primary" 
+              endIcon={<DeleteIcon/>}
+              style={{marginLeft : '4.5%'}}
+              disabled={row.reservationStatus !== "DRAFT"}
+              onClick={() => { 
+                setDeleteDialog({
+                  isSet : true,
+                  id : row.id,
+                  propertyName : row.reservationName,
+                });
+              }}
+              
+            >
+            Cancel
+            </Button>
+
+            {deleteDialog.isSet && deleteDialog.id === row.id ? (
+                  <DialogConfirm
+                    isOpen={deleteDialog.isSet}
+                    closeHandler={() => setDeleteDialog(DELETE_DIALOG_CONFIRMATION_DEFAULT)}
+                    onAcceptHandler={
+                      () => {
+                        TableContextImp?.removeReservation_(TableContextImp.jwtToken_, row.id)
+                        setDeleteDialog(DELETE_DIALOG_CONFIRMATION_DEFAULT) 
+                      }  
+                    }
+                    dialogTitle="Are you sure to delete?"
+                    dialogDescription= {`Reservation named ${row.reservationName} will be deleted`}
+                    disagreeText="Back"
+                    agreeText="Delete"
+              >
+              </DialogConfirm>
+            ) : null}
 
             {summaryDialog.isSet && summaryDialog.id === row.id ? (
                       <SummaryDialog

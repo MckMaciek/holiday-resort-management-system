@@ -18,6 +18,7 @@ import {
     setRemoveAccommodationFetching,
 
 } from "../Actions/ReservationOperations";
+import {NewReservationRequest} from '../../Interfaces/NewReservationRequest';
 
 import { ThunkDispatch } from 'redux-thunk';
 import Axios from 'axios';
@@ -90,6 +91,76 @@ export const deleteAccommodationApi = (jwtToken : string, accommodationId : numb
         finally{
             dispatch(objectModified(false));
             setRemoveAccommodationFetching(false);
+        }
+        
+    }
+}
+
+
+const postReservationApiRequest = async (jwtToken : string, reservationRequest : NewReservationRequest) => {
+
+    const config = {
+        headers: { Authorization: `Bearer ${jwtToken}` },
+        'Content-Type': 'application/json',
+    };
+
+    const post = await Axios.post(
+        `${API_URL.SERVER_URL}${API_URL.POST_RESERVATION}`, reservationRequest, config);
+    
+    return post.status;
+}
+
+export const postReservation = (jwtToken : string, reservationRequest : NewReservationRequest) => {
+
+    return async (dispatch : ThunkDispatch<{}, {}, any> ) => {
+            
+        try{
+            const reservationStatus = await postReservationApiRequest(jwtToken, reservationRequest);
+            if(reservationStatus === 200){
+                dispatch(objectModified(true));
+                console.log("sukces");
+                console.log(reservationStatus);
+            }
+
+        }
+        catch (err){
+            console.log(err);
+        }
+        finally{
+            dispatch(objectModified(false));
+        }
+        
+    }
+}
+
+const deleteReservationRequest = async (jwtToken : string, reservationId : number) => {
+
+    const config = {
+        headers: { Authorization: `Bearer ${jwtToken}` },
+        'Content-Type': 'application/json',
+    };
+
+    const deleteStatus = await Axios.delete(
+        `${API_URL.SERVER_URL}${API_URL.DELETE_RESERVATION}/${reservationId}`, config);
+    
+    return deleteStatus.status;
+}
+
+export const deleteReservationApi = (jwtToken : string, reservationId : number) => {
+
+    return async (dispatch : ThunkDispatch<{}, {}, any> ) => {
+            
+        try{
+            const deleteAccommodationStatus = await deleteReservationRequest(jwtToken, reservationId);
+            if(deleteAccommodationStatus === 200){
+                dispatch(objectModified(true));
+            }
+
+        }
+        catch (err){
+        }
+        finally{
+            dispatch(objectModified(false));
         }
         
     }
