@@ -56,7 +56,7 @@ public class ExternalServiceController {
             throws IllegalArgumentException{
 
         return ResponseEntity.ok(
-                serviceRequestService.getAll();
+                serviceRequestService.getAll()
 
         );
     }

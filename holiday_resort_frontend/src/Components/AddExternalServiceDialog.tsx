@@ -7,10 +7,11 @@ import Divider from '@mui/material/Divider';
 import * as React from 'react';
 import Axios from 'axios';
 import API_URL from "../API_URL.json";
-import {ExternalService} from '../Interfaces/ExternalService';
 import {ExternalServiceResponse} from '../Interfaces/ExternalServiceResponse';
 import CircularProgress from '@mui/material/CircularProgress';
 import { pink } from '@mui/material/colors';
+import Button from '@mui/material/Button';
+import SendIcon from '@material-ui/icons/Send'
 
 import SelectExternalService from './SelectExternalService';
 
@@ -53,6 +54,15 @@ const AddExternalServiceDialog : React.FC<ComponentProps> = ({
 
     const [externalServices, setExternalServices] = React.useState<Array<ExternalServiceResponse>>([]);
 
+    interface ExternalServicesCheckBox extends ExternalServiceResponse {
+        isSet : boolean,
+        amountOfPeople : number,
+    }
+
+    const [externalServicesCheckboxValues, setExternalServicesCheckboxValues] = React.useState<Array<ExternalServicesCheckBox>>([])
+
+
+    
     return(
         <Dialog
         open={isOpen}
@@ -73,7 +83,12 @@ const AddExternalServiceDialog : React.FC<ComponentProps> = ({
         >
             {externalServices.length !== 0 ? (
                 <div>
-                    <SelectExternalService/>
+                    <SelectExternalService
+                        externalServices={externalServices}
+                        setExternalServicesCheckboxValues={setExternalServicesCheckboxValues}
+                        externalServicesCheckboxValues={externalServicesCheckboxValues}
+                    />
+
                 </div>
             ) : (
             <CircularProgress 
