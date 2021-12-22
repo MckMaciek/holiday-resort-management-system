@@ -26,4 +26,6 @@ public class ReservationRequest {
     private Date reservationEndingDate;
     private Date reservationStartingDate;
 
+    private ReservationOwnerRequest reservationOwnerRequest;
+
 }

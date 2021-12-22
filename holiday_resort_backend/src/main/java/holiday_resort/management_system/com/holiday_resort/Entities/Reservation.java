@@ -26,7 +26,7 @@ public class Reservation implements LoginDetailsLinked {
     private Long id;
 
     @Column(name="reservation_name")
-    private String reservatonName;
+    private String reservationName;
 
     @Column(name="reservation_status")
     @Enumerated(EnumType.STRING)
@@ -50,6 +50,9 @@ public class Reservation implements LoginDetailsLinked {
     @OneToMany(mappedBy = "reservation", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ExternalService> externalServiceList;
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private ReservationOwner reservationOwner;
+
     @OneToOne(fetch = FetchType.EAGER)
     @NotNull
     private User user;
@@ -68,7 +71,8 @@ public class Reservation implements LoginDetailsLinked {
 
         this.user = reservationDTO.getUser();
         this.reservationEndingDate = reservationDTO.getReservationEndingDate();
-        this.reservatonName = reservationDTO.getReservationName();
+        this.reservationName = reservationDTO.getReservationName();
+
     }
 
     @Override

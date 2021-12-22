@@ -1,17 +1,17 @@
 package holiday_resort.management_system.com.holiday_resort.Services;
 
-import holiday_resort.management_system.com.holiday_resort.Dto.AccommodationDTO;
-import holiday_resort.management_system.com.holiday_resort.Dto.ExternalServiceDTO;
-import holiday_resort.management_system.com.holiday_resort.Dto.ReservationDTO;
-import holiday_resort.management_system.com.holiday_resort.Dto.ReservationRemarksDTO;
+import holiday_resort.management_system.com.holiday_resort.Dto.*;
 import holiday_resort.management_system.com.holiday_resort.Entities.*;
 import holiday_resort.management_system.com.holiday_resort.Enums.ReservationStatus;
 import holiday_resort.management_system.com.holiday_resort.Enums.RoleTypes;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.CrudOperations;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.Validate;
+import holiday_resort.management_system.com.holiday_resort.Repositories.ReservationOwnerRepository;
 import holiday_resort.management_system.com.holiday_resort.Repositories.ReservationRepository;
+import holiday_resort.management_system.com.holiday_resort.Requests.ReservationOwnerRequest;
 import holiday_resort.management_system.com.holiday_resort.Requests.ReservationRemarksRequest;
 import holiday_resort.management_system.com.holiday_resort.Requests.ReservationRequest;
+import org.h2.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -35,6 +35,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
     private final ReservationRemarksService reservationRemarksService;
     private final ExternalServiceService externalServiceService;
     private final PriceService priceService;
+    private final ReservationOwnerRepository reservationOwnerRepository;
 
     private final static String SYSTEM_AUTHOR = "SYSTEM";
     private final static String STATUS_CHANGED = "Status changed";
@@ -46,7 +47,8 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                               PriceService priceService,
                               ReservationRemarksService reservationRemarksService,
                               ExternalServiceService externalServiceService,
-                              GenericAction<Reservation, ReservationRepository> reservationContext
+                              GenericAction<Reservation, ReservationRepository> reservationContext,
+                              ReservationOwnerRepository reservationOwnerRepository
     ){
         this.reservationRepository = reservationRepository;
         this.accommodationService = accommodationService;
@@ -54,6 +56,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         this.reservationRemarksService = reservationRemarksService;
         this.reservationContext = reservationContext;
         this.externalServiceService = externalServiceService;
+        this.reservationOwnerRepository = reservationOwnerRepository;
     }
 
     @Transactional
@@ -74,7 +77,6 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
 
         accommodationDTOS.forEach(accommodationDTO -> accommodationDTO.setUser(loginDetails.getUser()));
 
-
         ReservationRemarksRequest welcomingMessage = ReservationRemarksRequest.builder()
                 .creationDate(Date.from(Instant.now()))
                 .topic("Welcome!")
@@ -94,6 +96,10 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                 .map(reservationRemarksService::convertRequestToDTO)
                 .collect(Collectors.toList());
 
+
+        ReservationOwnerRequest reservationOwnerRequest = reservationReq.getReservationOwnerRequest();
+
+
         ReservationDTO reservationDTO = ReservationDTO.builder()
                 .accommodationListDTO(accommodationDTOS)
                 .reservationName(reservationReq.getReservationName())
@@ -102,6 +108,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                 .reservationDate(reservationReq.getReservationStartingDate())
                 .externalServiceDTOS(externalServiceDTOS)
                 .reservationRemarks(reservationRemarksDTOS)
+                .reservationOwnerDTO(new ReservationOwnerDTO(reservationOwnerRequest))
                 .finalPrice(priceService.calculateFinalPrice())
                 .user(loginDetails.getUser())
                 .build();
@@ -122,6 +129,13 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                     String.format("Reservation owner - %s and username in request - %s do not match!",
                             reservation.getLinkedLoginDetails().getUsername(), loginDetails.getUsername()));
         }
+
+        reservation.getAccommodationList().forEach(accommodation -> {
+            accommodation.getResortObject().setIsReserved(false);
+        });
+
+        reservationOwnerRepository.delete(reservation.getReservationOwner());
+        reservation.setReservationOwner(null);
 
         List<Accommodation> accommodationList = reservation.getAccommodationList();
         if(!accommodationList.isEmpty()){
@@ -213,7 +227,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         reservation.setReservationStatus(reservationDTO.getReservationStatus());
         reservation.setReservationDate(reservationDTO.getReservationDate());
         reservation.setReservationEndingDate(reservationDTO.getReservationEndingDate());
-        reservation.setReservatonName(reservationDTO.getReservationName());
+        reservation.setReservationName(reservationDTO.getReservationName());
         reservation.setUser(reservationDTO.getUser());
         reservation.setFinalPrice(reservationDTO.getFinalPrice());
 
@@ -233,10 +247,17 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                 .collect(Collectors.toList());
 
 
+        ReservationOwner reservationOwner = new ReservationOwner(reservationDTO.getReservationOwnerDTO());
+
+        if(!validateReservationOwner(reservationOwner)) throw new IllegalArgumentException("Illegal reservation owner provided");
+        if(reservationOwner.getId() != null) throw new IllegalArgumentException("Cannot insert entity with non null reservationOwner id");
+
+        reservationOwnerRepository.save(reservationOwner);
         //accommodationList.forEach(accommodationService::add);
         reservation.setAccommodationList(accommodationList);
         reservation.setReservationRemarks(reservationRemarksList);
         reservation.setExternalServiceList(externalServiceList);
+        reservation.setReservationOwner(reservationOwner);
         //reservationRemarksList.forEach(reservationRemarksService::add);
 
         return reservation;
@@ -263,6 +284,12 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         return reservation != null && reservation.getAccommodationList() != null
                 && !reservation.getAccommodationList().isEmpty() && reservation.getFinalPrice() != null &&
                 reservation.getUser() != null;
+    }
+
+    private boolean validateReservationOwner(ReservationOwner reservationOwner){
+        return  !StringUtils.isNullOrEmpty(reservationOwner.getFirstName()) ||
+                !StringUtils.isNullOrEmpty(reservationOwner.getLastName())  ||
+                !StringUtils.isNullOrEmpty(reservationOwner.getPhoneNumber());
     }
 
     private boolean validateReservationRequest(ReservationRequest reservationRequest){

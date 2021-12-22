@@ -8,6 +8,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -79,6 +80,7 @@ const Row = ({row} : any) => {
   const classes = useStyles();
   const TableContextImp = React.useContext(TableContext);
 
+  console.log(row);
 
   return (
     <React.Fragment>
@@ -100,6 +102,8 @@ const Row = ({row} : any) => {
         <TableCell align="center">{row.finalPrice}</TableCell>
         <TableCell align="center">{row.reservationStatus}</TableCell>
         <TableCell align="center">
+
+        <div style={{marginLeft : '1.3vw', display : 'flex', flexDirection : 'row'}}>
             <Button variant="outlined" size="medium" color="secondary" endIcon={<SendIcon />}
             onClick={() => setSummaryDialog(
               {
@@ -108,7 +112,7 @@ const Row = ({row} : any) => {
               }              
               )}
             >
-            Show
+            Details
             </Button>
 
             <Button 
@@ -129,7 +133,7 @@ const Row = ({row} : any) => {
             >
             Cancel
             </Button>
-
+            </div>
             {deleteDialog.isSet && deleteDialog.id === row.id ? (
                   <DialogConfirm
                     isOpen={deleteDialog.isSet}
@@ -149,32 +153,59 @@ const Row = ({row} : any) => {
             ) : null}
 
             {summaryDialog.isSet && summaryDialog.id === row.id ? (
-                      <SummaryDialog
-                        submit="Send"
-                        cancel='Close'
-                        open={summaryDialog.isSet}
-                        reservation={row}
-                        handleClose={() => setSummaryDialog(SUMMARY_DIALOG_DEFAULT)}
-                        handleAccept={() => setSummaryDialog(SUMMARY_DIALOG_DEFAULT)}
-                      />
+                <SummaryDialog
+                  submit="Send"
+                  cancel='Close'
+                  open={summaryDialog.isSet}
+                  reservation={row}
+                  handleClose={() => setSummaryDialog(SUMMARY_DIALOG_DEFAULT)}
+                  handleAccept={() => setSummaryDialog(SUMMARY_DIALOG_DEFAULT)}
+                />
             ) : null}
 
         </TableCell> 
       </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
+      <TableRow style={{width : '100%'}}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0, width : '100%'}} colSpan={4}>
           <Collapse in={open} timeout="auto" unmountOnExit>
+            <div>
+
+              <div style={{marginTop : '5%', marginBottom : '5%', marginLeft : '7%', display : 'flex', justifyContent : 'flex-start', alignItems : 'center'}}>
+                <div style={{marginRight : '7%', display : 'inline'}}> 
+                
+                  <span> Reservation done by : 
+                    <strong> {`${row.reservationOwnerRequest.firstName} ${row.reservationOwnerRequest.lastName}`} </strong>
+                  </span>
+                  <p> User Contact : <strong> {row.reservationOwnerRequest.phoneNumber} </strong> </p>
+
+                </div>
+                <Button
+                    color="secondary" 
+                    type="submit"
+                    variant="outlined"
+                    style={{display : 'inline'}}
+                    disabled={row.reservationStatus !== "DRAFT"}
+                  >
+                  Change Reservation Details
+                </Button>
+              </div>
+
+            </div>
             <Box sx={{ margin: 1 }}>
+            <TableContainer>
             <Table 
             >
             <TableHead>
+
             <TableRow>
-                <TableCell  align="left"> Object Name</TableCell>
-                <TableCell  align="center"> Object Type</TableCell>
-                <TableCell  align="center"> People</TableCell>
+                <TableCell  align="left" >   Object Name</TableCell>
+                <TableCell  align="center" > Object Type</TableCell>
+                <TableCell  align="center">  People</TableCell>
+                <TableCell  align="center"></TableCell>
             </TableRow>
             </TableHead>
             <TableBody>
+
             {row.accommodationResponses.map((innerRow) => (
                 <TableRow key={innerRow.resortObject.id}>
                   <TableCell 
@@ -194,11 +225,12 @@ const Row = ({row} : any) => {
                       {innerRow.numberOfPeople}
                   </TableCell>
 
-                  <div style={{marginLeft : '6%'}}>
+                  <TableCell>
+                  <div style={{marginLeft : '1.3vw', display : 'flex', flexDirection : 'row'}}>
                     <Button
                     color="primary" 
                     type="submit"
-                    variant="contained"
+                    variant="outlined"
                     disabled={(row.reservationStatus !== "DRAFT")} //&& !TableContextImp?.roles_.includes(RolesTypes.ADMIN)
                     className={classes.editButton}
                     onClick={() => {
@@ -215,7 +247,7 @@ const Row = ({row} : any) => {
 
                     <Button 
                     color="secondary"
-                    variant="contained"
+                    variant="outlined"
                     type="submit"
                     className={classes.deleteButton}
                     disabled={(row.reservationStatus !== "DRAFT")} //&& !TableContextImp?.roles_.includes(RolesTypes.ADMIN)
@@ -230,6 +262,8 @@ const Row = ({row} : any) => {
                     >
                         DELETE
                     </Button>
+                  </div>
+                  </TableCell>
 
                     <DialogConfirm
                         isOpen={deleteDialog.isSet}
@@ -261,9 +295,9 @@ const Row = ({row} : any) => {
                           }
                       />
                     ): null}
-                 </div>
               </TableRow>
             ))}
+            
               <IconButton
                 sx={{
                   marginTop : '2%',
@@ -288,8 +322,8 @@ const Row = ({row} : any) => {
               />
             </Collapse>
             </TableBody>
-
             </Table>
+            </TableContainer>
             </Box>
           </Collapse>
         </TableCell>
@@ -314,7 +348,7 @@ const classes = useStyles();
 
 
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(15);
+  const [rowsPerPage, setRowsPerPage] = React.useState(1);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -325,8 +359,8 @@ const classes = useStyles();
     setPage(0);
   };
 
-  {console.log(reservationList)}
 
+  console.log(reservationList);
   return (
     <div className={classes.table}>
         <TableContainer component={Paper}>
@@ -336,10 +370,12 @@ const classes = useStyles();
             <TableRow>
                 <TableCell />
                 <TableCell  align="left"> Reservation name</TableCell>
+                <TableCell  align="center"> Reservation Unique ID</TableCell>
                 <TableCell  align="center"> Starting</TableCell>
                 <TableCell  align="center"> Ending</TableCell>
                 <TableCell  align="center"> Final price</TableCell>
                 <TableCell  align="center"> Status</TableCell>
+                <TableCell  align="center"></TableCell>
                 <TableCell  align="center"></TableCell>
             </TableRow>
             </TableHead>
@@ -372,7 +408,7 @@ export default ReservationTable;
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     table: {
-        width : '87vw',
+        width : '90vw',
     },
 
     editButton : {

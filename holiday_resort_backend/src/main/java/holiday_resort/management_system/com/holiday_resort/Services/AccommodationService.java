@@ -184,6 +184,8 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
     public Accommodation transformToEntity(AccommodationDTO accommodationDTO, Reservation reservation){
 
         ResortObject resortObject = resortObjectService.mapDtoToEntity(accommodationDTO.getResortObject()).get(0);
+        resortObject.setIsReserved(true);
+
         List<Event> eventList = eventService.mapDtoToEntity(accommodationDTO.getEventDTOS());
 
         Accommodation accommodation = new Accommodation();

@@ -1,5 +1,6 @@
 import {AccommodationRequest} from "./AccommodationRequest";
 import { ExternalServiceRequest } from "./ExternalServiceRequest";
+import { ReservationOwner } from "./ReservationOwner";
 
 export interface NewReservationRequest {
     reservationEndingDate : number,
@@ -8,4 +9,5 @@ export interface NewReservationRequest {
     accommodationRequestList : Array<AccommodationRequest>,
     externalServicesRequests : Array<ExternalServiceRequest>
     reservationRemarksRequestList : Array<any>,
+    reservationOwnerRequest : ReservationOwner,
 }

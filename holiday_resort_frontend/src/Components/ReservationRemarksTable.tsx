@@ -20,7 +20,7 @@ const ReservationRemarksTable : React.FC<IProps> = ({
     return(
     <>
         {reservationRemarks.length !== 0 ? (
-        <Box sx={{ margin: 1, width : '11vw' }}>
+        <Box sx={{ margin: 1, width : '100%' }}>
         <Table>  
             <TableHead>
                 <TableRow>

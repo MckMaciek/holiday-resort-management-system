@@ -112,7 +112,11 @@ const NewReservationDialog : React.FC<Props> = ({
     React.useEffect(() => {
 
         if(userDetails && userDetails.firstName !== '' && userDetails.lastName !== '' && userDetails.phoneNumber !== ''){
-            setUserReservationDetails(userDetails);
+            setNewReservation(reservation => ({...reservation, reservationOwnerRequest : {
+                firstName : userDetails.firstName,
+                lastName :  userDetails.lastName,
+                phoneNumber : userDetails.phoneNumber,
+            }}))
         }
 
     }, [userDetails])
@@ -132,16 +136,6 @@ const NewReservationDialog : React.FC<Props> = ({
         }));
     }
 
-
-    interface NewReservationRequest {
-        reservationEndingDate : number,
-        reservationStartingDate : number,
-        reservationName : string,
-        accommodationRequestList : Array<AccommodationRequest>,
-        externalServicesRequests : Array<ExternalServiceRequest>,
-        reservationRemarksRequestList : Array<any>,
-    }
-    
     const NEW_RESERVATION_DEFAULT : NewReservationRequest = {
         reservationEndingDate : 0,
         reservationStartingDate : 0,
@@ -149,6 +143,11 @@ const NewReservationDialog : React.FC<Props> = ({
         accommodationRequestList : [],
         externalServicesRequests : [],
         reservationRemarksRequestList : [],
+        reservationOwnerRequest : {
+            firstName : '',
+            lastName : '',
+            phoneNumber : '',
+        }
     }
     
     const [newReservation, setNewReservation] = React.useState<NewReservationRequest>(NEW_RESERVATION_DEFAULT);
@@ -189,15 +188,6 @@ const NewReservationDialog : React.FC<Props> = ({
 
     const [newExternalServiceDialog, setNewExternalServiceDialog] = React.useState<NewExternalServiceDialog>(NEW_EXTERNAL_SERVICE_DIALOG);
 
-
-    const USER_DETAILS_DEFAULT : UserInfoResponse= {
-        firstName : '',
-        lastName : '',
-        phoneNumber : '',
-    }
-
-    const [userReservationDetails, setUserReservationDetails] = React.useState<UserInfoResponse>(USER_DETAILS_DEFAULT);
-
     React.useEffect(() => {
         if(jwtToken && jwtToken !== ""){
             fetchAvailableResortObj(jwtToken);
@@ -234,6 +224,7 @@ const NewReservationDialog : React.FC<Props> = ({
 
     const postReservation = () => {
         if(newReservation.accommodationRequestList.length !== 0 && jwtToken){
+            console.log(newReservation);
             sendReservation(jwtToken, newReservation);
         }
     }
@@ -334,7 +325,12 @@ const NewReservationDialog : React.FC<Props> = ({
                                         optWidth={'27%'}
                                         defaultValue={userDetails.firstName}
                                         onChange={(event) => 
-                                            setUserReservationDetails(userDetails => ({...userDetails, firstName : event.target.value}))}
+                                            setNewReservation(
+                                                reservation => ({...reservation, reservationOwnerRequest : {
+                                                    ...reservation.reservationOwnerRequest,
+                                                    firstName : event.target.value,
+                                                }
+                                                }))}
                                     />
 
                                     <NumericTextField
@@ -344,7 +340,12 @@ const NewReservationDialog : React.FC<Props> = ({
                                         optWidth={'27%'}
                                         defaultValue={userDetails.lastName}
                                         onChange={(event) => 
-                                            setUserReservationDetails(userDetails => ({...userDetails, lastName : event.target.value}))}
+                                            setNewReservation(
+                                                reservation => ({...reservation, reservationOwnerRequest : {
+                                                    ...reservation.reservationOwnerRequest,
+                                                    lastName : event.target.value,
+                                                }
+                                                }))}
                                     />
 
                                     <NumericTextField
@@ -354,7 +355,12 @@ const NewReservationDialog : React.FC<Props> = ({
                                         optWidth={'27%'}
                                         defaultValue={userDetails.phoneNumber}
                                         onChange={(event) => 
-                                            setUserReservationDetails(userDetails => ({...userDetails, phoneNumber : event.target.value}))}
+                                            setNewReservation(
+                                                reservation => ({...reservation, reservationOwnerRequest : {
+                                                    ...reservation.reservationOwnerRequest,
+                                                    phoneNumber : event.target.value,
+                                                }
+                                                }))}
                                     />
                                 </div>
 

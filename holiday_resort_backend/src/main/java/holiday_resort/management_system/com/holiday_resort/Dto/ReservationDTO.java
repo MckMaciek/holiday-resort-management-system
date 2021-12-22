@@ -28,6 +28,7 @@ public class ReservationDTO {
     private List<ReservationRemarksDTO> reservationRemarks;
     private List<AccommodationDTO> accommodationListDTO;
     private List<ExternalServiceDTO> externalServiceDTOS;
+    private ReservationOwnerDTO reservationOwnerDTO;
     private User user;
 
     public ReservationDTO(Reservation reservation){
@@ -54,7 +55,9 @@ public class ReservationDTO {
 
         this.user = reservation.getUser();
         this.reservationEndingDate = reservation.getReservationEndingDate();
-        this.reservationName = reservation.getReservatonName();
+        this.reservationName = reservation.getReservationName();
+
+        this.reservationOwnerDTO = new ReservationOwnerDTO(reservation.getReservationOwner());
     }
     public ReservationDTO(){}
 }

@@ -2,6 +2,7 @@ package holiday_resort.management_system.com.holiday_resort.Responses;
 
 import holiday_resort.management_system.com.holiday_resort.Dto.ReservationDTO;
 import holiday_resort.management_system.com.holiday_resort.Enums.ReservationStatus;
+import holiday_resort.management_system.com.holiday_resort.Requests.ReservationOwnerRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +30,8 @@ public class ReservationResponse {
     private List<AccommodationResponse> accommodationResponses;
     private List<ExternalServiceResponse> externalServiceResponses;
 
+    private ReservationOwnerRequest reservationOwnerRequest;
+
 
     public ReservationResponse(ReservationDTO reservationDTO){
 
@@ -53,6 +56,8 @@ public class ReservationResponse {
 
         this.reservationEndingDate = reservationDTO.getReservationEndingDate();
         this.reservationName = reservationDTO.getReservationName();
+
+        this.reservationOwnerRequest = new ReservationOwnerRequest(reservationDTO.getReservationOwnerDTO());
     }
 
 

@@ -173,6 +173,14 @@ public class Startup implements CommandLineRunner {
 
         ReservationRequest reservationRequest = new ReservationRequest();
 
+        ReservationOwnerRequest reservationOwnerRequest = ReservationOwnerRequest.builder()
+                .firstName("Jan")
+                .lastName("Kowalski")
+                .phoneNumber("+666666666")
+                .build();
+
+        reservationRequest.setReservationOwnerRequest(reservationOwnerRequest);
+
         List<ServiceRequest> serviceRequestList = serviceRequestRepository.findAll();
 
         List<ServiceRequestDTO> externalServiceDTOS = externalServiceController.getAvailableServices().getBody();
