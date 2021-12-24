@@ -173,8 +173,9 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
                             
                         {true ? (
                             <Snackbar
-                            open={operationAlert.isSet}
-                            autoHideDuration={3000}
+                                open={operationAlert.isSet}
+                                onClose={() => setOperationAlert(OPERATION_ALERT_DEFAULT)}
+                                autoHideDuration={3000}
                             >
                                 <Alert 
                                 sx={{width : '40vw', marginBottom : '2vh', marginTop : '1vh'}}

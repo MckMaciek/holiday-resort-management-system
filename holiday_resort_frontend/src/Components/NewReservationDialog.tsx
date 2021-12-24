@@ -57,7 +57,6 @@ const Transition = React.forwardRef(function Transition(
 interface MapDispatcherToProps {
     fetchAvailableResortObj : (jwtToken : string) => void,
     fetchUserInfo : (jwtToken : string) => void,
-    sendReservation : (jwtToken : string, reservationRequest : NewReservationRequest) => void,
 }
 
 interface MapStateToProps {
@@ -71,7 +70,6 @@ const mapDispatchToProps = (dispatch : ThunkDispatch<{}, {}, any>) : MapDispatch
 
     fetchAvailableResortObj : (jwtToken : string) => dispatch(getAvailableResortObjectsApi(jwtToken)),
     fetchUserInfo : (jwtToken : string) => dispatch(getUserInfo(jwtToken)),
-    sendReservation : (jwtToken : string, reservationRequest : NewReservationRequest) => dispatch(postReservation(jwtToken, reservationRequest)),
 });
 
 const mapStateToProps = (state : any, accommodationProps : ComponentProps) : MapStateToProps => ({
@@ -108,7 +106,6 @@ const NewReservationDialog : React.FC<Props> = ({
     fetchAvailableResortObj,
     fetchUserInfo,
     userDetails,
-    sendReservation,
 }) => {
 
     React.useEffect(() => {

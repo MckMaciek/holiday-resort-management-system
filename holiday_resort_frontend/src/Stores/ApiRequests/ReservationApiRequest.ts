@@ -154,9 +154,6 @@ export const patchReservation = (jwtToken : string, reservationRequest : NewRese
             const reservationStatus = await patchReservationApiRequest(jwtToken, reservationRequest);
             if(reservationStatus === 200){
                 dispatch(objectModified(true));
-                console.log(reservationRequest);
-                console.log("patchowana");
-                console.log(reservationStatus);
             }
 
         }
