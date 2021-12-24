@@ -8,7 +8,7 @@ import { connect, ConnectedProps  } from 'react-redux';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-
+import {postReservation} from "../Stores/ApiRequests/ReservationApiRequest";
 import { ReservationInterface } from '../Interfaces/Reservation';
 
 import Box from '@mui/material/Box';
@@ -20,13 +20,17 @@ import {
     deleteAccommodationApi,
     markReservationStarted,
     deleteReservationApi,
+    patchReservation,
 } from '../Stores/ApiRequests/ReservationApiRequest';
 
 import ReservationTable from '../Components/ReservationTable';
 import NewReservationDialog from "../Components/NewReservationDialog";
+import { NewReservationRequest } from '../Interfaces/NewReservationRequest';
 import { useEffect, useState } from 'react';
 
 interface MapDispatcherToProps {
+    sendReservation : (jwtToken : string, reservationRequest : NewReservationRequest) => void,
+    updateReservation : (jwtToken : string, reservationRequest : NewReservationRequest) => void,
     removeReservation : (jwtToken : string, reservationId : number) => void,
     fetchReservations : (jwtToken : string) => void;
     removeAccommodation : (jwtToken : string, accommodationId : number) => void;
@@ -43,6 +47,9 @@ interface MapStateToProps {
 }
 
 const mapDispatchToProps = (dispatch : ThunkDispatch<{}, {}, any>) : MapDispatcherToProps => ({
+    
+    sendReservation : (jwtToken : string, reservationRequest : NewReservationRequest) => dispatch(postReservation(jwtToken, reservationRequest)),
+    updateReservation : (jwtToken : string, reservationRequest : NewReservationRequest) => dispatch(patchReservation(jwtToken, reservationRequest)),
     removeReservation : (jwtToken : string, reservationId) => dispatch(deleteReservationApi(jwtToken, reservationId)),
     fetchReservations : (jwtToken : string) => dispatch(getReservations(jwtToken)),
     removeAccommodation : (jwtToken : string, accommodationId : number) => dispatch(deleteAccommodationApi(jwtToken, accommodationId)),
@@ -67,6 +74,7 @@ interface TableContextInterface {
     removeAccommodation_ : (jwtToken : string, accommodationId : number) => void,
     setReservationStarted_ : (jwtToken : string, reservationId : number) => void,
     removeReservation_ : (jwtToken : string, reservationId : number) => void,
+    updateReservation_ : (jwtToken : string, reservationRequest : NewReservationRequest) => void,
 }
 
 export const TableContext = React.createContext<TableContextInterface | null> (null);
@@ -81,6 +89,8 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
     removeAccommodation,
     setReservationStarted,
     removeReservation,
+    sendReservation,
+    updateReservation,
 }) => {
 
     const [componentChanged, setComponentChanged] = useState(false);
@@ -137,6 +147,7 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
         removeAccommodation_ : removeAccommodation,
         setReservationStarted_ : setReservationStarted,
         removeReservation_ : removeReservation,
+        updateReservation_ : updateReservation,
     } 
 
     return(
@@ -145,9 +156,13 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
 
                 {newReservationDialog && newReservationDialog.isSet ? (
                     <NewReservationDialog
+                        reservationId={null}
+                        externalServiceText="Add"
+                        reservationOperation="New Reservation"
                         isOpen={newReservationDialog.isSet}
                         handleClose={() => setNewReservationDialog(NEW_RESERVATION_DIALOG_DEFAULT)}
                         handleAccept={() => setNewReservationDialog(NEW_RESERVATION_DIALOG_DEFAULT)}
+                        createOrUpdate={sendReservation}
                     />
                 ) : null}
 

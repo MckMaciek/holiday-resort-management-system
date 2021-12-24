@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ReservationService implements CrudOperations<ReservationDTO, Long>, Validate<ReservationDTO> {
@@ -114,6 +115,62 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                 .build();
 
         this.add(reservationDTO);
+    }
+
+
+    public void patchReservation(LoginDetails loginDetails, ReservationRequest reservationReq, Long reservationId){
+
+        if(!validateReservationRequest(reservationReq)) throw new IllegalArgumentException("Invalid Reservation Request!");
+        if(Objects.isNull(loginDetails.getUser())) throw new NullPointerException("User cannot be null!");
+
+        Optional<Reservation> reservationOpt = reservationRepository.findById(reservationId);
+        if(reservationOpt.isEmpty()) throw new NullPointerException(String.format("Reservation with the id of %s not found", reservationId));
+
+        List<ExternalServiceDTO> externalServiceDTOS = reservationReq.getExternalServicesRequests()
+                .stream()
+                .map(externalServiceService::convertRequestToDTO)
+                .collect(Collectors.toList());
+
+        List<AccommodationDTO> accommodationDTOS =  reservationReq.getAccommodationRequestList()
+                .stream()
+                .map(accommodationService::convertRequestToDTO)
+                .collect(Collectors.toList());
+
+        accommodationDTOS.forEach(accommodationDTO -> accommodationDTO.setUser(loginDetails.getUser()));
+
+        ReservationOwnerRequest reservationOwnerRequest = reservationReq.getReservationOwnerRequest();
+
+        Reservation userReservation = reservationOpt.get();
+
+        if (!reservationContext.checkIfOwnerAndUserRequestAreSame(userReservation.getLinkedLoginDetails(), loginDetails)){
+            throw new IllegalArgumentException(
+                    String.format("Reservation owner - %s and username in request - %s do not match!",
+                            userReservation.getLinkedLoginDetails().getUsername(), loginDetails.getUsername()));
+        }
+
+        ReservationDTO userReservationDTO = new ReservationDTO(userReservation);
+
+
+        userReservationDTO.setReservationDate(reservationReq.getReservationStartingDate());
+        userReservationDTO.setReservationEndingDate(reservationReq.getReservationEndingDate());
+        userReservationDTO.setReservationOwnerDTO(new ReservationOwnerDTO(reservationOwnerRequest));
+        userReservationDTO.setReservationName(reservationReq.getReservationName());
+        userReservationDTO.setUser(loginDetails.getUser());
+        userReservationDTO.setId(reservationId);
+
+        List<AccommodationDTO> existingAccommodationsDTO = userReservationDTO.getAccommodationListDTO();
+        List<AccommodationDTO> unionList = Stream.concat(existingAccommodationsDTO.stream(), accommodationDTOS.stream()).distinct()
+                .collect(Collectors.toList());
+
+        userReservationDTO.setAccommodationListDTO(unionList);
+
+        List<ExternalServiceDTO> existingExternalServicesDTO = userReservationDTO.getExternalServiceDTOS();
+        List<ExternalServiceDTO> externalServiceUnion = Stream.concat(existingExternalServicesDTO.stream(), externalServiceDTOS.stream()).distinct()
+                .collect(Collectors.toList());
+
+        userReservationDTO.setExternalServiceDTOS(externalServiceUnion);
+
+        this.modify(userReservationDTO);
     }
 
     public void deleteReservation(LoginDetails loginDetails, Long reservationId){
@@ -221,6 +278,14 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         }
     }
 
+    public void modify(ReservationDTO reservationDTO){
+
+        if(reservationDTO.getId() == null) throw new NullPointerException("Cannot update null id reservation");
+
+        Reservation reservation = transformToEntity(reservationDTO);
+        reservationRepository.save(reservation);
+    }
+
     private Reservation transformToEntity(ReservationDTO reservationDTO){
         Reservation reservation = new Reservation();
 
@@ -229,6 +294,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         reservation.setReservationEndingDate(reservationDTO.getReservationEndingDate());
         reservation.setReservationName(reservationDTO.getReservationName());
         reservation.setUser(reservationDTO.getUser());
+        reservation.setId(reservationDTO.getId());
         reservation.setFinalPrice(reservationDTO.getFinalPrice());
 
         List<Accommodation> accommodationList = reservationDTO.getAccommodationListDTO()

@@ -47,6 +47,7 @@ public class ReservationRemarksService implements CrudOperations<ReservationRema
     public ReservationRemarks transformToEntity(ReservationRemarksDTO reservationRemarksDTO, Reservation reservation){
 
         ReservationRemarks reservationRemarks = new ReservationRemarks();
+            reservationRemarks.setId(reservationRemarksDTO.getId());
             reservationRemarks.setCreationDate(reservationRemarksDTO.getCreationDate());
             reservationRemarks.setDescription(reservationRemarksDTO.getDescription());
             reservationRemarks.setTopic(reservationRemarksDTO.getTopic());

@@ -3,6 +3,7 @@ import { ExternalServiceRequest } from "./ExternalServiceRequest";
 import { ReservationOwner } from "./ReservationOwner";
 
 export interface NewReservationRequest {
+    reservationId : number | null,
     reservationEndingDate : number,
     reservationStartingDate : number,
     reservationName : string,

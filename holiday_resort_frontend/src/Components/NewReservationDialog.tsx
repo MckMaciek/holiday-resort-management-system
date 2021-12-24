@@ -83,15 +83,23 @@ const mapStateToProps = (state : any, accommodationProps : ComponentProps) : Map
 
 
 interface ComponentProps {
+    externalServiceText : string,
+    reservationOperation : string,
     isOpen : boolean,
+    reservationId : number | null,
     handleClose : () => void,
     handleAccept : () => void,
+    createOrUpdate : (jwtToken : string, reservationRequest : NewReservationRequest) => void,
 }
 
 type Props = MapStateToProps & MapDispatcherToProps & ComponentProps
 
 const NewReservationDialog : React.FC<Props> = ({
+    externalServiceText,
+    reservationOperation,
     isOpen,
+    reservationId,
+    createOrUpdate,
     handleClose,
     handleAccept,
 
@@ -112,11 +120,16 @@ const NewReservationDialog : React.FC<Props> = ({
     React.useEffect(() => {
 
         if(userDetails && userDetails.firstName !== '' && userDetails.lastName !== '' && userDetails.phoneNumber !== ''){
-            setNewReservation(reservation => ({...reservation, reservationOwnerRequest : {
+            setNewReservation(reservation => ({...reservation, 
+                reservationOwnerRequest : {
                 firstName : userDetails.firstName,
                 lastName :  userDetails.lastName,
                 phoneNumber : userDetails.phoneNumber,
-            }}))
+            }}));
+
+            if(reservationId){
+                setNewReservation(reservation => ({...reservation, reservationId : reservationId}));
+            } // setting reservation Id in case the operation is to update
         }
 
     }, [userDetails])
@@ -137,6 +150,7 @@ const NewReservationDialog : React.FC<Props> = ({
     }
 
     const NEW_RESERVATION_DEFAULT : NewReservationRequest = {
+        reservationId : null,
         reservationEndingDate : 0,
         reservationStartingDate : 0,
         reservationName : '',
@@ -223,9 +237,8 @@ const NewReservationDialog : React.FC<Props> = ({
     }
 
     const postReservation = () => {
-        if(newReservation.accommodationRequestList.length !== 0 && jwtToken){
-            console.log(newReservation);
-            sendReservation(jwtToken, newReservation);
+        if(jwtToken){
+            createOrUpdate(jwtToken, newReservation);
         }
     }
 
@@ -248,7 +261,7 @@ const NewReservationDialog : React.FC<Props> = ({
                         style={{textAlign : 'center', marginBottom : '1%'}}
                     >
 
-                     New Reservation 
+                     {reservationOperation}
                     </Typography>
                     <Divider />
                 </DialogTitle>
@@ -379,7 +392,7 @@ const NewReservationDialog : React.FC<Props> = ({
                                     style={{marginTop : '1%', width : '30%'}}
                                     onClick={() => setNewExternalServiceDialog({isSet : true})}
                                 >  
-                                    Add External Service
+                                    {`${externalServiceText} External Service`}
                                 </Button>
 
                                 <AddExternalServiceDialog

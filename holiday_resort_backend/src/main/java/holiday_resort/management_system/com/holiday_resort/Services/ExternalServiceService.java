@@ -74,6 +74,7 @@ public class ExternalServiceService implements Validate<ExternalServiceDTO> {
     public ExternalService transformToEntity(ExternalServiceDTO externalServiceDTO, Reservation reservation){
 
         ExternalService externalService = ExternalService.builder()
+                .id(externalServiceDTO.getId())
                 .reservation(reservation)
                 .amountOfPeople(externalServiceDTO.getAmountOfPeople())
                 .remarks(externalServiceDTO.getRemarks())

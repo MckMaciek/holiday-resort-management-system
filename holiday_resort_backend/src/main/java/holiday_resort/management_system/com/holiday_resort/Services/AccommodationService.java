@@ -189,7 +189,7 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
         List<Event> eventList = eventService.mapDtoToEntity(accommodationDTO.getEventDTOS());
 
         Accommodation accommodation = new Accommodation();
-        accommodation.setId(null);
+        accommodation.setId(accommodationDTO.getId());
         accommodation.setUser(accommodationDTO.getUser());
         accommodation.setNumberOfPeople(accommodationDTO.getNumberOfPeople());
         accommodation.setReservation(reservation);

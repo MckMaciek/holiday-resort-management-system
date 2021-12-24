@@ -31,6 +31,9 @@ import { TableContext } from '../MainPageSections/ReservationSection';
 import { ReservationInterface } from '../Interfaces/Reservation';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { RolesTypes } from '../Enums/Roles';
+import {OperationType} from "../Enums/OperationType";
+
+import NewReservationDialog from './NewReservationDialog';
 
 const Row = ({row} : any) => {
 
@@ -41,12 +44,14 @@ const Row = ({row} : any) => {
     isSet : boolean,
     id : number,
     propertyName : string,
+    deleteType : OperationType,
   }
 
   interface EDIT_DIALOG_INTERFACE {
     isSet : boolean,
     id : number,
     propertyName : string,
+    editType : OperationType,
   }
 
   interface SUMMARY_DIALOG_INTERFACE {
@@ -58,6 +63,7 @@ const Row = ({row} : any) => {
     isSet : false,
     id : -1,
     propertyName : "",
+    deleteType : OperationType.NONE,
   }
   const [deleteDialog, setDeleteDialog] = React.useState<DELETE_DIALOG_CONFIRMATION_INTERFACE>(DELETE_DIALOG_CONFIRMATION_DEFAULT);
   
@@ -65,6 +71,7 @@ const Row = ({row} : any) => {
     isSet : false,
     id : -1,
     propertyName : "",
+    editType : OperationType.NONE,
   }
   const [editDialog, setEditDialog] = React.useState<EDIT_DIALOG_INTERFACE>(EDIT_DIALOG_DEFAULT);
 
@@ -83,6 +90,9 @@ const Row = ({row} : any) => {
   console.log(row);
 
   return (
+
+    (TableContextImp !== undefined && TableContextImp !== null ? (
+
     <React.Fragment>
       <TableRow key={row.key} sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
@@ -127,6 +137,7 @@ const Row = ({row} : any) => {
                   isSet : true,
                   id : row.id,
                   propertyName : row.reservationName,
+                  deleteType : OperationType.RESERVATION,
                 });
               }}
               
@@ -134,13 +145,13 @@ const Row = ({row} : any) => {
             Cancel
             </Button>
             </div>
-            {deleteDialog.isSet && deleteDialog.id === row.id ? (
+            {deleteDialog.isSet && deleteDialog.deleteType === OperationType.RESERVATION &&  deleteDialog.id === row.id ? (
                   <DialogConfirm
                     isOpen={deleteDialog.isSet}
                     closeHandler={() => setDeleteDialog(DELETE_DIALOG_CONFIRMATION_DEFAULT)}
                     onAcceptHandler={
                       () => {
-                        TableContextImp?.removeReservation_(TableContextImp.jwtToken_, row.id)
+                        TableContextImp.removeReservation_(TableContextImp.jwtToken_, row.id)
                         setDeleteDialog(DELETE_DIALOG_CONFIRMATION_DEFAULT) 
                       }  
                     }
@@ -151,6 +162,7 @@ const Row = ({row} : any) => {
               >
               </DialogConfirm>
             ) : null}
+
 
             {summaryDialog.isSet && summaryDialog.id === row.id ? (
                 <SummaryDialog
@@ -185,10 +197,30 @@ const Row = ({row} : any) => {
                     variant="outlined"
                     style={{display : 'inline'}}
                     disabled={row.reservationStatus !== "DRAFT"}
+                    onClick={() => { 
+                      setEditDialog({
+                        isSet : true,
+                        id : row.id,
+                        propertyName : row.reservationName,
+                        editType : OperationType.RESERVATION,
+                      });
+                    }}
                   >
                   Change Reservation Details
                 </Button>
               </div>
+
+              {editDialog.isSet && editDialog.editType === OperationType.RESERVATION &&  editDialog.id === row.id ? (
+                 <NewReservationDialog
+                    reservationId={editDialog.id}
+                    externalServiceText="Edit"
+                    reservationOperation={`Edit -  ${editDialog.propertyName.toLowerCase()}`}
+                    isOpen={editDialog.isSet}
+                    handleClose={() => setEditDialog(EDIT_DIALOG_DEFAULT)}
+                    handleAccept={() => setEditDialog(EDIT_DIALOG_DEFAULT)}
+                    createOrUpdate={TableContextImp.updateReservation_}
+                 />
+              ) : null}
 
             </div>
             <Box sx={{ margin: 1 }}>
@@ -238,6 +270,7 @@ const Row = ({row} : any) => {
                         isSet : true,
                         id : innerRow.id,
                         propertyName : innerRow.resortObject.objectName,
+                        editType : OperationType.ACCOMMODATION,
                       });
                     }}
                     startIcon={<ModeEditIcon/>}
@@ -256,6 +289,7 @@ const Row = ({row} : any) => {
                         isSet : true,
                         id : innerRow.id,
                         propertyName : innerRow.resortObject.objectName,
+                        deleteType : OperationType.ACCOMMODATION,
                       });
                     }}
                     startIcon={<DeleteIcon/>}
@@ -266,11 +300,11 @@ const Row = ({row} : any) => {
                   </TableCell>
 
                     <DialogConfirm
-                        isOpen={deleteDialog.isSet}
+                        isOpen={deleteDialog.isSet && deleteDialog.deleteType === OperationType.ACCOMMODATION}
                         closeHandler={() => setDeleteDialog(DELETE_DIALOG_CONFIRMATION_DEFAULT)}
                         onAcceptHandler={
                           () => {
-                            TableContextImp?.removeAccommodation_(TableContextImp.jwtToken_, deleteDialog.id)
+                            TableContextImp.removeAccommodation_(TableContextImp.jwtToken_, deleteDialog.id)
                             setDeleteDialog(DELETE_DIALOG_CONFIRMATION_DEFAULT) 
                           }  
                         }
@@ -281,7 +315,7 @@ const Row = ({row} : any) => {
                     >
                     </DialogConfirm>
 
-                    {editDialog.isSet && editDialog.id === innerRow.id ? (
+                    {editDialog.isSet && editDialog.editType === OperationType.ACCOMMODATION && editDialog.id === innerRow.id ? (
                       <AccommodationDialogEdit
                           isOpen={editDialog.isSet}
                           propertyId={editDialog.id}
@@ -329,6 +363,7 @@ const Row = ({row} : any) => {
         </TableCell>
       </TableRow>
     </React.Fragment>
+    ) : null)
   );
 }
 

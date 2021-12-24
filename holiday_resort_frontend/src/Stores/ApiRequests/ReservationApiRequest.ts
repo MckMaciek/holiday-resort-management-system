@@ -133,6 +133,43 @@ export const postReservation = (jwtToken : string, reservationRequest : NewReser
     }
 }
 
+const patchReservationApiRequest = async (jwtToken : string, reservationRequest : NewReservationRequest) => {
+
+    const config = {
+        headers: { Authorization: `Bearer ${jwtToken}` },
+        'Content-Type': 'application/json',
+    };
+
+    const post = await Axios.patch(
+        `${API_URL.SERVER_URL}${API_URL.PATCH_RESERVATION}/${reservationRequest.reservationId}`, reservationRequest, config);
+    
+    return post.status;
+}
+
+export const patchReservation = (jwtToken : string, reservationRequest : NewReservationRequest) => {
+
+    return async (dispatch : ThunkDispatch<{}, {}, any> ) => {
+            
+        try{
+            const reservationStatus = await patchReservationApiRequest(jwtToken, reservationRequest);
+            if(reservationStatus === 200){
+                dispatch(objectModified(true));
+                console.log(reservationRequest);
+                console.log("patchowana");
+                console.log(reservationStatus);
+            }
+
+        }
+        catch (err){
+            console.log(err);
+        }
+        finally{
+            dispatch(objectModified(false));
+        }
+    }
+}
+
+
 const deleteReservationRequest = async (jwtToken : string, reservationId : number) => {
 
     const config = {
