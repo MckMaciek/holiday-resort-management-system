@@ -156,6 +156,7 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
 
                 {newReservationDialog && newReservationDialog.isSet ? (
                     <NewReservationDialog
+                        reservationName=""
                         reservationId={null}
                         externalServiceText="Add"
                         reservationOperation="New Reservation"

@@ -31,12 +31,18 @@ export type LoginActionIsAuthenticated = {
     isAuth : boolean,
 }
 
+export type LoginActionTokenExpired = {
+    type : typeof AuthOperationLoginTypes.TOKEN_EXPIRED,
+    isTokenExpired : boolean,
+}
+
 export type LoginGenericAction = 
     LoginActionErrorInterface | 
     LoginActionIsSetInReducerInterface | 
     LoginActionFetchingInterface | 
     LoginActionIsAuthenticated |
-    LoginActionInterface;
+    LoginActionInterface |
+    LoginActionTokenExpired;
 
 /* INTERFACES FOR ACTIONS DISPATCHED WHILE SIGN-UP PROCESS  */
 export type RegisterActionInterface = {

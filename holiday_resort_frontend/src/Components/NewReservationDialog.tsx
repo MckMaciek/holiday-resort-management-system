@@ -81,6 +81,7 @@ const mapStateToProps = (state : any, accommodationProps : ComponentProps) : Map
 
 
 interface ComponentProps {
+    reservationName : string,
     externalServiceText : string,
     reservationOperation : string,
     isOpen : boolean,
@@ -93,6 +94,7 @@ interface ComponentProps {
 type Props = MapStateToProps & MapDispatcherToProps & ComponentProps
 
 const NewReservationDialog : React.FC<Props> = ({
+    reservationName,
     externalServiceText,
     reservationOperation,
     isOpen,
@@ -118,6 +120,8 @@ const NewReservationDialog : React.FC<Props> = ({
 
         if(userDetails && userDetails.firstName !== '' && userDetails.lastName !== '' && userDetails.phoneNumber !== ''){
             setNewReservation(reservation => ({...reservation, 
+                reservationName : reservationName,
+
                 reservationOwnerRequest : {
                 firstName : userDetails.firstName,
                 lastName :  userDetails.lastName,
@@ -314,7 +318,7 @@ const NewReservationDialog : React.FC<Props> = ({
                                 <NumericTextField
                                     id={'reservationName'}
                                     label={'Reservation Name'}
-                                    defaultValue=''
+                                    defaultValue={reservationName}
                                     optWidth={'50%'}
                                     type={'search'}
                                     onChange={(event) => 

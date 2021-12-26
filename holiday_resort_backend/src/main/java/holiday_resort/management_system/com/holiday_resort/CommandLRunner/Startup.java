@@ -111,14 +111,14 @@ public class Startup implements CommandLineRunner {
         registerRequest.setLastName("Musial");
         registerRequest.setPhoneNumber("+48666666666");
 
-        registerRequest.setUsername("MckMaciek");
-        registerRequest.setPassword("Koteczek12");
+        registerRequest.setUsername("123123123a");
+        registerRequest.setPassword("123123123a");
 
         authController.registerUser(registerRequest);
 
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setUsername("MckMaciek");
-        loginRequest.setPassword("Koteczek12");
+        loginRequest.setUsername("123123123a");
+        loginRequest.setPassword("123123123a");
 
 
         setReservations(loginRequest);
@@ -202,11 +202,11 @@ public class Startup implements CommandLineRunner {
         accommodationRequest1.setResortObjectId(resortObjectList.get(1).getId());
 
         AccommodationRequest accommodationRequest2 = new AccommodationRequest();
-        accommodationRequest2.setNumberOfPeople(55l);
+        accommodationRequest2.setNumberOfPeople(11l);
         accommodationRequest2.setResortObjectId(resortObjectList.get(2).getId());
 
         AccommodationRequest accommodationRequest3 = new AccommodationRequest();
-        accommodationRequest3.setNumberOfPeople(11l);
+        accommodationRequest3.setNumberOfPeople(55l);
         accommodationRequest3.setResortObjectId(resortObjectList.get(3).getId());
 
         setResortObjectService("NIEZAREZERWOWANE1", "Namiot", false, 33l, BigDecimal.ONE, BigDecimal.TEN);

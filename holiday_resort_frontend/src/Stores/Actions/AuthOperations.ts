@@ -11,6 +11,7 @@ import {LoginActionInterface,
     RegisterActionFetchingInterface,
     RegisterActionIsSetInReducerInterface,
     RegisterActionSetDetails,
+    LoginActionTokenExpired
     } from '../../Interfaces/ReduxInterfaces/AuthOperations';
 import { LoginResponse } from '../../Interfaces/LoginResponse';
 import { RegisterResponse } from '../../Interfaces/RegisterResponse';
@@ -41,6 +42,11 @@ export const loginSetError = (error : errorInterface) : LoginActionErrorInterfac
 export const loginSetAuthenticated = (isAuth : boolean) : LoginActionIsAuthenticated => ({
     type : AuthOperationLoginTypes.SET_AUTHENTICATED,
     isAuth : isAuth,
+})
+
+export const loginSetTokenExpired = (isTokenExpired : boolean) : LoginActionTokenExpired => ({
+    type : AuthOperationLoginTypes.TOKEN_EXPIRED,
+    isTokenExpired : isTokenExpired,
 })
 
 /* ACTIONS DISPATCHED WHILE SIGN-UP PROCESS */

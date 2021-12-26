@@ -11,6 +11,7 @@ interface INIT_STATE_LOGIN_INTERFACE {
     roles : Array<string>,
 
     isAuthenticated : boolean,
+    isTokenExpired : boolean,
 
     isLoginInReducer : boolean,
     isLoginFetching : boolean,
@@ -26,6 +27,7 @@ const INIT_STATE_LOGIN : INIT_STATE_LOGIN_INTERFACE = {
     roles : [],
 
     isAuthenticated : false,
+    isTokenExpired : false,
 
     isLoginInReducer : false,
     isLoginFetching : false,
@@ -39,6 +41,10 @@ const LoginReducer = (state : INIT_STATE_LOGIN_INTERFACE = INIT_STATE_LOGIN, act
         case AuthOperationLoginTypes.LOGIN_ACTION : {
             const {jwt, userId, username, email, roles} = action.payload;
             return {...state, jwt : jwt, userId : userId, username : username, email : email, roles : roles}
+        }
+
+        case AuthOperationLoginTypes.TOKEN_EXPIRED : {
+            return {...state, isTokenExpired : action.isTokenExpired}
         }
         case AuthOperationLoginTypes.SET_AUTHENTICATED : {
             return {...state, isAuthenticated : action.isAuth}

@@ -110,7 +110,6 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                 .externalServiceDTOS(externalServiceDTOS)
                 .reservationRemarks(reservationRemarksDTOS)
                 .reservationOwnerDTO(new ReservationOwnerDTO(reservationOwnerRequest))
-                .finalPrice(priceService.calculateFinalPrice())
                 .user(loginDetails.getUser())
                 .build();
 
@@ -164,11 +163,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
 
         userReservationDTO.setAccommodationListDTO(unionList);
 
-        List<ExternalServiceDTO> existingExternalServicesDTO = userReservationDTO.getExternalServiceDTOS();
-        List<ExternalServiceDTO> externalServiceUnion = Stream.concat(existingExternalServicesDTO.stream(), externalServiceDTOS.stream()).distinct()
-                .collect(Collectors.toList());
-
-        userReservationDTO.setExternalServiceDTOS(externalServiceUnion);
+        userReservationDTO.setExternalServiceDTOS(externalServiceDTOS);
 
         this.modify(userReservationDTO);
     }
@@ -274,6 +269,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         if(validate(reservationDTO)){
 
             Reservation reservation = transformToEntity(reservationDTO);
+            reservation.setFinalPrice(priceService.calculateFinalPrice(reservation));
             reservationRepository.save(reservation);
         }
     }
@@ -283,6 +279,8 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         if(reservationDTO.getId() == null) throw new NullPointerException("Cannot update null id reservation");
 
         Reservation reservation = transformToEntity(reservationDTO);
+        reservation.setFinalPrice(priceService.calculateFinalPrice(reservation));
+
         reservationRepository.save(reservation);
     }
 
@@ -342,7 +340,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
     @Override
     public boolean validate(ReservationDTO reservationDTO) {
         return reservationDTO != null && reservationDTO.getAccommodationListDTO() != null
-                && !reservationDTO.getAccommodationListDTO().isEmpty() && reservationDTO.getFinalPrice() != null &&
+                && !reservationDTO.getAccommodationListDTO().isEmpty()  &&
                     reservationDTO.getUser() != null;
     }
 

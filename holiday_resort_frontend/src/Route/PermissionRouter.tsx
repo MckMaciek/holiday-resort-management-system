@@ -44,10 +44,10 @@ const PermissionRouter : React.FC<PropsFromRedux> = (
             >
                 <AdminPage/>
             </PrivateRouter>
-
+                                   
 
             <PrivateRouter
-            isAuth={isAuthenticated && roles.includes(RolesTypes.ADMIN)}
+            isAuth={isAuthenticated && roles.includes(RolesTypes.USER)}
             path={path}
             >
                 <MainPage/>

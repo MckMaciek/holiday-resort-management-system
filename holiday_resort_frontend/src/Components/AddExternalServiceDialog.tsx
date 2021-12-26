@@ -60,9 +60,22 @@ const AddExternalServiceDialog : React.FC<ComponentProps> = ({
 
     interface ExternalServicesCheckBox extends ExternalServiceResponse {
         isSet : boolean,
+        remarks : string,
         amountOfPeople : number,
     }
+
+        
+    interface ExternalServiceRemarksInt {
+        id : number,
+        remarks : string,
+    }
+
+    const NEW_EXTENRAL_SERVICE_REMARKS_DEFAULT : ExternalServiceRemarksInt = {
+        id : -1,
+        remarks : '',
+    }
     
+    const [externalSericeRemarks, setExternalServiceRemarks] = React.useState<Array<ExternalServiceRemarksInt>>([]);
 
     const [externalServicesCheckboxValues, setExternalServicesCheckboxValues] = React.useState<Array<ExternalServicesCheckBox>>([])
 
@@ -76,10 +89,11 @@ const AddExternalServiceDialog : React.FC<ComponentProps> = ({
                 let externalServiceObj : ExternalServiceRequest = {
                     serviceRequestId : externalService.id,
                     amountOfPeople : externalService.amountOfPeople,
-                    remarks : '',
+                    remarks : externalService.remarks,
                 }
                 externalServicesRequest.push(externalServiceObj);
             }
+            console.log(externalServicesRequest)
         });
 
         modifyReservation(reservation => ({
@@ -112,6 +126,7 @@ const AddExternalServiceDialog : React.FC<ComponentProps> = ({
                         externalServices={externalServices}
                         setExternalServicesCheckboxValues={setExternalServicesCheckboxValues}
                         externalServicesCheckboxValues={externalServicesCheckboxValues}
+                        setExternalServiceRemarks={setExternalServiceRemarks}
                     />
                 </div>
             ) : (

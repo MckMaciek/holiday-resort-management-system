@@ -14,6 +14,7 @@ import holiday_resort.management_system.com.holiday_resort.Enums.RoleTypes;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.CrudOperations;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.Validate;
 import holiday_resort.management_system.com.holiday_resort.Repositories.AccommodationRepository;
+import holiday_resort.management_system.com.holiday_resort.Repositories.ReservationRepository;
 import holiday_resort.management_system.com.holiday_resort.Requests.AccommodationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -31,12 +32,14 @@ import java.util.stream.Collectors;
 //@Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class AccommodationService implements CrudOperations<AccommodationDTO, Long>, Validate<AccommodationDTO> {
 
+    private final ReservationRepository reservationRepository;
     private final AccommodationRepository accommodationRepository;
     private final AccommodationConverter accommodationConverter;
     private final ObjectMapper objectMapper;
 
     private final GenericAction<Accommodation, AccommodationRepository> accommodationContext;
 
+    private final PriceService priceService;
     private final ResortObjectService resortObjectService;
     private final EventService eventService;
 
@@ -44,15 +47,19 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
     public AccommodationService(AccommodationRepository accommodationRepository,
                                 AccommodationConverter accommodationConverter,
                                 ResortObjectService resortObjectService,
+                                ReservationRepository reservationRepository,
                                 EventService eventService,
+                                PriceService priceService,
                                 GenericAction<Accommodation, AccommodationRepository> accommodationContext,
                                 ObjectMapper objectMapper
                                 ){
         this.accommodationRepository = accommodationRepository;
         this.accommodationConverter = accommodationConverter;
+        this.reservationRepository = reservationRepository;
         this.resortObjectService = resortObjectService;
         this.eventService = eventService;
         this.accommodationContext = accommodationContext;
+        this.priceService = priceService;
         this.objectMapper = objectMapper;
     }
 
@@ -96,6 +103,11 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
         } else userAccommodation.setUserEventList(null);
 
         this.add(userAccommodation);
+        Reservation reservation = userAccommodation.getReservation();
+
+        reservation.setFinalPrice(priceService.calculateFinalPrice(reservation));
+        reservationRepository.save(reservation);
+
     }
 
     public List<EventDTO> getResortObjectEvents (Long accommodationId, LoginDetails loginDetails){
@@ -123,7 +135,12 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
         if(targetStatus.equals(ReservationStatus.NEW) || targetStatus.equals(ReservationStatus.DRAFT) ){
             try {
                 Accommodation accommodationPatched = applyPatchToAccommodation(accommodationPatch, accommodation);
+
                 accommodationRepository.save(accommodationPatched);
+                Reservation reservation = accommodation.getReservation();
+
+                reservation.setFinalPrice(priceService.calculateFinalPrice(reservation));
+                reservationRepository.save(reservation);
 
             } catch (JsonPatchException | JsonProcessingException e) {
                 e.printStackTrace();
@@ -146,19 +163,32 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
 
         if(userReservation.getReservationStatus() == ReservationStatus.DRAFT || userReservation.getReservationStatus() == ReservationStatus.NEW){
 
+            Reservation reservation = accommodationOwnerPair.getSecond().getReservation();
             accommodationOwnerPair.getSecond().setResortObject(null);
+
+            reservation.setFinalPrice(priceService.calculateFinalPrice(reservation));
+            reservationRepository.save(reservation);
+
             accommodationOwnerPair.getSecond().setReservation(null);
             accommodationOwnerPair.getSecond().setUser(null);
+
             accommodationRepository.delete(accommodationOwnerPair.getSecond());
         }
         else if ((userReservation.getReservationStatus() != ReservationStatus.DRAFT || userReservation.getReservationStatus() != ReservationStatus.NEW)
                 && (userRoles.contains(RoleTypes.ADMIN) || userRoles.contains(RoleTypes.MANAGER))
         ){
 
+            Reservation reservation = accommodationOwnerPair.getSecond().getReservation();
             accommodationOwnerPair.getSecond().setResortObject(null);
+
+            reservation.setFinalPrice(priceService.calculateFinalPrice(reservation));
+            reservationRepository.save(reservation);
+
             accommodationOwnerPair.getSecond().setReservation(null);
             accommodationOwnerPair.getSecond().setUser(null);
+
             accommodationRepository.delete(accommodationOwnerPair.getSecond());
+
         }
         else throw new IllegalArgumentException("Only the privileged user is able to remove an accommodation with the status other than 'started'");
     }

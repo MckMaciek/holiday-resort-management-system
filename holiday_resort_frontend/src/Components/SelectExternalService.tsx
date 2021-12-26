@@ -4,29 +4,42 @@ import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { useEffect, useRef, useState } from "react";
+import { createRef, forwardRef, useEffect, useRef, useState } from "react";
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import * as React from 'react';
 
 
 interface ExternalServicesCheckBox extends ExternalServiceResponse {
     isSet : boolean,
     amountOfPeople : number,
+    remarks : string,
 }
+
+interface ExternalServiceRemarksInt {
+    id : number,
+    remarks : string,
+}
+
 interface ComponentProps {
     externalServices : Array<ExternalServiceResponse>,
     setExternalServicesCheckboxValues : React.Dispatch<React.SetStateAction<Array<ExternalServicesCheckBox>>>,
     externalServicesCheckboxValues : Array<ExternalServicesCheckBox>,
+    setExternalServiceRemarks : React.Dispatch<React.SetStateAction<Array<ExternalServiceRemarksInt>>>,
 }
 
 const SelectExternalService : React.FC<ComponentProps> = ({
     externalServices,
     setExternalServicesCheckboxValues,
     externalServicesCheckboxValues,
+    setExternalServiceRemarks,
 }) => {
+
+    let textfieldRef = React.createRef<HTMLDivElement>();
 
     useEffect(() => {
         
@@ -38,6 +51,7 @@ const SelectExternalService : React.FC<ComponentProps> = ({
                     serviceName : externalService.serviceName,
                     isSet : false,
                     amountOfPeople : 0,
+                    remarks : '',
                 }]);
             });
         }
@@ -52,7 +66,7 @@ const SelectExternalService : React.FC<ComponentProps> = ({
 
         setExternalServicesCheckboxValues(ext => [...ext.slice(0, checkboxIndex),{
                 ...selectedCheckBox[0],
-                amountOfPeople : (operation === 'add' ? selectedCheckBox[0].amountOfPeople + 1 : selectedCheckBox[0].amountOfPeople - 1),
+                amountOfPeople : (operation === 'add' ? selectedCheckBox[0].amountOfPeople + 1 :  Math.max(selectedCheckBox[0].amountOfPeople - 1, 0)),
             }, ...ext.slice(++checkboxIndex)]);
      }
 
@@ -79,11 +93,8 @@ const SelectExternalService : React.FC<ComponentProps> = ({
         }
     }
 
-
     return(
-
         <div>
-
             {externalServicesCheckboxValues && externalServicesCheckboxValues.length === externalServices.length ? (
                 
                 <FormControl 
@@ -102,7 +113,7 @@ const SelectExternalService : React.FC<ComponentProps> = ({
                     </FormLabel>
                     <FormGroup>
                     <>
-                        {externalServicesCheckboxValues.map((externalServicesChkbx, index) => (
+                        {externalServicesCheckboxValues.map((externalServicesChkbx) => (
                             <>
                                 
                             <FormControlLabel
@@ -144,7 +155,8 @@ const SelectExternalService : React.FC<ComponentProps> = ({
                                     style={{marginLeft : '5%'}}
                                 >   
                                     {externalServicesChkbx.amountOfPeople}  People 
-                                </span>    
+                                </span> 
+
                             </ButtonGroup>
                             </>     
                         ))}

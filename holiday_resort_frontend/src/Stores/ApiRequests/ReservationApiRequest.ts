@@ -2,7 +2,7 @@ import { ReservationInterface } from "../../Interfaces/Reservation";
 import API_URL from '../../API_URL.json';
 
 import {AccommodationRequest} from '../../Interfaces/AccommodationRequest';
-
+import {loginSetTokenExpired} from '../Actions/AuthOperations';
 import {
     getResortObjectEvents,
     areAvailableObjectsFetching
@@ -155,6 +155,9 @@ export const patchReservation = (jwtToken : string, reservationRequest : NewRese
             if(reservationStatus === 200){
                 dispatch(objectModified(true));
             }
+            else if(reservationStatus === 411){
+                dispatch(loginSetTokenExpired(true));
+            }
 
         }
         catch (err){
@@ -188,6 +191,9 @@ export const deleteReservationApi = (jwtToken : string, reservationId : number) 
             const deleteAccommodationStatus = await deleteReservationRequest(jwtToken, reservationId);
             if(deleteAccommodationStatus === 200){
                 dispatch(objectModified(true));
+            }
+            else if(deleteAccommodationStatus === 411){
+                dispatch(loginSetTokenExpired(true));
             }
 
         }

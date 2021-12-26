@@ -213,6 +213,7 @@ const Row = ({row} : any) => {
               {editDialog.isSet && editDialog.editType === OperationType.RESERVATION &&  editDialog.id === row.id ? (
                  <NewReservationDialog
                     reservationId={editDialog.id}
+                    reservationName={editDialog.propertyName}
                     externalServiceText="Edit"
                     reservationOperation={`Edit -  ${editDialog.propertyName.toLowerCase()}`}
                     isOpen={editDialog.isSet}

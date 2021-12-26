@@ -14,7 +14,18 @@ import DialogConfirm from "./DialogConfirm";
 import {ReservationInterface} from "../Interfaces/Reservation";
 import ListComponent from "./ListComponent";
 import { Typography } from '@material-ui/core';
+
 import Box from '@mui/material/Box';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import IconButton from '@mui/material/IconButton';
+import Collapse from '@mui/material/Collapse';
+
 
 
 const Transition = React.forwardRef(function Transition(
@@ -53,6 +64,7 @@ const SummaryDialog : React.FC<IProps> = ({
     isSet : false,
   }
   const [sendDialog, setSendDialog] = React.useState<SEND_DIALOG_INTERFACE>(SEND_DIALOG_CONFIRMATION_DEFAULT);
+  const [tableOpen, setTableOpen] = React.useState<boolean>(false);
 
   const TableContextImp = React.useContext(TableContext);
 
@@ -100,6 +112,67 @@ const SummaryDialog : React.FC<IProps> = ({
                     / (1000 * 3600 * 24))} </strong>
                 </Typography>
 
+                <Typography
+                    variant="h5"
+                    component="div"
+                    style={{marginBottom : '2%', marginTop : '2%'}}
+                >
+                    External Services : 
+                </Typography>
+
+                {reservation.externalServiceResponses.length !== 0 ? (
+                <Box sx={{ margin: 1, width : '100%' }}>
+                    <Table>  
+                        <TableHead>
+                            <TableRow  sx={{ '& > *': { borderBottom: 'unset' } }}>
+                                <TableCell  align="center"> Event </TableCell>
+                                <TableCell  align="center"> Amount of People </TableCell>
+                                <TableCell  align="center"> Remarks </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                        {reservation.externalServiceResponses.map(externalService => (
+                        <TableRow key={externalService.serviceRequestId}>
+
+                            <TableCell 
+                            align="center"
+                            component="th" 
+                            scope="row"
+                            >
+                                {externalService.serviceRequestName}
+                            </TableCell>
+                            <TableCell 
+                            align="center"
+                            component="th" 
+                            scope="row"
+                            >
+                                {externalService.amountOfPeople}
+                            </TableCell>
+                            <TableCell 
+                            align="center"
+                            component="th" 
+                            scope="row"
+                            >
+                                {externalService.remarks}
+                            </TableCell>
+                            </TableRow>
+                        ))}
+                        </TableBody>
+                    </Table>
+                </Box>
+
+                ) : (
+                    <p> No choosen </p>
+                )}
+
+                <Typography
+                    variant="h5"
+                    component="div"
+                    style={{marginBottom : '2%', marginTop : '2%'}}
+                >
+                    Accommodation : 
+                </Typography>
+                
                 <ListComponent
                 reservation={reservation}
                 sendDialog={sendDialog}
