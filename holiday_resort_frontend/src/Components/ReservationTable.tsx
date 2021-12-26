@@ -23,7 +23,7 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DialogConfirm from '../Components/DialogConfirm';
 import AccommodationDialogEdit from '../Components/AccommodationDialogEdit';
 import SummaryDialog from '../Components/SummaryDialog';
-
+import { format } from "date-fns";
 import ReservationRemarksTable from './ReservationRemarksTable'; 
 
 import { TableContext } from '../MainPageSections/ReservationSection';
@@ -103,13 +103,13 @@ const Row = ({row} : any) => {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
-          <p> {row.reservationName} </p>
+        <TableCell component="th" scope="row" align="left">
+          <p> {row.id} </p>
         </TableCell>
-        <TableCell align="center">{row.id}</TableCell>
+        <TableCell align="left">{row.reservationName}</TableCell>
+        <TableCell align="left">{row.creationDate}</TableCell>
         <TableCell align="center">{row.reservationDate}</TableCell>
         <TableCell align="center">{row.reservationEndingDate}</TableCell>
-        <TableCell align="center">{row.finalPrice}</TableCell>
         <TableCell align="center">{row.reservationStatus}</TableCell>
         <TableCell align="center">
 
@@ -406,13 +406,12 @@ const classes = useStyles();
             <TableHead>
             <TableRow>
                 <TableCell />
+                <TableCell  align="left"> Reservation Unique ID</TableCell>
                 <TableCell  align="left"> Reservation name</TableCell>
-                <TableCell  align="center"> Reservation Unique ID</TableCell>
+                <TableCell  align="left"> Created</TableCell>
                 <TableCell  align="center"> Starting</TableCell>
                 <TableCell  align="center"> Ending</TableCell>
-                <TableCell  align="center"> Final price</TableCell>
                 <TableCell  align="center"> Status</TableCell>
-                <TableCell  align="center"></TableCell>
                 <TableCell  align="center"></TableCell>
             </TableRow>
             </TableHead>

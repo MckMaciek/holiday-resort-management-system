@@ -24,6 +24,7 @@ public class ReservationResponse {
     private String reservationName;
     private Date reservationDate;
     private Date reservationEndingDate;
+    private Date creationDate;
     private ReservationStatus reservationStatus;
 
     private List<ReservationRemarksResponse> reservationRemarksResponse;
@@ -38,6 +39,7 @@ public class ReservationResponse {
         this.id = reservationDTO.getId();
         this.finalPrice = reservationDTO.getFinalPrice();
         this.reservationDate = reservationDTO.getReservationDate();
+        this.creationDate = reservationDTO.getCreationDate();
         this.reservationStatus = reservationDTO.getReservationStatus();
         this.accommodationResponses = reservationDTO.getAccommodationListDTO()
                                                     .stream()

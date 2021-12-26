@@ -32,6 +32,9 @@ public class Reservation implements LoginDetailsLinked {
     @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
 
+    @Column(name="creation_date")
+    private Date creationDate;
+
     @Column(name="reservation_date")
     private Date reservationDate;
 
@@ -72,7 +75,7 @@ public class Reservation implements LoginDetailsLinked {
         this.user = reservationDTO.getUser();
         this.reservationEndingDate = reservationDTO.getReservationEndingDate();
         this.reservationName = reservationDTO.getReservationName();
-
+        this.creationDate = reservationDTO.getCreationDate();
     }
 
     @Override

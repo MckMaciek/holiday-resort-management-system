@@ -105,6 +105,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                 .accommodationListDTO(accommodationDTOS)
                 .reservationName(reservationReq.getReservationName())
                 .reservationEndingDate(reservationReq.getReservationEndingDate())
+                .creationDate(Date.from(Instant.now()))
                 .reservationStatus(ReservationStatus.DRAFT)
                 .reservationDate(reservationReq.getReservationStartingDate())
                 .externalServiceDTOS(externalServiceDTOS)
@@ -291,6 +292,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         reservation.setReservationDate(reservationDTO.getReservationDate());
         reservation.setReservationEndingDate(reservationDTO.getReservationEndingDate());
         reservation.setReservationName(reservationDTO.getReservationName());
+        reservation.setCreationDate(reservationDTO.getCreationDate());
         reservation.setUser(reservationDTO.getUser());
         reservation.setId(reservationDTO.getId());
         reservation.setFinalPrice(reservationDTO.getFinalPrice());

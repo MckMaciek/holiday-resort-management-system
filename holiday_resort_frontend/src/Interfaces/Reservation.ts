@@ -7,6 +7,7 @@ export interface ReservationInterface {
     reservationName : string,
     finalPrice : number,
     reservationDate : Date,
+    creationDate : Date,
     reservationEndingDate : Date,
     reservationStatus : string,
     reservationRemarksResponse : Array<ReservationRemarksInterface>,

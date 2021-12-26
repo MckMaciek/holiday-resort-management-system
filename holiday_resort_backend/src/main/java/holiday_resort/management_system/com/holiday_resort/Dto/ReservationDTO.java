@@ -22,6 +22,7 @@ public class ReservationDTO {
     private Long id;
     private String reservationName;
     private BigDecimal finalPrice;
+    private Date creationDate;
     private Date reservationDate;
     private Date reservationEndingDate;
     private ReservationStatus reservationStatus;
@@ -37,6 +38,7 @@ public class ReservationDTO {
         this.finalPrice = reservation.getFinalPrice();
         this.reservationStatus = reservation.getReservationStatus();
         this.reservationDate = reservation.getReservationDate();
+        this.creationDate = reservation.getCreationDate();
 
         this.reservationRemarks = reservation.getReservationRemarks()
                 .stream()
