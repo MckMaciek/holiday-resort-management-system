@@ -417,7 +417,7 @@ const NewReservationDialog : React.FC<Props> = ({
                                     resortObjects={resortObjects}
                                     jwtToken={jwtToken}
                                 />
-
+                                
                                 {newReservation.accommodationRequestList.length !== 0 ? (
 
                                 <List
@@ -429,17 +429,15 @@ const NewReservationDialog : React.FC<Props> = ({
                                         flex : '1',
                                         flexWrap : 'wrap'}}
                                 >
+                                    <Divider style={{width:'100%', marginTop : '1.5%' ,marginBottom : '1%'}} />  
                                     {newReservation.accommodationRequestList.map(accommodation => (
                                         <ListItem
                                         
                                         sx={{ 
-                                            marginTop : '1.8%',
-                                            borderRadius : '3%',
-                                            padding : '4.2%', 
+
                                             bgcolor: 'background.paper', 
-                                            borderStyle : 'groove' 
                                         }}
-                                        >
+                                        > 
                                             <ListItemAvatar>
                                                 <Avatar>
                                                     <HomeIcon/>
@@ -456,9 +454,9 @@ const NewReservationDialog : React.FC<Props> = ({
                                                         <li>
                                                         {accommodation.eventRequests.map((event) => (
                                                             <ul
-                                                            style={{padding: '0', listStyle: 'none'}}
+                                                            style={{listStyle: 'none'}}
                                                             > 
-                                                            <strong>{transformRoToEvents(event.id)[0].eventType.toLowerCase()}, </strong> 
+                                                            {transformRoToEvents(event.id)[0].eventType.toLowerCase()} 
                                                             </ul> 
                                                                                                                 
                                                             ))}
@@ -474,9 +472,11 @@ const NewReservationDialog : React.FC<Props> = ({
                                                                 Delete
                                                             </Button>     
                                                         </div>   
+                                                        <Divider style={{width:'100%', marginTop : '1%'}} />   
                                                     </div>
                                                 }
                                             />
+                                            
                                         </ListItem>
                                     ))}
                                 </List>

@@ -10,6 +10,9 @@ import { borders } from '@mui/system';
 
 import Axios from 'axios';
 import API_URL from "../API_URL.json";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 
 import SelectAccommodations from "../Components/SelectAccommodations";
 import SelectAccommodationEvents from './SelectAccommodationEvents';
@@ -22,6 +25,11 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { Dispatch, SetStateAction } from "react";
+import HomeIcon from '@mui/icons-material/Home';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import BungalowIcon from '@mui/icons-material/Bungalow';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 
 import {AccommodationRequest} from "../Interfaces/AccommodationRequest";
 import {NewReservationRequest} from "../Interfaces/NewReservationRequest";
@@ -88,15 +96,46 @@ const NewAccommodation : React.FC<ComponentProps> = ({
         return resortObjectEvents.data as Array<EventInterface>;
     }
 
+    const setIconType = (objectType : string) => {
+        if(objectType === "Dom") return <HomeIcon />
+        else if(objectType === "Namiot") return <BungalowIcon/>
+        else return <QuestionMarkIcon/>
+    }
+
     const showResortObjectDetails = (resortObjId) => {
         const resortObj : ResortObjectInterface[] = resortObjects.filter(rO => rO.id === resortObjId);
         return(
-            <div>
-                <p>Max People in : {resortObj[0].maxAmountOfPeople} </p>
-                <p>Object Type : {resortObj[0].objectType} </p>
-                <p>Price per Person : {resortObj[0].pricePerPerson} zł </p>
-            </div>
-        )
+
+            <List
+            
+            >
+                <Divider />
+                <ListItem>
+                <ListItemAvatar>
+                    <Avatar>
+                      {setIconType(resortObj[0].objectType)}
+                    </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                    primary={`Object Name : ${resortObj[0].objectName.toLowerCase()}`}
+                    secondary={
+                    <div>
+                        <p>Object Type : {resortObj[0].objectType} </p>
+                        <p>Max People in : {resortObj[0].maxAmountOfPeople} </p>
+                        <p>Price per Person : {resortObj[0].pricePerPerson} zł </p>
+                    </div>
+                    }
+                />
+                </ListItem>
+                <Divider />
+            </List>
+        );
+    }
+
+    const resortObjMaxPeople = (resortObjId : string) => {
+
+        const resortObj : ResortObjectInterface[] = resortObjects.filter(rO => rO.id === parseInt(resortObjId));
+        return resortObj[0].maxAmountOfPeople;
     }
 
     const resertForm = () => {
@@ -179,13 +218,12 @@ const NewAccommodation : React.FC<ComponentProps> = ({
                             sx={{
                                 fontSize : '1rem', 
                                 alignSelf : 'flex-start', 
-                                marginLeft : '8%', 
+                                marginLeft : '16%', 
                                 marginBottom : '4%', 
-                                borderStyle: 'groove',
                                 paddingLeft : '2%',
                                 paddingBottom : '2%',
                                 paddingTop : '2%',
-                                paddingRight : '46%',
+                                paddingRight : '12%',
                             }}
                             textAlign={'left'}
                         >
@@ -213,12 +251,14 @@ const NewAccommodation : React.FC<ComponentProps> = ({
                                 aria-label="increase"
                                 onClick={() => {
                                     setNewAccommodation(accommodation => 
-                                        ({...accommodation, numberOfPeople : accommodation.numberOfPeople + 1}));
+                                        ({...accommodation, numberOfPeople : (accommodation.numberOfPeople + 1) % (resortObjMaxPeople(resortObject.id) +1)}));
                                 }}
                             >
                                 <AddIcon fontSize="small" />
                             </Button>
                         </ButtonGroup>
+
+                        <p style={{marginTop : '5%'}}> additional resources : </p>
     
                         <SelectAccommodationEvents
                             eventType={eventType}
