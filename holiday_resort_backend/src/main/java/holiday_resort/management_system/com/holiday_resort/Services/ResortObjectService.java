@@ -104,6 +104,7 @@ public class ResortObjectService implements CrudOperations<ResortObjectDTO, Long
                 .unusedSpacePrice(resortObjectDTO.getUnusedSpacePrice())
                 .pricePerPerson(resortObjectDTO.getPricePerPerson())
                 .maxAmountOfPeople(resortObjectDTO.getMaxAmountOfPeople())
+                .photo(resortObjectDTO.getPhoto())
                 .objectType(resortObjectDTO.getObjectType())
                 .objectName(resortObjectDTO.getObjectName())
                 .isReserved(resortObjectDTO.getIsReserved())

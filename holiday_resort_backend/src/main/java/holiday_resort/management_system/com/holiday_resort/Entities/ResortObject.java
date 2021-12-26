@@ -41,6 +41,10 @@ public class ResortObject {
     @Column(name="unused_space_price")
     private BigDecimal unusedSpacePrice;
 
+    @Lob
+    @Column(name = "photo", length=100000, columnDefinition="BLOB")
+    private byte[] photo;
+
     @Column(name="reserved")
     @NotNull
     private Boolean isReserved;
@@ -56,6 +60,7 @@ public class ResortObject {
         this.pricePerPerson = resortObjectDTO.getPricePerPerson();
         this.unusedSpacePrice = resortObjectDTO.getUnusedSpacePrice();
         this.isReserved = resortObjectDTO.getIsReserved();
+        this.photo = resortObjectDTO.getPhoto();
 
         this.eventList = resortObjectDTO.getEventList().stream().map(Event::new).collect(Collectors.toList());
     }

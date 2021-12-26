@@ -21,11 +21,6 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import IconButton from '@mui/material/IconButton';
-import Collapse from '@mui/material/Collapse';
-
 
 
 const Transition = React.forwardRef(function Transition(
@@ -115,6 +110,14 @@ const SummaryDialog : React.FC<IProps> = ({
                 <Typography
                     variant="h5"
                     component="div"
+                    style={{marginBottom : '2%', marginTop : '0.5%'}}
+                >
+                    Total price : <strong> {reservation.finalPrice} zł </strong>
+                </Typography>
+
+                <Typography
+                    variant="h5"
+                    component="div"
                     style={{marginBottom : '2%', marginTop : '2%'}}
                 >
                     External Services : 
@@ -127,6 +130,8 @@ const SummaryDialog : React.FC<IProps> = ({
                             <TableRow  sx={{ '& > *': { borderBottom: 'unset' } }}>
                                 <TableCell  align="center"> Event </TableCell>
                                 <TableCell  align="center"> Amount of People </TableCell>
+                                <TableCell  align="center"> Cost/Person </TableCell>
+                                <TableCell  align="center"> Final cost </TableCell>
                                 <TableCell  align="center"> Remarks </TableCell>
                             </TableRow>
                         </TableHead>
@@ -147,6 +152,20 @@ const SummaryDialog : React.FC<IProps> = ({
                             scope="row"
                             >
                                 {externalService.amountOfPeople}
+                            </TableCell>
+                            <TableCell 
+                            align="center"
+                            component="th" 
+                            scope="row"
+                            >
+                                {externalService.cost} zł
+                            </TableCell>
+                            <TableCell 
+                            align="center"
+                            component="th" 
+                            scope="row"
+                            >
+                                {externalService.amountOfPeople * externalService.cost} zł
                             </TableCell>
                             <TableCell 
                             align="center"

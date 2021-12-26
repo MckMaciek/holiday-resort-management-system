@@ -21,6 +21,7 @@ public class ResortObjectResponse {
     private BigDecimal pricePerPerson;
     private BigDecimal unusedSpacePrice;
     private Boolean isReserved;
+    private byte[] photo;
 
     private List<EventResponse> eventResponseList;
 
@@ -32,6 +33,7 @@ public class ResortObjectResponse {
         this.pricePerPerson = resortObjectDTO.getPricePerPerson();
         this.unusedSpacePrice = resortObjectDTO.getUnusedSpacePrice();
         this.isReserved = resortObjectDTO.getIsReserved();
+        this.photo = resortObjectDTO.getPhoto();
         this.eventResponseList = resortObjectDTO.getEventList().stream().map(EventResponse::new).collect(Collectors.toList());
     }
 }

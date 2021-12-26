@@ -320,6 +320,7 @@ const Row = ({row} : any) => {
                       <AccommodationDialogEdit
                           isOpen={editDialog.isSet}
                           propertyId={editDialog.id}
+                          maxAmountOfPeople={innerRow.resortObject.maxAmountOfPeople}
                           propertyName={editDialog.propertyName}
                           resortObjectId={innerRow.resortObject.id}
                           closeHandler={() => setEditDialog(EDIT_DIALOG_DEFAULT)}

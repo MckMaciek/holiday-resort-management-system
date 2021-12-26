@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import BungalowIcon from '@mui/icons-material/Bungalow';
 import HomeIcon from '@mui/icons-material/Home';
-
+import {AccommodationInterface} from '../Interfaces/Accommodation';
 import {ReservationInterface} from '../Interfaces/Reservation';
 
 import DialogConfirm from "./DialogConfirm";
@@ -33,6 +33,29 @@ const ListComponent : React.FC<IProps> = ({
     sendDialogCloseHandler,
     sendDialogAcceptHandler,
 }) => {
+
+  const getDetailedPrice = (accommodation : AccommodationInterface) => {
+
+    let numberOfPeople = accommodation.numberOfPeople as number;
+
+    let maxAmountOfPeople = accommodation.resortObject.maxAmountOfPeople as number;
+    let pricePerPerson = accommodation.resortObject.pricePerPerson as number;
+    let unusedSpacePrice = accommodation.resortObject.unusedSpacePrice as number;
+
+    let lessPeoplePay = maxAmountOfPeople - numberOfPeople;
+
+    let finalPrice = (numberOfPeople * pricePerPerson) + (lessPeoplePay * unusedSpacePrice);
+    let bonusEvents = 0;
+
+    if(accommodation && accommodation.eventResponseList.length !== 0){
+
+      bonusEvents = accommodation.eventResponseList
+                      .map(event => event.price)
+                      .reduce((total, sum) => total + sum)
+    }
+
+    return finalPrice + bonusEvents;
+  }
 
 
   const setIconType = (objectType : string) => {
@@ -61,7 +84,10 @@ const ListComponent : React.FC<IProps> = ({
                       <div>
                         <p> Amount of people : {accommodation.numberOfPeople} </p>
                         <p> Object Name : {accommodation.resortObject.objectName} </p>
-                        <p> Price per person : {accommodation.resortObject.pricePerPerson} </p>
+                        <p> Price per person : {accommodation.resortObject.pricePerPerson} zł </p>
+                        <p> Price per unused space : {accommodation.resortObject.unusedSpacePrice} zł </p>
+                        <p> Max amount of People : {accommodation.resortObject.maxAmountOfPeople} </p>
+                        <p> <strong> Detailed price with services included : {getDetailedPrice(accommodation)} zł </strong> </p>
                       </div>
                     }
                 />

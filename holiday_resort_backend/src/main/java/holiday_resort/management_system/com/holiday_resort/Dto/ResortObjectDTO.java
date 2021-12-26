@@ -22,6 +22,7 @@ public class ResortObjectDTO {
     private BigDecimal unusedSpacePrice;
     private List<EventDTO> eventList;
     private Boolean isReserved;
+    private byte[] photo;
 
     public ResortObjectDTO (ResortObject resortObject){
         this.id = resortObject.getId();
@@ -31,6 +32,7 @@ public class ResortObjectDTO {
         this.pricePerPerson = resortObject.getPricePerPerson();
         this.unusedSpacePrice = resortObject.getUnusedSpacePrice();
         this.isReserved = resortObject.getIsReserved();
+        this.photo = resortObject.getPhoto();
 
         this.eventList = resortObject.getEventList().stream()
                 .map(EventDTO::new)

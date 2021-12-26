@@ -15,7 +15,9 @@ import {EventRequest} from '../Interfaces/EventRequest';
 
 import { ThunkDispatch } from 'redux-thunk';
 import { connect } from 'react-redux';
-
+import ButtonGroup from '@mui/material/ButtonGroup';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import {ResortObjectInterface} from '../Interfaces/ResortObject';
 import {putAccommodationApi} from "../Stores/ApiRequests/ReservationApiRequest";
 
@@ -26,9 +28,6 @@ import NumericTextField from "./NumericTextField";
 
 import {getEventsForAccommodationId} from "../Stores/ApiRequests/ReservationApiRequest";
 
-import {
-    getAvailableResortObjectsApi
-} from '../Stores/ApiRequests/ResortObjectApiRequest';
 import { useEffect } from 'react';
 
 interface MapDispatcherToProps {
@@ -60,6 +59,7 @@ interface AccommodationDialogProps{
     propertyId : number,
     resortObjectId : number,
     propertyName : string,
+    maxAmountOfPeople : number,
     closeHandler : () => void,
     onAcceptHandler : () => void,
 }
@@ -72,6 +72,7 @@ const AccommodationDialogEdit : React.FC<Props> = ({
     jwtToken,
     sendAccommodationPut,
     getResortObjectEvents,
+    maxAmountOfPeople,
     
     isOpen,
     propertyId,
@@ -89,7 +90,7 @@ const AccommodationDialogEdit : React.FC<Props> = ({
         id : -1,
         price : -1,
     }])
-    const [numberOfPeople, setNumberOfPeople] = React.useState<number>(-1);
+    const [numberOfPeople, setNumberOfPeople] = React.useState<number>(0);
 
     const handleChangeEvent = (event: any) => {
         const {
@@ -151,7 +152,7 @@ const AccommodationDialogEdit : React.FC<Props> = ({
                 >
                 <DialogTitle> You are currently editing {propertyName}</DialogTitle>
                 <DialogContent
-                    style={{height:'15vh', marginTop:'3%'}}
+                    style={{height:'20vh', marginTop:'3%'}}
                 >
                     <SelectAccommodationEvents
                         eventType={eventType}
@@ -163,16 +164,43 @@ const AccommodationDialogEdit : React.FC<Props> = ({
                     <FormControl
                         sx={{
                             marginTop : '1%',
+                            marginLeft : '2.5%',
                         }}
                         >
-                        <NumericTextField
-                            id = "filled-search"
-                            label = "Number of people"
-                            type = "search"
-                            optWidth='100%'
-                            defaultValue=''
-                            onChange={(event) => setNumberOfPeople(parseInt(event.target.value))}
-                        />
+                        <p
+                            style={{marginTop : '3%'}}
+                        > 
+                            Max People : {maxAmountOfPeople} in {propertyName}
+                        </p>
+
+                        <ButtonGroup
+                        >  
+                        
+                            <Button
+                                aria-label="reduce"
+                                onClick={() => {
+                                    setNumberOfPeople(amountOfPeople => Math.max(amountOfPeople - 1, 0))
+                                }}
+                            >
+                                <RemoveIcon fontSize="small" />
+                            </Button>
+                            <Button
+                                aria-label="increase"
+                                onClick={() => {
+                                    setNumberOfPeople(amountOfPeople => ((amountOfPeople + 1) % (maxAmountOfPeople + 1)))
+                                }}
+                            >
+                                <AddIcon fontSize="small" />
+                            </Button>
+
+                            <span
+                                style={{marginLeft : '20%'}}
+                            >   
+                                {numberOfPeople}  People
+                            </span>
+
+                        </ButtonGroup>
+
                     </FormControl> 
                 
                 </DialogContent>

@@ -27,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.*;
@@ -133,13 +134,20 @@ public class Startup implements CommandLineRunner {
         Optional<LoginDetails> optUser = loginDetailsRepository.findByUsername(username);
 
         optUser.ifPresent(loginDetails -> {
-            setReservation(loginDetails);
-            setReservation(loginDetails);
+            try {
+                setReservation(loginDetails);
+                setReservation(loginDetails);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 
     private void setResortObjectService(String objectName, String objectType, Boolean isReserved, Long maxAmountOfPeople,
-                                        BigDecimal pricePerPerson, BigDecimal pricePerUnusedSpace){
+                                        BigDecimal pricePerPerson, BigDecimal pricePerUnusedSpace) throws IOException {
+
+//        File file = ResourceUtils.getFile("C:\\Users\\mckmu\\holiday_resort_app\\holiday_resort_backend\\src\\main\\resources\\static\\tent.jpg");
+//        InputStream in = new FileInputStream(file);
 
         ResortObjectDTO resortObjectDTO = ResortObjectDTO.builder()
                 .objectName(objectName)
@@ -148,6 +156,7 @@ public class Startup implements CommandLineRunner {
                 .maxAmountOfPeople(maxAmountOfPeople)
                 .pricePerPerson(pricePerPerson)
                 .unusedSpacePrice(pricePerUnusedSpace)
+                //.photo(in.readAllBytes())
                 .build();
 
         EventDTO eventDTO = EventDTO.builder()
@@ -169,7 +178,7 @@ public class Startup implements CommandLineRunner {
         resortObjectController.postResortObject(resortObjectDTO, List.of(eventDTO, eventDTO2));
     }
 
-    private void setReservation(LoginDetails loginDetails){
+    private void setReservation(LoginDetails loginDetails) throws IOException {
 
         ReservationRequest reservationRequest = new ReservationRequest();
 
