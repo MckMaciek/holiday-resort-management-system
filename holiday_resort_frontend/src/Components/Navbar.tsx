@@ -93,12 +93,22 @@ const Navbar : React.FC<PropsFromRedux> = ({
                     type="submit"
                     color="primary"
                     onClick={onLogout}
-                    style={{marginRight : '0.7%'}}
+                    style={{marginRight : '3.5%'}}
                     >
                     Manager Panel
                 </Button>
 
                 ) : null}
+
+                <Button 
+                    variant="contained"
+                    type="submit"
+                    color="primary"
+                    onClick={onLogout}
+                    style={{marginRight : '0.7%'}}
+                    >
+                    Contact Us
+                </Button>
 
                 <Button 
                     variant="outlined"

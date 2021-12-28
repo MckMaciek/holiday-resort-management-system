@@ -95,17 +95,6 @@ public class LoginDetailsService implements UserDetailsService, CrudOperations<L
         return true;
     }
 
-    public Boolean checkIntegrityOfData(LoginDetails loginDetails){
-        if(Objects.nonNull(loginDetails) && validate(loginDetails)){
-
-            User userFromJSON = loginDetails.getUser();
-
-            if(userService.validate(userFromJSON)) return true;
-            return false;
-        }
-        return false;
-    }
-
     @Override
     public boolean validate(LoginDetails loginDetails) {
         boolean userValidated = true;

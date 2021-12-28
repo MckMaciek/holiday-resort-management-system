@@ -7,6 +7,7 @@ import holiday_resort.management_system.com.holiday_resort.Entities.User;
 import holiday_resort.management_system.com.holiday_resort.Responses.UserInfoResponse;
 import holiday_resort.management_system.com.holiday_resort.Services.UserService;
 import io.swagger.annotations.Api;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,11 +50,10 @@ public class UserController extends Throwable{
     public ResponseEntity<UserDTO> getUser(@PathVariable(name = "id", required = true) Long id)
             throws InvalidParameterException {
 
-        /*return userService.findById(id)
+        return userService.findById(id)
                 .map(UserDTO::new)
                 .map(ResponseEntity::ok)
-                .orElseThrow(UserControllerExceptions.UserNotFoundException::new);*/
-        return null;
+                .orElseThrow(InvalidParameterException::new);
     }
 
     @PreAuthorize(ROLE_ADMIN)
@@ -62,9 +62,9 @@ public class UserController extends Throwable{
 
         if(userService.validate(user)){
             userService.add(user);
-            return ResponseEntity.ok(new UserResponseStatus.UserLoginResponseBuilder()
-                    .setId(user.getId())
-                    .setResponse("CREATED")
+            return ResponseEntity.ok(UserResponseStatus.builder()
+                    .id(user.getId())
+                    .response("CREATED")
                     .build());
         }
 
@@ -82,61 +82,16 @@ public class UserController extends Throwable{
                 );
     }
 
-
+    @Setter
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ToString
     private static class UserResponseStatus {
-        // FRONTEND RESPONSE IN BODY
-        private final String id;
-        private final String response;
-
-        private static UserResponseStatus getInstance(String _id, String _response){
-            return new UserResponseStatus(_id, _response);
-        }
-
-        private UserResponseStatus(String _id, String _response){
-            this.response = _response;
-            this.id = _id;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getResponse() {
-            return response;
-        }
-
-        @Override
-        public String toString() {
-            return "ResponseStatus{" +
-                    "id=" + id +
-                    ", response='" + response + '\'' +
-                    '}';
-        }
-
-        private static class UserLoginResponseBuilder{
-            private String id;
-            private String response;
-
-            public UserResponseStatus.UserLoginResponseBuilder setId(Long _id){
-                this.id = _id.toString();
-                return this;
-            }
-            public UserResponseStatus.UserLoginResponseBuilder setResponse(String _response){
-                this.response = _response;
-                return this;
-            }
-            public UserResponseStatus build(){
-                return UserResponseStatus.getInstance(
-                        this.id,
-                        this.response
-                );
-            }
-
+        private  Long id;
+        private  String response;
 
         }
-
-
-    }//UserResponseStatusEND
-
 }
 

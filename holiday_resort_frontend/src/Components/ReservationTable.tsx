@@ -178,7 +178,7 @@ const Row = ({row} : any) => {
         </TableCell> 
       </TableRow>
       <TableRow style={{width : '100%'}}>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0, width : '100%'}} colSpan={4}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0, width : '100%'}} colSpan={8}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <div>
 
