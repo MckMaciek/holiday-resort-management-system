@@ -30,9 +30,11 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import BungalowIcon from '@mui/icons-material/Bungalow';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import {setReservationResortObject} from '../Stores/Actions/ResortObjectOperations';
 
 import {AccommodationRequest} from "../Interfaces/AccommodationRequest";
 import {NewReservationRequest} from "../Interfaces/NewReservationRequest";
+import { useDispatch } from 'react-redux';
 
 
 interface ComponentProps {
@@ -77,7 +79,7 @@ const NewAccommodation : React.FC<ComponentProps> = ({
 
     const [resortObject, setResortObject] = useState<ResortObjectRequest>(RESORT_OBJECT_REQUEST_DEFAULT);
 
-
+    const dispatch = useDispatch();
     const [eventType, setEventType] = useState<string[]>([]);
     const [chosenEvents, setChosenEvents] = useState<Array<EventRequest>>([{id : -1, price : -1}]);
     const [fetchedEvents, setFetchedEvents] = useState<Array<EventInterface>>([]);
@@ -107,7 +109,6 @@ const NewAccommodation : React.FC<ComponentProps> = ({
         return(
 
             <List
-            
             >
                 <Divider />
                 <ListItem>
@@ -202,11 +203,12 @@ const NewAccommodation : React.FC<ComponentProps> = ({
             
             <div style={{display : 'flex', justifyContent : 'center', alignItems : 'center', flexDirection : 'column'}}>
                 <SelectAccommodations                      
-                    availableResortObjects={resortObjects}
+                    availableResortObjects={resortObjects} // TODO
                     choosenResortId={resortObject.id}
                     handleChange={(event) => {
                         setResortObject({id : event.target.value, isSent : false});
                         setNewAccommodation(accommodation => ({...accommodation, resortObjectId : parseInt(event.target.value)}));
+                    
                     }}
                 />
 
@@ -280,6 +282,8 @@ const NewAccommodation : React.FC<ComponentProps> = ({
                 <Button onClick={() => {
                     modifyReservation(reservation => 
                         ({...reservation, accommodationRequestList : [...reservation.accommodationRequestList, newAccommodation]}));
+                    
+                    dispatch(setReservationResortObject(parseInt(resortObject.id), true));
                     resertForm();
                     acceptHandler();
                 }} autoFocus>

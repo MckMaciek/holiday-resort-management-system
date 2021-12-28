@@ -15,6 +15,8 @@ import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 
+import {UserInfoResponse} from "../Interfaces/UserInfoResponse";
+
 import {
     getReservations, 
     deleteAccommodationApi,
@@ -42,6 +44,7 @@ interface MapStateToProps {
     reservation : Array<ReservationInterface>,
     reservationFetching : boolean,
     roles : Array<String>,
+    userDetails : UserInfoResponse,
 
     objectModified : boolean,
 }
@@ -61,6 +64,7 @@ const mapStateToProps = (state : any) : MapStateToProps => ({
     reservation : state.ReservationReducer.reservation,
     reservationFetching : state.ReservationReducer.isFetching,
     roles : state.LoginReducer.roles,
+    userDetails : state.RegisterReducer.userDetails,
 
     objectModified : state.UserOperationsReducer.objectModified,
 });
@@ -85,6 +89,7 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
     reservationFetching,
     roles,
     objectModified,
+    userDetails,
     fetchReservations,
     removeAccommodation,
     setReservationStarted,
@@ -201,16 +206,9 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
                     </>
                 ) : (
                     <>
-                        <h1 className={classes.reservationHeader}> Loading Reservation of Yours </h1>
-                        <CircularProgress 
-                        size='7vh'
-                        sx={{
-                            color: pink[800],
-                            '&.Mui-checked': {
-                                color: pink[600],
-                            },
-                            }}
-                        />
+                        <h1> {userDetails.firstName}, do not wait :) </h1>
+                        <h1> Add <span style={{color :  'red'}}> Your Own </span> reservation!</h1>
+                        <h2 style={{marginTop : '4%'}}> Click on add icon in the right corner</h2>
                     </>
                 )}
             </div>

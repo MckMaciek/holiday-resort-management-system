@@ -43,6 +43,7 @@ export const loginApiRequest = (loginModel : LoginActionPayloadInterface ) => {
             if(isValidResponse){
                 dispatch(loginAction(loginResponse));
                 dispatch(loginSetAuthenticated(true));
+                dispatch(getUserInfo(loginResponse.jwt))
                 dispatch(loginSetReducer(true));
                 dispatch(loginAttemptFailed(false));
             }

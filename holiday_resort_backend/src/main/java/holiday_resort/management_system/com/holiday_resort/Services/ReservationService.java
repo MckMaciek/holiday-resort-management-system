@@ -208,6 +208,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         return reservationList
                     .stream()
                     .map(ReservationDTO::new)
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toList());
     }
 
@@ -318,11 +319,12 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         if(!validateReservationOwner(reservationOwner)) throw new IllegalArgumentException("Illegal reservation owner provided");
         if(reservationOwner.getId() != null) throw new IllegalArgumentException("Cannot insert entity with non null reservationOwner id");
 
-        reservationOwnerRepository.save(reservationOwner);
+        //reservationOwnerRepository.save(reservationOwner);
         //accommodationList.forEach(accommodationService::add);
         reservation.setAccommodationList(accommodationList);
         reservation.setReservationRemarks(reservationRemarksList);
         reservation.setExternalServiceList(externalServiceList);
+
         reservation.setReservationOwner(reservationOwner);
         //reservationRemarksList.forEach(reservationRemarksService::add);
 

@@ -5,6 +5,7 @@ import {
     GetAvailableResortObjects,
     AvailableResortObjectsAreFetching,
     AvailableResortObjectsError,
+    AvailableResortObjectSetReserved,
 
 } from '../../Interfaces/ReduxInterfaces/ResortObjectOperations';
 
@@ -22,4 +23,10 @@ export const areAvailableObjectsFetching = (isFetching : boolean) : AvailableRes
 export const errorAvailableObjects = (error : boolean) : AvailableResortObjectsError => ({
     type : ResortObjectOperationTypes.RESORT_OBJECT_ERROR,
     error : error,
+})
+
+export const setReservationResortObject = (resortObjectId : number, isReserved : boolean) : AvailableResortObjectSetReserved => ({
+    type : ResortObjectOperationTypes.RESORT_OBJECT_SET_RESERVED,
+    resortObjectId : resortObjectId,
+    isReserved : isReserved,
 })

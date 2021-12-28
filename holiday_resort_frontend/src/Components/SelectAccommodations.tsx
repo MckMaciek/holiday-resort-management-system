@@ -28,7 +28,10 @@ const SelectAccommodations : React.FC<Iprops> = ({
                     value={choosenResortId}
                     onChange={handleChange}
                     >
-                    {availableResortObjects.map(rO => {
+                    {
+                    availableResortObjects
+                        .filter(rO => !rO.isReserved)
+                        .map(rO => {
                         return (
                             <MenuItem 
                             value={rO.id}

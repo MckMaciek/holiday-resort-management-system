@@ -42,7 +42,7 @@ public class ResortObject {
     private BigDecimal unusedSpacePrice;
 
     @Lob
-    @Column(name = "photo", length=100000, columnDefinition="BLOB")
+    @Column(name = "photo", length=111, columnDefinition="BLOB")
     private byte[] photo;
 
     @Column(name="reserved")

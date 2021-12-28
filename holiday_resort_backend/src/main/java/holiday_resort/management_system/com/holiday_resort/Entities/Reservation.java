@@ -53,7 +53,7 @@ public class Reservation implements LoginDetailsLinked {
     @OneToMany(mappedBy = "reservation", fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExternalService> externalServiceList;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private ReservationOwner reservationOwner;
 
     @OneToOne(fetch = FetchType.EAGER)

@@ -14,7 +14,7 @@ import AddExternalServiceDialog from './AddExternalServiceDialog';
 
 import { differenceInDays } from "date-fns"
 import { ThunkDispatch } from 'redux-thunk';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import HomeIcon from '@mui/icons-material/Home';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
@@ -42,6 +42,7 @@ import NumericTextField from './NumericTextField';
 import NewAccommodation from "../Components/NewAccommodation";
 import {getAvailableResortObjectsApi} from "../Stores/ApiRequests/ResortObjectApiRequest";
 import {postReservation} from "../Stores/ApiRequests/ReservationApiRequest";
+import {setReservationResortObject} from '../Stores/Actions/ResortObjectOperations';
 
 
 const Transition = React.forwardRef(function Transition(
@@ -165,6 +166,7 @@ const NewReservationDialog : React.FC<Props> = ({
         }
     }
     
+    const dispatch = useDispatch();
     const [newReservation, setNewReservation] = React.useState<NewReservationRequest>(NEW_RESERVATION_DEFAULT);
 
     interface DateRangeInterface {
@@ -235,6 +237,8 @@ const NewReservationDialog : React.FC<Props> = ({
                 newReservation.accommodationRequestList
                         .filter(accDelete => accDelete.resortObjectId !== resortObj.id)
             }));
+
+        dispatch(setReservationResortObject(resortObjectId, false));
     }
 
     const postReservation = () => {

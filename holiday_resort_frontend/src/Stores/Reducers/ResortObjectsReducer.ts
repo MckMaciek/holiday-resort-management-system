@@ -21,9 +21,10 @@ const INIT_STATE_RESORT_OBJ : INIT_STATE = {
 
 
 const ResortObjectsReducer = (state : INIT_STATE = INIT_STATE_RESORT_OBJ, action : ResortObjectGenericAction) : INIT_STATE => {
-
+    console.log(action)
     switch(action.type){
 
+        
         case ResortObjectOperationTypes.RESORT_OBJECT_GET : {
             return {...state, availableResortObjects : action.payload}
         }
@@ -36,6 +37,23 @@ const ResortObjectsReducer = (state : INIT_STATE = INIT_STATE_RESORT_OBJ, action
             return {...state, error : action.error}
         }
 
+        case ResortObjectOperationTypes.RESORT_OBJECT_SET_RESERVED : {
+
+        let selectedRO = state.availableResortObjects
+                                .filter(rO => rO.id === action.resortObjectId);
+
+        let index = state.availableResortObjects.indexOf(selectedRO[0]);
+
+            return {...state, availableResortObjects : [
+                    ...state.availableResortObjects.slice(0, index),
+                    {
+                        ...state.availableResortObjects[index],
+                        isReserved : action.isReserved,
+
+                    }, ...state.availableResortObjects.slice(++index)]
+            }
+        }
+        
         default : {
             return state;
         }

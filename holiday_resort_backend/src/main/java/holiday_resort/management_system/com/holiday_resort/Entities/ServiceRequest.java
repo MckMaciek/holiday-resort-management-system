@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 public class ServiceRequest {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name="service_name")

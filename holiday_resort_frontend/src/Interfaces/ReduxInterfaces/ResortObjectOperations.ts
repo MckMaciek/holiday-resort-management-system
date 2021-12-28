@@ -16,6 +16,12 @@ export type AvailableResortObjectsError = {
     error : boolean,
 }
 
+export type AvailableResortObjectSetReserved = {
+    type : typeof ResortObjectOperationTypes.RESORT_OBJECT_SET_RESERVED,
+    resortObjectId : number,
+    isReserved : boolean,
+}
+
 
 export type ResortObjectGenericAction = 
-    GetAvailableResortObjects | AvailableResortObjectsAreFetching | AvailableResortObjectsError;
+    GetAvailableResortObjects | AvailableResortObjectsAreFetching | AvailableResortObjectsError | AvailableResortObjectSetReserved;
