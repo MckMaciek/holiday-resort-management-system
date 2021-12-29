@@ -4,6 +4,7 @@ import holiday_resort.management_system.com.holiday_resort.Dto.*;
 import holiday_resort.management_system.com.holiday_resort.Entities.*;
 import holiday_resort.management_system.com.holiday_resort.Enums.ReservationStatus;
 import holiday_resort.management_system.com.holiday_resort.Enums.RoleTypes;
+import holiday_resort.management_system.com.holiday_resort.Events.ReservationStatusChangedEvent;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.CrudOperations;
 import holiday_resort.management_system.com.holiday_resort.Interfaces.Validate;
 import holiday_resort.management_system.com.holiday_resort.Repositories.ReservationOwnerRepository;
@@ -13,6 +14,7 @@ import holiday_resort.management_system.com.holiday_resort.Requests.ReservationR
 import holiday_resort.management_system.com.holiday_resort.Requests.ReservationRequest;
 import org.h2.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +40,8 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
     private final PriceService priceService;
     private final ReservationOwnerRepository reservationOwnerRepository;
 
+    private final ApplicationEventPublisher applicationEventPublisher;
+
     private final static String SYSTEM_AUTHOR = "SYSTEM";
     private final static String STATUS_CHANGED = "Status changed";
 
@@ -49,7 +53,8 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                               ReservationRemarksService reservationRemarksService,
                               ExternalServiceService externalServiceService,
                               GenericAction<Reservation, ReservationRepository> reservationContext,
-                              ReservationOwnerRepository reservationOwnerRepository
+                              ReservationOwnerRepository reservationOwnerRepository,
+                              ApplicationEventPublisher applicationEventPublisher
     ){
         this.reservationRepository = reservationRepository;
         this.accommodationService = accommodationService;
@@ -58,6 +63,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         this.reservationContext = reservationContext;
         this.externalServiceService = externalServiceService;
         this.reservationOwnerRepository = reservationOwnerRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Transactional
@@ -117,7 +123,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         this.add(reservationDTO);
     }
 
-
+    @Transactional
     public void patchReservation(LoginDetails loginDetails, ReservationRequest reservationReq, Long reservationId){
 
         if(!validateReservationRequest(reservationReq)) throw new IllegalArgumentException("Invalid Reservation Request!");
@@ -169,6 +175,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         this.modify(userReservationDTO);
     }
 
+    @Transactional
     public void deleteReservation(LoginDetails loginDetails, Long reservationId){
         if(reservationId == null) throw new NullPointerException("Invalid reservationId parameter");
 
@@ -212,6 +219,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                     .collect(Collectors.toList());
     }
 
+    @Transactional
     public void changeReservationStatus(ReservationStatus reservationStatus, LoginDetails loginDetails, Long reservationId){
 
         Pair<LoginDetails, Reservation> reservationOwnerPair =
@@ -224,12 +232,19 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         }
 
         Reservation reservation = reservationOwnerPair.getSecond();
+        ReservationStatus beforeStatus = reservation.getReservationStatus();
+
         if(!ReservationStatus.DRAFT.equals(reservation.getReservationStatus())){
             List<RoleTypes> userRoles = reservationOwnerPair.getFirst().getRoles().getRoleTypesList();
 
             if(userRoles.contains(RoleTypes.MANAGER) || userRoles.contains(RoleTypes.ADMIN)){
                 reservation.setReservationStatus(reservationStatus);
                 flushReservationRemarks(reservation, reservationStatus, loginDetails);
+
+                applicationEventPublisher.publishEvent(new ReservationStatusChangedEvent(
+                        new ReservationDTO(reservation),
+                        beforeStatus
+                ));
             }
             else throw new UnsupportedOperationException("User is not privileged enough to change status");
 
@@ -237,6 +252,11 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         else if(ReservationStatus.DRAFT.equals(reservation.getReservationStatus())){
             reservation.setReservationStatus(reservationStatus);
             flushReservationRemarks(reservation, reservationStatus, loginDetails);
+
+            applicationEventPublisher.publishEvent(new ReservationStatusChangedEvent(
+                    new ReservationDTO(reservation),
+                    beforeStatus
+            ));
         }
     }
 

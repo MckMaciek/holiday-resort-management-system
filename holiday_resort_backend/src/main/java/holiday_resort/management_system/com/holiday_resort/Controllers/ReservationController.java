@@ -81,7 +81,6 @@ public class ReservationController {
 
         LoginDetails contextUser = userContext.getAssociatedUser();
         Optional<ReservationDTO> reservationDTO = reservationService.findById(reservationId);
-        //TODO
 
         return ResponseEntity.ok(new ReservationResponse(reservationDTO.get()));
     }
