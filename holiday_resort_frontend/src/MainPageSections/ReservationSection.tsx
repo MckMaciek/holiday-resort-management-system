@@ -98,8 +98,6 @@ const ReservationSection : React.FC<PropsFromRedux> = ({
     updateReservation,
 }) => {
 
-    const [componentChanged, setComponentChanged] = useState(false);
-
     interface operationAlertInterface {
         isSet : boolean,
         message : string,

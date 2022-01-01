@@ -11,6 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { pink } from '@mui/material/colors';
 
 import RegisterForm from '../Components/RegisterForm';
+import { useTranslation } from "react-i18next";
 
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -52,6 +53,7 @@ const RegisterPage : React.FC<PropsFromRedux> = ({
 
     const classes = useStyles();
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     useEffect(() => {
         if(isAuthenticated === true){
@@ -82,7 +84,7 @@ const RegisterPage : React.FC<PropsFromRedux> = ({
                                                         },
                                                       }}
                                                     />) : null}
-                    <Link className={classes.aboutLink} to='/about'> About Us?</Link>
+                    <Link className={classes.aboutLink} to='/about'> {t(`registerPage.aboutUs-link`)}</Link>
                 </div>
             </Typography>
         </div>

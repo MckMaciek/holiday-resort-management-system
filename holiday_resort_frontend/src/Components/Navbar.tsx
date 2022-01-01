@@ -16,8 +16,10 @@ import { Redirect } from "react-router-dom";
 import {RolesTypes} from '../Enums/Roles';
 
 import {loginSetAuthenticated} from '../Stores/Actions/AuthOperations';
+import { useRouteMatch } from "react-router";
+import {Link} from "react-router-dom";
 
-
+import { useHistory } from "react-router-dom";
 import { ThunkDispatch } from 'redux-thunk';
 import { connect, ConnectedProps, useDispatch } from 'react-redux';
 
@@ -47,19 +49,43 @@ const Navbar : React.FC<PropsFromRedux> = ({
 }) : JSX.Element => {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [anchorHamburger, setAnchorHamburger] = React.useState<null | HTMLElement>(null);
+
+    let { path, url } = useRouteMatch();
+    let history = useHistory();
 
     const dispatch = useDispatch();
 
-    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
+    const handleMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
+    const handleHamburger = (event: React.MouseEvent<HTMLElement>) => setAnchorHamburger(event.currentTarget);
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+
+    const handleClose = () => setAnchorEl(null);
+    const handleHamburgerClose = () => setAnchorHamburger(null);
+    
 
     const onLogout = () => {
         dispatch(loginSetAuthenticated(false));
+    }
+
+    const redirectToProfile = () => {
+
+        const userProfile = {
+            pathname: '/profile',
+            state: { fromDashboard: true }
+        }
+
+        history.push(userProfile)
+    }
+
+    const redirectToReservations = () => {
+
+        const userReservations = {
+            pathname: '/reservations',
+            state: { fromDashboard: true }
+        }
+
+        history.push(userReservations)
     }
 
     return(
@@ -78,25 +104,41 @@ const Navbar : React.FC<PropsFromRedux> = ({
                     edge="start"
                     color="inherit"
                     aria-label="menu"
+                    onClick={handleHamburger}
                     sx={{ mr: 2 }}
                 >
                 <MenuIcon />
                 </IconButton>
+                <Menu
+                    id="menu-appbar"
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    keepMounted
+                    open={Boolean(anchorHamburger)}
+                    onClose={handleHamburgerClose}
+                >
+                    <MenuItem onClick={redirectToReservations}>Reservations</MenuItem>
+                </Menu>
+
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    Hi {username} !
+                    Logged as: {username} !
                 </Typography>
 
                 {roles.includes(RolesTypes.ADMIN) ? (
-
-                <Button 
-                    variant="contained"
-                    type="submit"
-                    color="primary"
-                    onClick={onLogout}
-                    style={{marginRight : '3.5%'}}
-                    >
-                    Manager Panel
-                </Button>
+                <Link 
+                    style={{textDecoration: 'none', marginRight : '3.5%'}} 
+                    to={`${path}admin`}
+                >
+                    <Button 
+                        variant="contained"
+                        type="submit"
+                        color="primary"
+                        >
+                        Manager Panel
+                    </Button>
+                </Link>
 
                 ) : null}
 
@@ -143,7 +185,7 @@ const Navbar : React.FC<PropsFromRedux> = ({
                         onClose={handleClose}
                     >
                         <MenuItem onClick={handleClose}>Profile</MenuItem>
-                        <MenuItem onClick={handleClose}>My account</MenuItem>
+                        <MenuItem onClick={redirectToProfile}>My account</MenuItem>
                     </Menu>
                     </div>
                 )}

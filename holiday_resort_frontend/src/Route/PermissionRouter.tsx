@@ -1,5 +1,4 @@
 import MainPage from '../Pages/MainPage';
-import AdminPage from '../Pages/AdminPage';
   
 import PrivateRouter from '../Route/PrivateRouter';
 import { connect, ConnectedProps  } from 'react-redux';
@@ -38,13 +37,6 @@ const PermissionRouter : React.FC<PropsFromRedux> = (
 
     return(
         <Switch>
-            <PrivateRouter
-            isAuth={isAuthenticated && roles.includes(RolesTypes.ADMIN)}
-            path={`${path}system`}
-            >
-                <AdminPage/>
-            </PrivateRouter>
-                                   
 
             <PrivateRouter
             isAuth={isAuthenticated && roles.includes(RolesTypes.USER)}

@@ -5,6 +5,7 @@ import {LoginActionPayloadInterface} from "../Interfaces/ReduxInterfaces/LoginAc
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 
 import {Link} from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import Typography from '@mui/material/Typography';
 import Button from '@material-ui/core/Button';
@@ -19,8 +20,9 @@ interface FuncProps{
 const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
 
     const classes = useStyles();
-    
-    const headerName = "Login";
+    const { t } = useTranslation();
+
+    const headerName = t(`loginForm.header`);
 
     const formik = useFormik({
         initialValues : {
@@ -30,18 +32,18 @@ const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
 
         validationSchema: Yup.object({
             username: Yup.string()
-                .min(6, 'Username must be 6 characters or more')
-                .max(15, 'Username must be 15 characters or less')
-                .trim('Username name cannot include leading and trailing spaces')
+                .min(6, t(`formValidations.username-min-characters`))
+                .max(15, t(`formValidations.username-max-characters`))
+                .trim(t(`formValidations.username-trim`))
                 .strict(true)
-                .required('Username is required'),
+                .required(t(`formValidations.username-required`)),
             password: Yup.string()
-                .required('Password is required') 
+                .required(t(`formValidations.password-required`)) 
                 .strict(true)
-                .trim('Password cannot include leading and trailing spaces')
-                .min(8, 'Password is too short - should be 8 chars minimum.')
-                .max(20, 'Password must be 20 characters or less')
-                .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.')
+                .trim(t(`formValidations.password-trim`))
+                .min(8, t(`formValidations.password-min-characters`))
+                .max(20, t(`formValidations.password-max-characters`))
+                .matches(/[a-zA-Z]/, t(`formValidations.password-must-match-latin-letters`))
         }),
         onSubmit: values => {
             sendLoginReq(values);
@@ -55,7 +57,7 @@ const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
                 {formik.errors.password && formik.touched.password ? (
                     <Fade in={formik.errors.password !== ""}>
                         <Alert variant="filled" className={classes.validationBar} severity="warning">
-                        <AlertTitle>Warning</AlertTitle>
+                        <AlertTitle>{t(`Alerts.warning`)}</AlertTitle>
                             {formik.errors.password}
                         </Alert>
                     </Fade>
@@ -64,7 +66,7 @@ const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
                 {formik.errors.username && formik.touched.username ? (
                     <Fade in={formik.errors.username !== ""}>
                         <Alert variant="filled" className={classes.validationBar} severity="warning">
-                            <AlertTitle>Warning</AlertTitle>
+                            <AlertTitle>{t(`Alerts.warning`)}</AlertTitle>
                                 {formik.errors.username}
                         </Alert>
                     </Fade>
@@ -80,7 +82,7 @@ const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
 
             <div className={classes.loginBox} >
                 <form onSubmit={formik.handleSubmit}>
-                    <label className={classes.fieldLabels} htmlFor="username">Username </label>
+                    <label className={classes.fieldLabels} htmlFor="username">{t(`loginForm.form-password`)} </label>
                     <input
                         className={classes.inputField}
                         id="username"
@@ -88,7 +90,7 @@ const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
                         {...formik.getFieldProps('username')}
                     />
 
-                    <label className={classes.fieldLabels} htmlFor="password">Password</label>
+                    <label className={classes.fieldLabels} htmlFor="password">{t(`loginForm.form-username`)}</label>
                     <input
                         className={classes.inputField}
                         id="password"
@@ -102,9 +104,9 @@ const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
                     className={classes.submitButton}
                     type="submit"
                     >
-                        Log-In
+                        {t(`loginForm.form-submit`)}
                     </Button>
-                    <Link className={classes.redirectLink} to="/signup"> No account? Sign up!</Link>
+                    <Link className={classes.redirectLink} to="/signup"> {t(`loginForm.no-account-link`)}</Link>
             </form>
         </div>  
         </div>  

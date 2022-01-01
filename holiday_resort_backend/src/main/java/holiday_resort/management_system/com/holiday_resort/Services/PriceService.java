@@ -41,7 +41,6 @@ public class PriceService {
 
         }, BigDecimal::add);
 
-
         return price;
     }
 

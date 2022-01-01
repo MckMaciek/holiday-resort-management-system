@@ -6,6 +6,7 @@ import {RegisterActionPayloadInterface} from "../Interfaces/ReduxInterfaces/Regi
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { pink } from '@mui/material/colors';
+import { useTranslation } from "react-i18next";
 
 import {Link} from "react-router-dom";
 
@@ -25,6 +26,7 @@ interface FuncProps{
 const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq, isEmailSent, isEmailFetching}) => {
 
     const classes = useStyles();
+    const { t } = useTranslation();
 
     const formik = useFormik({
         initialValues : {
@@ -40,43 +42,43 @@ const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq, isEmailSent, isEma
 
         validationSchema: Yup.object({
             username: Yup.string()
-                .min(6, 'Username must be 6 characters or more')
-                .max(15, 'Username must be 15 characters or less')
-                .trim('Username name cannot include leading and trailing spaces')
+                .min(6, t(`formValidations.username-min-characters`))
+                .max(15, t(`formValidations.username-max-characters`))
+                .trim(t(`formValidations.username-trim`))
                 .strict(true)
-                .required('Username is required'),
+                .required(t(`formValidations.username-required`)),
             password: Yup.string()
-                .required('Password is required') 
+                .required(t(`formValidations.password-required`)) 
                 .strict(true)
-                .trim('Password cannot include leading and trailing spaces')
-                .min(8, 'Password is too short - should be 8 chars minimum.')
-                .max(20, 'Password must be 20 characters or less')
-                .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
+                .trim(t(`formValidations.password-min-characters`))
+                .min(8, t(`formValidations.password-min-characters`))
+                .max(20, t(`formValidations.password-max-characters`))
+                .matches(/[a-zA-Z]/, t(`formValidations.password-must-match-latin-letters`)),
             passwordConfirmation: Yup.string()
-                .test('passwords-match', 'Passwords has to match', function(value){
+                .test('passwords-match', t(`formValidations.passwords-has-to-match`), function(value){
                     return this.parent.password === value
                 }),
             email : Yup.string()
-                .email('Must be a valid email')
-                .max(50, "Email is too big")
-                .required('Email is required'),
+                .email(t(`formValidations.email-validation`))
+                .max(50, t(`formValidations.email-max-characters`))
+                .required(t(`formValidations.email-required`)),
             firstName : Yup.string()
-                .min(1, 'First name must be 1 characters or more')
-                .max(20, 'First name must be 20 characters or less')
-                .trim('First name cannot include leading and trailing spaces')
+                .min(1, t(`formValidations.firstName-min-characters`))
+                .max(20, t(`formValidations.firstName-max-characters`))
+                .trim(t(`formValidations.firstName-trim`))
                 .strict(true)
-                .required('First name is required'),
+                .required(t(`formValidations.firstName-required`)),
             lastName : Yup.string()
-                .min(1, 'Last name must be 1 characters or more')
-                .max(20, 'Last name must be 20 characters or less')
-                .trim('Last name cannot include leading and trailing spaces')
+                .min(1, t(`formValidations.lastName-min-characters`))
+                .max(20, t(`formValidations.lastName-max-characters`))
+                .trim(t(`formValidations.lastName-trim`))
                 .strict(true)
-                .required('Last name is required'), 
+                .required(t(`formValidations.lastName-required`)), 
             phoneNumber : Yup.string()
                 .phone()
-                .required('Phone number is required'),
+                .required(t(`formValidations.phoneNumber-required`)),
             acceptTerms: Yup.bool()
-                .oneOf([true], 'Accept Terms Conditions is required')
+                .oneOf([true], t(`formValidations.acceptTermsAndConditions-required`))
 
         }),
         onSubmit: values => {
@@ -120,7 +122,8 @@ const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq, isEmailSent, isEma
                 align='center'
                 variant='h3'
             >
-                Please introduce <span className={classes.fontRed}>Yourself.</span>
+                {t(`registerForm.header.firstPart`)} 
+                <span className={classes.fontRed}>{t(`registerForm.header.secondColoredPart`)} </span>
             </Typography>
 
             {isEmailFetching ? 
@@ -131,7 +134,9 @@ const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq, isEmailSent, isEma
                 <form onSubmit={formik.handleSubmit}>
                     <div className={classes.userInputContainer}>
 
-                    <label className={classes.fieldLabels} htmlFor="username">Username </label>
+                    <label className={classes.fieldLabels} htmlFor="username">
+                        {t(`registerForm.username`)}     
+                    </label>
                     <div className={classes.validationContainer}>
                         <input
                             className={classes.userInput}
@@ -142,7 +147,9 @@ const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq, isEmailSent, isEma
                         {showValidationAlert(formik.errors.username, formik.touched.username)}
                     </div>
 
-                    <label className={classes.fieldLabels} htmlFor="password">Password</label>
+                    <label className={classes.fieldLabels} htmlFor="password">
+                        {t(`registerForm.password`)}   
+                    </label>
                     <div className={classes.validationContainer}>
                         <input
                             className={classes.userInput}
@@ -153,7 +160,9 @@ const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq, isEmailSent, isEma
                         {showValidationAlert(formik.errors.password, formik.touched.password)}
                     </div>
 
-                    <label className={classes.fieldLabels} htmlFor="passwordConfirmation">Password Confirm</label>
+                    <label className={classes.fieldLabels} htmlFor="passwordConfirmation">
+                        {t(`registerForm.password-confirm`)}  
+                    </label>
                     <div className={classes.validationContainer}>
                         <input
                             className={classes.userInput}
@@ -164,7 +173,9 @@ const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq, isEmailSent, isEma
                         {showValidationAlert(formik.errors.passwordConfirmation, formik.touched.passwordConfirmation)}
                     </div>
 
-                    <label className={classes.fieldLabels} htmlFor="email">E-mail</label>
+                    <label className={classes.fieldLabels} htmlFor="email">
+                        {t(`registerForm.email`)}
+                    </label>
                     <div className={classes.validationContainer}>
                         <input
                             id="email"
@@ -175,7 +186,9 @@ const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq, isEmailSent, isEma
                         {showValidationAlert(formik.errors.email, formik.touched.email)}
                     </div>
 
-                    <label className={classes.fieldLabels} htmlFor="firstName">First name</label>
+                    <label className={classes.fieldLabels} htmlFor="firstName">
+                        {t(`registerForm.firstName`)}
+                    </label>
                     <div className={classes.validationContainer}>
                         <input
                             id="firstName"
@@ -186,7 +199,9 @@ const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq, isEmailSent, isEma
                         {showValidationAlert(formik.errors.firstName, formik.touched.firstName)}
                     </div>
                         
-                    <label className={classes.fieldLabels} htmlFor="lastName">Last name</label>
+                    <label className={classes.fieldLabels} htmlFor="lastName">
+                        {t(`registerForm.lastName`)}
+                    </label>
                     <div className={classes.validationContainer}>
                         <input
                             id="lastName"
@@ -197,7 +212,9 @@ const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq, isEmailSent, isEma
                         {showValidationAlert(formik.errors.lastName, formik.touched.lastName)}
                     </div>
 
-                    <label className={classes.fieldLabels} htmlFor="phoneNumber">Phone number</label>
+                    <label className={classes.fieldLabels} htmlFor="phoneNumber">
+                        {t(`registerForm.phoneNumber`)}
+                    </label>
                     <div className={classes.validationContainer}>
                         <input
                             id="phoneNumber"
@@ -221,7 +238,7 @@ const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq, isEmailSent, isEma
                               }}
                             {...formik.getFieldProps('acceptTerms')}
                             />
-                            I accept terms conditions
+                                {t(`registerForm.acceptTermsAndConditions`)}
                         </div>
                         {showValidationAlert(formik.errors.acceptTerms, formik.touched.acceptTerms)}
                     </div>
@@ -233,12 +250,12 @@ const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq, isEmailSent, isEma
                     className={classes.submitButton}
                     type="submit"
                     >
-                        Sign-Up
+                        {t(`registerForm.sign-up-submit`)}
                     </Button>
                 </div>
             </form>
         </div>  
-        <Link className={classes.redirectLink} to="/signin"> Already have an account?</Link>                      
+        <Link className={classes.redirectLink} to="/signin"> {t(`registerForm.already-have-an-account`)} </Link>                      
         </div>  
     );
 };

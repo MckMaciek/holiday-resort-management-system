@@ -2,6 +2,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
 
+
 import Theming  from './Theme/Theme';
 import CombinedReducers from './Stores/Reducers/CombinedReducers';
 

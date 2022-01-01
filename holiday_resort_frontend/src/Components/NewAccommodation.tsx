@@ -203,7 +203,7 @@ const NewAccommodation : React.FC<ComponentProps> = ({
             
             <div style={{display : 'flex', justifyContent : 'center', alignItems : 'center', flexDirection : 'column'}}>
                 <SelectAccommodations                      
-                    availableResortObjects={resortObjects} // TODO
+                    availableResortObjects={resortObjects}
                     choosenResortId={resortObject.id}
                     handleChange={(event) => {
                         setResortObject({id : event.target.value, isSent : false});

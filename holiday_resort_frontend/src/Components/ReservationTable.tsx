@@ -142,7 +142,7 @@ const Row = ({row} : any) => {
               }}
               
             >
-            Cancel
+            Delete
             </Button>
             </div>
             {deleteDialog.isSet && deleteDialog.deleteType === OperationType.RESERVATION &&  deleteDialog.id === row.id ? (
@@ -349,7 +349,7 @@ const Row = ({row} : any) => {
               }}
               variant='h5'
               >
-                  Uwagi do zamówienia
+                  Historia zmian
               </Typography>
               </IconButton>
             <Collapse in={remarksTableOpen} timeout="auto" unmountOnExit>

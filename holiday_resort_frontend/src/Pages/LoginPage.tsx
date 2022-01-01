@@ -8,7 +8,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { pink } from '@mui/material/colors';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-
+import { useTranslation } from "react-i18next";
 import {AlertActionType}  from '../Enums/AlertTypes';
 import {registerEmailSent} from '../Stores/Actions/EmailOperations';
 
@@ -63,6 +63,7 @@ const LoginPage : React.FC<PropsFromRedux> = ({
 
     const classes = useStyles();
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     const [alertMessage, setAlertMessage] = useState<AlertState>({
         isSet : false,
@@ -75,7 +76,7 @@ const LoginPage : React.FC<PropsFromRedux> = ({
             setAlertMessage(
             {
                 isSet : true, 
-                message : 'Could not log in',
+                message : t(`loginPage.alert.failed-log-in`),
                 cause : AlertActionType.LOGIN_FAILED,
             })
         }
@@ -84,7 +85,7 @@ const LoginPage : React.FC<PropsFromRedux> = ({
             setAlertMessage(
             {
                 isSet : true, 
-                message : 'Email has been sent!',
+                message : t(`loginPage.alert.email-sent`),
                 cause : AlertActionType.EMAIL_SENT,
             })
         }

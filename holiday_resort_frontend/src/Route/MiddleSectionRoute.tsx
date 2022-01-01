@@ -9,8 +9,11 @@ import {RolesTypes} from '../Enums/Roles';
 import {useRouteMatch } from 'react-router';
 import {Link} from "react-router-dom";
 
+
+import AdminSection from "../MainPageSections/AdminSection";
 import ReservationSection from '../MainPageSections/ReservationSection';
 import DefaultMiddleSection from '../MainPageSections/DefaultMiddleSection';
+import AccountProfile from "../MainPageSections/AccoutProfile";
 
 interface MapStateToProps {
     isAuthenticated : boolean,
@@ -49,6 +52,21 @@ const MiddleSectionRoute : React.FC<PropsFromRedux> = ({
                     >
                         <ReservationSection/>
                 </PrivateRouter>
+
+                <PrivateRouter 
+                    isAuth={isAuthenticated && roles.includes(RolesTypes.USER)}
+                    path={`${path}profile`}
+                    >
+                        <AccountProfile/>
+                </PrivateRouter>
+
+                <PrivateRouter 
+                    isAuth={isAuthenticated && roles.includes(RolesTypes.ADMIN)}
+                    path={`${path}admin`}
+                    >
+                        <AdminSection/>
+                </PrivateRouter>
+
             </Switch>
         </>
     );

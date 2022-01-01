@@ -1,0 +1,79 @@
+{
+    "loginForm" : {
+        "header" : "Log-In",
+        "form-username" : "Username",
+        "form-password" : "Password",
+        "form-submit" : "Log-In",
+        "no-account-link" : "No account? Sign up!"
+    },
+
+    "registerForm" : {
+        "header" : {
+            "firstPart" : "Please introduce",
+            "secondColoredPart" : "Yourself."
+        },
+        "username" : "Username",
+        "password" : "Password",
+        "password-confirm" : "Password Confirm",
+        "email" : "E-mail",
+        "firstName" : "First name",
+        "lastName" : "Last name",
+        "phoneNumber" : "Phone number",
+
+        "accept-terms-and-conditions" : "I accept terms conditions",
+        "sign-up-submit" : "Sign-Up",
+
+        "already-have-an-account" : "Already have an account?"
+    },
+
+    "formValidations" : {
+        "username-min-characters" : "Username must be 6 characters or more",
+        "username-max-characters" : "Username must be 15 characters or less",
+        "username-trim" : "Username name cannot include leading and trailing spaces",
+        "username-required" : "Username is required",
+
+        "password-min-characters" : "Password is too short - should be 8 chars minimum",
+        "password-max-characters": "Password must be 20 characters or less",
+        "password-trim" : "Password cannot include leading and trailing spaces",
+        "password-must-match-latin-letters" : "Password can only contain Latin letters",
+        "password-required" : "Password is required",
+        "passwords-has-to-match" : "Passwords has to match",
+
+        "email-validation" : "Must be a valid email",
+        "email-max-characters" : "Email is too big",
+        "email-required" : "Email is required",
+
+        "firstName-min-characters" : "First name must be 1 characters or more",
+        "firstName-max-characters" : "First name must be 20 characters or less",
+        "firstName-trim" : "First name cannot include leading and trailing spaces",
+        "firstName-required" : "First name is required",
+
+        "lastName-min-characters" : "Last name must be 1 characters or more",
+        "lastName-max-characters" : "Last name must be 20 characters or less",
+        "lastName-trim" : "Last name cannot include leading and trailing spaces",
+        "lastName-required" : "Last name is required",
+
+        "phoneNumber-required" : "Phone number is required",
+        "acceptTermsAndConditions-required" : "Accept Terms Conditions is required"
+    },
+
+    "loginPage" : {
+        "alert" : {
+            "failed-log-in" : "Could not log in",
+            "email-sent" : "Email has been sent!"
+        }
+    },
+
+    "registerPage" : {
+        "aboutUs-link" : "About Us?"
+    },
+
+    "Alerts" : {
+        "warning" : "Warning",
+        "success" : "Success"
+    }
+
+
+    
+
+  }
