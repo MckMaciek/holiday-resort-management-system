@@ -23,11 +23,15 @@ public class ServiceRequest {
     @Column(name="service_name")
     private String serviceName;
 
+    @Column(name="is_number_of_people_irrelevant")
+    private Boolean isNumberOfPeopleIrrelevant;
+
     private BigDecimal cost;
 
     public ServiceRequest(ServiceRequestDTO serviceRequestDTO){
         this.id = serviceRequestDTO.getId();
         this.serviceName = serviceRequestDTO.getServiceName();
         this.cost = serviceRequestDTO.getCost();
+        this.isNumberOfPeopleIrrelevant = serviceRequestDTO.getIsNumberOfPeopleIrrelevant();
     }
 }

@@ -15,11 +15,13 @@ public class ServiceRequestDTO {
 
     private Long id;
     private String serviceName;
+    private Boolean isNumberOfPeopleIrrelevant;
     private BigDecimal cost;
 
     public ServiceRequestDTO(ServiceRequest serviceRequest){
         this.id = serviceRequest.getId();
         this.serviceName = serviceRequest.getServiceName();
         this.cost = serviceRequest.getCost();
+        this.isNumberOfPeopleIrrelevant = serviceRequest.getIsNumberOfPeopleIrrelevant();
     }
 }

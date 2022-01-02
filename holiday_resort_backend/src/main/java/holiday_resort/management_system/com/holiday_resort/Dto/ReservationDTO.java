@@ -21,6 +21,7 @@ public class ReservationDTO {
 
     private Long id;
     private String reservationName;
+    private String description;
     private BigDecimal finalPrice;
     private Date creationDate;
     private Date reservationDate;
@@ -39,6 +40,7 @@ public class ReservationDTO {
         this.reservationStatus = reservation.getReservationStatus();
         this.reservationDate = reservation.getReservationDate();
         this.creationDate = reservation.getCreationDate();
+        this.description = reservation.getDescription();
 
         this.reservationRemarks = reservation.getReservationRemarks()
                 .stream()

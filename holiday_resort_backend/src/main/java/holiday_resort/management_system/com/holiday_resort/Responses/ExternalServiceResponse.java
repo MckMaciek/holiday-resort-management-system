@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Builder
 @Getter
@@ -20,6 +21,9 @@ public class ExternalServiceResponse {
     private Long amountOfPeople;
     private BigDecimal cost;
     private String remarks;
+    private LocalDate date;
+
+    private Boolean isNumberOfPeopleIrrelevant;
 
     public ExternalServiceResponse(ExternalServiceDTO externalServiceDTO){
         this.serviceRequestId = externalServiceDTO.getId();
@@ -27,5 +31,8 @@ public class ExternalServiceResponse {
         this.amountOfPeople = externalServiceDTO.getAmountOfPeople();
         this.remarks = externalServiceDTO.getRemarks();
         this.cost = externalServiceDTO.getServiceRequestDTO().getCost();
+        this.date = externalServiceDTO.getDate();
+
+        this.isNumberOfPeopleIrrelevant = externalServiceDTO.getServiceRequestDTO().getIsNumberOfPeopleIrrelevant();
     }
 }

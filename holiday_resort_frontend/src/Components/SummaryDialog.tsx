@@ -132,7 +132,7 @@ const SummaryDialog : React.FC<IProps> = ({
                                 <TableCell  align="center"> Amount of People </TableCell>
                                 <TableCell  align="center"> Cost/Person </TableCell>
                                 <TableCell  align="center"> Final cost </TableCell>
-                                <TableCell  align="center"> Remarks </TableCell>
+                                <TableCell  align="center"> Date </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -151,28 +151,28 @@ const SummaryDialog : React.FC<IProps> = ({
                             component="th" 
                             scope="row"
                             >
-                                {externalService.amountOfPeople}
+                                {!externalService.isNumberOfPeopleIrrelevant ? externalService.amountOfPeople : 'N/A'} 
                             </TableCell>
                             <TableCell 
                             align="center"
                             component="th" 
                             scope="row"
                             >
-                                {externalService.cost} zł
+                                {!externalService.isNumberOfPeopleIrrelevant ? `${externalService.cost} zł` : 'N/A'}
                             </TableCell>
                             <TableCell 
                             align="center"
                             component="th" 
                             scope="row"
                             >
-                                {externalService.amountOfPeople * externalService.cost} zł
+                                {!externalService.isNumberOfPeopleIrrelevant ? (externalService.amountOfPeople * externalService.cost) : externalService.cost} zł
                             </TableCell>
                             <TableCell 
                             align="center"
                             component="th" 
                             scope="row"
                             >
-                                {externalService.remarks}
+                                {externalService.date}
                             </TableCell>
                             </TableRow>
                         ))}

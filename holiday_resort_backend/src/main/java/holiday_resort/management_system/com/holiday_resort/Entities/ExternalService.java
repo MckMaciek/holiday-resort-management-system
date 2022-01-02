@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "external_services_tb")
@@ -25,6 +26,8 @@ public class ExternalService {
 
     @Column(name="people_amount")
     private Long amountOfPeople;
+
+    private LocalDate date;
 
     @OneToOne(fetch = FetchType.EAGER)
     @NotNull

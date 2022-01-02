@@ -7,6 +7,7 @@ import holiday_resort.management_system.com.holiday_resort.Requests.ExternalServ
 import holiday_resort.management_system.com.holiday_resort.Services.ServiceRequestService;
 import org.springframework.stereotype.Service;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 @Service
@@ -35,6 +36,7 @@ public class ExternalServicesConverter implements Converter<ExternalServiceDTO, 
                 .amountOfPeople(externalServicesRequest.getAmountOfPeople())
                 .remarks(externalServicesRequest.getRemarks())
                 .serviceRequestDTO(findExternalService(externalServicesRequest.getServiceRequestId()))
+                .date(externalServicesRequest.getDate().plus(1, ChronoUnit.DAYS))
                 .build();
 
         return externalServiceDTO;

@@ -62,6 +62,7 @@ const AddExternalServiceDialog : React.FC<ComponentProps> = ({
         isSet : boolean,
         remarks : string,
         amountOfPeople : number,
+        date : Date,
     }
 
         
@@ -90,6 +91,7 @@ const AddExternalServiceDialog : React.FC<ComponentProps> = ({
                     serviceRequestId : externalService.id,
                     amountOfPeople : externalService.amountOfPeople,
                     remarks : externalService.remarks,
+                    date : externalService.date,
                 }
                 externalServicesRequest.push(externalServiceObj);
             }

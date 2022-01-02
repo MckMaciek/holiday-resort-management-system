@@ -5,6 +5,7 @@ import {ReservationOwner} from './ReservationOwner';
 export interface ReservationInterface {
     id : number,
     reservationName : string,
+    description : string,
     finalPrice : number,
     reservationDate : Date,
     creationDate : Date,

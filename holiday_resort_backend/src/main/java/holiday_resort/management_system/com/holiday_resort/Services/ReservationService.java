@@ -103,9 +103,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                 .map(reservationRemarksService::convertRequestToDTO)
                 .collect(Collectors.toList());
 
-
         ReservationOwnerRequest reservationOwnerRequest = reservationReq.getReservationOwnerRequest();
-
 
         ReservationDTO reservationDTO = ReservationDTO.builder()
                 .accommodationListDTO(accommodationDTOS)
@@ -117,11 +115,15 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
                 .externalServiceDTOS(externalServiceDTOS)
                 .reservationRemarks(reservationRemarksDTOS)
                 .reservationOwnerDTO(new ReservationOwnerDTO(reservationOwnerRequest))
+                .description(this.setDescription(reservationReq.getDescription()))
                 .user(loginDetails.getUser())
+                .description(this.setDescription(reservationReq.getDescription()))
                 .build();
+
 
         this.add(reservationDTO);
     }
+
 
     @Transactional
     public void patchReservation(LoginDetails loginDetails, ReservationRequest reservationReq, Long reservationId){
@@ -156,12 +158,12 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
 
         ReservationDTO userReservationDTO = new ReservationDTO(userReservation);
 
-
         userReservationDTO.setReservationDate(reservationReq.getReservationStartingDate());
         userReservationDTO.setReservationEndingDate(reservationReq.getReservationEndingDate());
         userReservationDTO.setReservationOwnerDTO(new ReservationOwnerDTO(reservationOwnerRequest));
         userReservationDTO.setReservationName(reservationReq.getReservationName());
         userReservationDTO.setUser(loginDetails.getUser());
+        userReservationDTO.setDescription(this.setDescription(reservationReq.getDescription()));
         userReservationDTO.setId(reservationId);
 
         List<AccommodationDTO> existingAccommodationsDTO = userReservationDTO.getAccommodationListDTO();
@@ -315,6 +317,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         reservation.setReservationName(reservationDTO.getReservationName());
         reservation.setCreationDate(reservationDTO.getCreationDate());
         reservation.setUser(reservationDTO.getUser());
+        reservation.setDescription(reservationDTO.getDescription());
         reservation.setId(reservationDTO.getId());
         reservation.setFinalPrice(reservationDTO.getFinalPrice());
 
@@ -378,6 +381,10 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         return  !StringUtils.isNullOrEmpty(reservationOwner.getFirstName()) ||
                 !StringUtils.isNullOrEmpty(reservationOwner.getLastName())  ||
                 !StringUtils.isNullOrEmpty(reservationOwner.getPhoneNumber());
+    }
+
+    private String setDescription(String desc){
+        return StringUtils.isNullOrEmpty(desc) ? "" : desc;
     }
 
     private boolean validateReservationRequest(ReservationRequest reservationRequest){

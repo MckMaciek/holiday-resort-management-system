@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -95,11 +96,13 @@ public class Startup implements CommandLineRunner {
 
         ServiceRequestDTO serviceRequestDTO = ServiceRequestDTO.builder()
                 .serviceName("Kajaki")
+                .isNumberOfPeopleIrrelevant(false)
                 .cost(BigDecimal.TEN)
                 .build();
 
         ServiceRequestDTO serviceRequestDTO2 = ServiceRequestDTO.builder()
                 .serviceName("Ognisko")
+                .isNumberOfPeopleIrrelevant(true)
                 .cost(BigDecimal.TEN)
                 .build();
 
@@ -239,9 +242,10 @@ public class Startup implements CommandLineRunner {
         externalServiceDTOS.forEach(externalServiceDTOS1 -> {
             ExternalServicesRequest externalServicesRequest = new ExternalServicesRequest();
             Long id = externalServiceDTOS1.getId();
-            externalServicesRequest.setServiceRequestId(id);
-            externalServicesRequest.setAmountOfPeople(11l);
-            externalServicesRequest.setRemarks("");
+                externalServicesRequest.setServiceRequestId(id);
+                externalServicesRequest.setAmountOfPeople(11l);
+                externalServicesRequest.setRemarks("");
+                externalServicesRequest.setDate(LocalDate.now());
 
             externalServicesRequests.add(externalServicesRequest);
         });

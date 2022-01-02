@@ -6,4 +6,6 @@ export interface ExternalService {
     amountOfPeople : number,
     cost : number,
     remarks : string,
+    isNumberOfPeopleIrrelevant : boolean,
+    date : Date,
 }

@@ -44,6 +44,9 @@ public class Reservation implements LoginDetailsLinked {
     @Column(name="final_price")
     private BigDecimal finalPrice;
 
+    @Column(name="reservation_add_dsc")
+    private String description;
+
     @OneToMany(mappedBy = "reservation", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ReservationRemarks> reservationRemarks;
 
@@ -61,8 +64,10 @@ public class Reservation implements LoginDetailsLinked {
     private User user;
 
     public Reservation(ReservationDTO reservationDTO){
+
         this.id = reservationDTO.getId();
         this.finalPrice = reservationDTO.getFinalPrice();
+        this.description = reservationDTO.getDescription();
         this.reservationRemarks = reservationDTO.getReservationRemarks()
                 .stream()
                 .map(ReservationRemarks::new)

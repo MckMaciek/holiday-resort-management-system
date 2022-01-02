@@ -22,6 +22,7 @@ public class ReservationResponse {
     private Long id;
     private BigDecimal finalPrice;
     private String reservationName;
+    private String description;
     private Date reservationDate;
     private Date reservationEndingDate;
     private Date creationDate;
@@ -58,6 +59,7 @@ public class ReservationResponse {
 
         this.reservationEndingDate = reservationDTO.getReservationEndingDate();
         this.reservationName = reservationDTO.getReservationName();
+        this.description = reservationDTO.getDescription();
 
         this.reservationOwnerRequest = new ReservationOwnerRequest(reservationDTO.getReservationOwnerDTO());
     }

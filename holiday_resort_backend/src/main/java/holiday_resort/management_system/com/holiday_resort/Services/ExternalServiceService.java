@@ -78,6 +78,7 @@ public class ExternalServiceService implements Validate<ExternalServiceDTO> {
                 .reservation(reservation)
                 .amountOfPeople(externalServiceDTO.getAmountOfPeople())
                 .remarks(externalServiceDTO.getRemarks())
+                .date(externalServiceDTO.getDate())
                 .serviceRequest(new ServiceRequest(externalServiceDTO.getServiceRequestDTO()))
                 .build();
 

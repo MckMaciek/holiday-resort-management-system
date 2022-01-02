@@ -22,6 +22,7 @@ public class ReservationRequest {
     private List<ExternalServicesRequest> externalServicesRequests;
 
     private String reservationName;
+    private String description;
 
     private Date reservationEndingDate;
     private Date reservationStartingDate;

@@ -12,12 +12,13 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-
+import { Calendar } from 'react-date-range';
 
 interface ExternalServicesCheckBox extends ExternalServiceResponse {
     isSet : boolean,
     amountOfPeople : number,
     remarks : string,
+    date : Date,
 }
 
 interface ExternalServiceRemarksInt {
@@ -39,7 +40,6 @@ const SelectExternalService : React.FC<ComponentProps> = ({
     setExternalServiceRemarks,
 }) => {
 
-    let textfieldRef = React.createRef<HTMLDivElement>();
 
     useEffect(() => {
         
@@ -52,6 +52,8 @@ const SelectExternalService : React.FC<ComponentProps> = ({
                     isSet : false,
                     amountOfPeople : 0,
                     remarks : '',
+                    isNumberOfPeopleIrrelevant : externalService.isNumberOfPeopleIrrelevant,
+                    date : new Date(),
                 }]);
             });
         }
@@ -69,6 +71,18 @@ const SelectExternalService : React.FC<ComponentProps> = ({
                 amountOfPeople : (operation === 'add' ? selectedCheckBox[0].amountOfPeople + 1 :  Math.max(selectedCheckBox[0].amountOfPeople - 1, 0)),
             }, ...ext.slice(++checkboxIndex)]);
      }
+
+     const changeDate = (index : any, item : any) => {
+
+        let selectedCheckBox = externalServicesCheckboxValues.filter(checkbox => checkbox.id === parseInt(index));
+        let checkboxIndex = externalServicesCheckboxValues.indexOf(selectedCheckBox[0]);
+
+        setExternalServicesCheckboxValues(ext => [...ext.slice(0, checkboxIndex),{
+                ...selectedCheckBox[0],
+                date : item,
+            }, ...ext.slice(++checkboxIndex)]);
+     }
+
 
     const handleSelectChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -115,7 +129,7 @@ const SelectExternalService : React.FC<ComponentProps> = ({
                     <>
                         {externalServicesCheckboxValues.map((externalServicesChkbx) => (
                             <>
-                                
+                            {console.log(externalServicesChkbx)}   
                             <FormControlLabel
                             control={
                                 <Switch 
@@ -128,36 +142,49 @@ const SelectExternalService : React.FC<ComponentProps> = ({
                                     color="secondary"
                                 />
                             }
-                            label={`${externalServicesChkbx.serviceName} - costs ${externalServicesChkbx.cost} zł per person`}
+                            label={!externalServicesChkbx.isNumberOfPeopleIrrelevant ? `${externalServicesChkbx.serviceName} - costs ${externalServicesChkbx.cost} zł per person` : `${externalServicesChkbx.serviceName}`}
                             />
 
-                            <ButtonGroup
+                            {externalServicesChkbx.isSet ? (
+
+                                <Calendar 
+                                    onChange={item => changeDate(externalServicesChkbx.id, item)}
+                                    date={externalServicesChkbx.date} 
+                                />
+
+                            ) : null}
+
+                            {!externalServicesChkbx.isNumberOfPeopleIrrelevant && externalServicesChkbx.isSet ? (
+                                
+                                <ButtonGroup
                                 disabled={!externalServicesChkbx.isSet}
-                            >  
-                                <Button
-                                    aria-label="reduce"
-                                    onClick={() => {
-                                        sendValue(externalServicesChkbx.id, 'sub');
-                                    }}
-                                >
-                                    <RemoveIcon fontSize="small" />
-                                </Button>
-                                <Button
-                                    aria-label="increase"
-                                    onClick={() => {
-                                        sendValue(externalServicesChkbx.id, 'add');
-                                    }}
-                                >
-                                    <AddIcon fontSize="small" />
-                                </Button>
+                                >  
 
-                                <span
-                                    style={{marginLeft : '5%'}}
-                                >   
-                                    {externalServicesChkbx.amountOfPeople}  People 
-                                </span> 
+                                    <Button
+                                        aria-label="reduce"
+                                        onClick={() => {
+                                            sendValue(externalServicesChkbx.id, 'sub');
+                                        }}
+                                    >
+                                        <RemoveIcon fontSize="small" />
+                                    </Button>
+                                    <Button
+                                        aria-label="increase"
+                                        onClick={() => {
+                                            sendValue(externalServicesChkbx.id, 'add');
+                                        }}
+                                    >
+                                        <AddIcon fontSize="small" />
+                                    </Button>
 
-                            </ButtonGroup>
+                                    <span
+                                        style={{marginLeft : '5%'}}
+                                    >   
+                                        {externalServicesChkbx.amountOfPeople}  People 
+                                    </span> 
+
+                                </ButtonGroup>
+                            ) : null}
                             </>     
                         ))}
                     </>

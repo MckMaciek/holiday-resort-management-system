@@ -22,14 +22,20 @@ public class PriceService {
         BigDecimal price = externalServiceList.stream()
                 .reduce(BigDecimal.ZERO, (subTotal, externalService) -> {
 
-                    Long amountOfPeople = externalService.getAmountOfPeople();
-                    return subTotal.add(externalService.getServiceRequest().getCost().multiply(BigDecimal.valueOf(amountOfPeople)));
+                    if(!checkIfAmountOfPeopleIsIrrelevant(externalService)){
+                        Long amountOfPeople = externalService.getAmountOfPeople();
+                        return subTotal.add(externalService.getServiceRequest().getCost().multiply(BigDecimal.valueOf(amountOfPeople)));
+                    }
+                    else return subTotal.add(externalService.getServiceRequest().getCost());
 
                 }, BigDecimal::add);
 
         return price;
     }
 
+    private boolean checkIfAmountOfPeopleIsIrrelevant(ExternalService externalService){
+        return externalService.getServiceRequest().getIsNumberOfPeopleIrrelevant();
+    }
 
     private BigDecimal calculateAccommodations(List<Accommodation> accommodationList){
 
