@@ -24,11 +24,10 @@ const ReservationRemarksTable : React.FC<IProps> = ({
         <Table >  
             <TableHead>
                 <TableRow>
-                    <TableCell  align="center"> Topic</TableCell>
-                    <TableCell  align="center"> Description </TableCell>
-                    <TableCell  align="center"> Creation Date</TableCell>
-                    <TableCell  align="center"> Modification Date </TableCell>
-                    <TableCell  align="center"> Author </TableCell>
+                    <TableCell  align="left"> Topic</TableCell>
+                    <TableCell  align="left"> Description </TableCell>
+                    <TableCell  align="left"> Creation Date</TableCell>
+                    <TableCell  align="left"> Author </TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
@@ -51,12 +50,6 @@ const ReservationRemarksTable : React.FC<IProps> = ({
                     scope="row"
                     >
                         {reservationRemark.creationDate}
-                    </TableCell>
-                    <TableCell 
-                    component="th" 
-                    scope="row"
-                    >
-                        {!!!reservationRemark.modificationDate ? "" : reservationRemark.modificationDate}
                     </TableCell>
                     <TableCell 
                     component="th" 

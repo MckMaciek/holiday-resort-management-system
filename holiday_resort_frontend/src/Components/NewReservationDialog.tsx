@@ -21,7 +21,7 @@ import Avatar from '@mui/material/Avatar';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import {UserInfoResponse} from "../Interfaces/UserInfoResponse";
-
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 import {getUserInfo} from "../Stores/ApiRequests/LoginApiRequest";
 
 import List from '@mui/material/List';
@@ -146,15 +146,16 @@ const NewReservationDialog : React.FC<Props> = ({
 
         setNewReservation(reservation => ({
             ...reservation, 
-            reservationEndingDate : ranges.selection.endDate.getTime(),
-            reservationStartingDate : ranges.selection.startDate.getTime(),
+            reservationEndingDate : ranges.selection.endDate,
+            reservationStartingDate : ranges.selection.startDate,
         }));
     }
 
     const NEW_RESERVATION_DEFAULT : NewReservationRequest = {
         reservationId : null,
-        reservationEndingDate : 0,
-        reservationStartingDate : 0,
+        reservationEndingDate : new Date(),
+        reservationStartingDate : new Date(),
+        description : '',
         reservationName : '',
         accommodationRequestList : [],
         externalServicesRequests : [],
@@ -316,7 +317,7 @@ const NewReservationDialog : React.FC<Props> = ({
                                     variant="h5"
                                     style={{marginBottom : '3%'}}
                                 >
-                                    <p> ({differenceInDays(dateRange.endDate, dateRange.startDate)} days)</p>
+                                    <p> ({differenceInDays(dateRange.endDate, dateRange.startDate) + 1} days)</p>
                                 </Typography>
                   
                                 <NumericTextField
@@ -381,6 +382,19 @@ const NewReservationDialog : React.FC<Props> = ({
                                                 }))}
                                     />
                                 </div>
+
+                                <TextareaAutosize
+                                    maxLength={255}
+                                    minRows={3}
+                                    placeholder="Additional remarks to the reservation"
+                                    onChange={(event) => 
+                                        setNewReservation(
+                                            reservation => ({...reservation,
+                                                description : event.target.value,
+                                            }))
+                                    }
+                                    style={{ width: '75%', marginTop : '1.9%', resize: 'none', paddingBottom : '2%'}}
+                                />
 
                                 <Button
                                     variant="outlined"

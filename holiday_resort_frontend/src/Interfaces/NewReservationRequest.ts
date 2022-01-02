@@ -4,9 +4,10 @@ import { ReservationOwner } from "./ReservationOwner";
 
 export interface NewReservationRequest {
     reservationId : number | null,
-    reservationEndingDate : number,
-    reservationStartingDate : number,
+    reservationEndingDate : Date,
+    reservationStartingDate : Date,
     reservationName : string,
+    description : string,
     accommodationRequestList : Array<AccommodationRequest>,
     externalServicesRequests : Array<ExternalServiceRequest>
     reservationRemarksRequestList : Array<any>,

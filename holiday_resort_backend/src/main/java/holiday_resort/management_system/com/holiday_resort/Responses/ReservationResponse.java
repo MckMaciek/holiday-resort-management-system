@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,9 +23,9 @@ public class ReservationResponse {
     private BigDecimal finalPrice;
     private String reservationName;
     private String description;
-    private Date reservationDate;
-    private Date reservationEndingDate;
-    private Date creationDate;
+    private LocalDate reservationDate;
+    private LocalDate reservationEndingDate;
+    private LocalDate creationDate;
     private ReservationStatus reservationStatus;
 
     private List<ReservationRemarksResponse> reservationRemarksResponse;

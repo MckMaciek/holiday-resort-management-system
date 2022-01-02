@@ -13,6 +13,13 @@ import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Fade from '@mui/material/Fade';
 
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import { useState } from 'react';
+
 interface FuncProps{
     sendLoginReq : (loginModel : LoginActionPayloadInterface) => void,
 }
@@ -23,6 +30,8 @@ const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
     const { t } = useTranslation();
 
     const headerName = t(`loginForm.header`);
+
+    const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 
     const formik = useFormik({
         initialValues : {
@@ -82,20 +91,32 @@ const LoginForm : React.FC<FuncProps> = ({sendLoginReq}) => {
 
             <div className={classes.loginBox} >
                 <form onSubmit={formik.handleSubmit}>
-                    <label className={classes.fieldLabels} htmlFor="username">{t(`loginForm.form-password`)} </label>
-                    <input
+                    <label className={classes.fieldLabels} htmlFor="username">{t(`loginForm.form-username`)} </label>
+                    <OutlinedInput 
                         className={classes.inputField}
                         id="username"
                         type="text"
                         {...formik.getFieldProps('username')}
+                        
                     />
-
-                    <label className={classes.fieldLabels} htmlFor="password">{t(`loginForm.form-username`)}</label>
-                    <input
+ 
+                    <label className={classes.fieldLabels} htmlFor="password">{t(`loginForm.form-password`)}</label>
+                    <OutlinedInput 
                         className={classes.inputField}
-                        id="password"
-                        type="password"
+                        id="password" 
+                        type={passwordVisible ? 'text' : 'password'}
                         {...formik.getFieldProps('password')}
+                        endAdornment={
+                            <InputAdornment position="end">
+                            <IconButton
+                                aria-label="toggle password visibility"
+                                edge="end"
+                                onClick={() => setPasswordVisible(!passwordVisible)}
+                            >
+                                {passwordVisible ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                            </InputAdornment>
+                        }
                     />
 
                     <Button 
@@ -137,6 +158,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         minWidth : '14vw',
         minHeight: '3vh',
         marginBottom : '5%',
+        background : 'white'
     },
     fieldLabels: {
         display : 'block',

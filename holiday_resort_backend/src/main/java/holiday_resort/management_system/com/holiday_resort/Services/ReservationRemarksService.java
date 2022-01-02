@@ -49,7 +49,6 @@ public class ReservationRemarksService implements  Validate<ReservationRemarksDT
             reservationRemarks.setCreationDate(reservationRemarksDTO.getCreationDate());
             reservationRemarks.setDescription(reservationRemarksDTO.getDescription());
             reservationRemarks.setTopic(reservationRemarksDTO.getTopic());
-            reservationRemarks.setModificationDate(reservationRemarksDTO.getModificationDate());
             reservationRemarks.setReservation(reservation);
             reservationRemarks.setAuthor(reservationRemarksDTO.getAuthor());
 

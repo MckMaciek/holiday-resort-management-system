@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -37,10 +38,10 @@ public class Event {
     private EventEnum eventType;
 
     @Column(name="starting_date")
-    private Date startingDate;
+    private LocalDate startingDate;
 
     @Column(name="duration_date")
-    private Date durationDate;
+    private LocalDate durationDate;
 
     @Column(name="price")
     private BigDecimal price;

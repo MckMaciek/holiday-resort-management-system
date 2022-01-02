@@ -16,9 +16,11 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Button from '@material-ui/core/Button';
 import TablePagination from '@mui/material/TablePagination';
 import SendIcon from '@mui/icons-material/Send';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import Avatar from '@mui/material/Avatar';
 
 import DialogConfirm from '../Components/DialogConfirm';
 import AccommodationDialogEdit from '../Components/AccommodationDialogEdit';
@@ -182,15 +184,22 @@ const Row = ({row} : any) => {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <div>
 
-              <div style={{marginTop : '5%', marginBottom : '5%', marginLeft : '7%', display : 'flex', justifyContent : 'flex-start', alignItems : 'center'}}>
-                <div style={{marginRight : '7%', display : 'inline'}}> 
-                
+              <div style={{marginTop : '3.5%', marginBottom : '3.5%', marginLeft : '4.5%', display : 'flex', justifyContent : 'flex-start', alignItems : 'center'}}>
+                <Avatar
+                  sx={{ height: '70px', width: '70px' }}
+                >
+                  <AccountCircleIcon
+                    sx={{ height: '70px', width: '70px' }}
+                  />
+                </Avatar>
+                <div style={{marginLeft : '1%', marginRight : '7%', display : 'inline'}}> 
                   <span> Reservation done by : 
                     <strong> {`${row.reservationOwnerRequest.firstName} ${row.reservationOwnerRequest.lastName}`} </strong>
                   </span>
                   <p> User Contact : <strong> {row.reservationOwnerRequest.phoneNumber} </strong> </p>
 
                 </div>
+              
                 <Button
                     color="secondary" 
                     type="submit"
@@ -208,7 +217,17 @@ const Row = ({row} : any) => {
                   >
                   Change Reservation Details
                 </Button>
-              </div>
+            </div>
+
+            <div style={{marginBottom : '2%'}}>
+                <Typography
+                  variant='h5'
+                  sx={{marginBottom : '0.4%'}}
+                >
+                  Reservation remarks :
+                </Typography>
+                <span> {row.description ? row.description : "None"}</span>
+            </div>
 
               {editDialog.isSet && editDialog.editType === OperationType.RESERVATION &&  editDialog.id === row.id ? (
                  <NewReservationDialog
@@ -224,6 +243,12 @@ const Row = ({row} : any) => {
               ) : null}
 
             </div>
+            <Typography
+              variant='h5'
+              sx={{marginBottom : '1%'}}
+              >
+                  Accommodation List :
+            </Typography>
             <Box sx={{ margin: 1 }}>
             <TableContainer>
             <Table 
@@ -238,6 +263,7 @@ const Row = ({row} : any) => {
             </TableRow>
             </TableHead>
             <TableBody>
+
 
             {row.accommodationResponses.map((innerRow) => (
                 <TableRow key={innerRow.resortObject.id}>

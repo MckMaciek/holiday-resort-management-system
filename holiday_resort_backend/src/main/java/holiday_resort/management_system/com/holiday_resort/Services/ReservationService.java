@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -108,10 +110,10 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         ReservationDTO reservationDTO = ReservationDTO.builder()
                 .accommodationListDTO(accommodationDTOS)
                 .reservationName(reservationReq.getReservationName())
-                .reservationEndingDate(reservationReq.getReservationEndingDate())
-                .creationDate(Date.from(Instant.now()))
+                .reservationEndingDate(reservationReq.getReservationEndingDate().plus(1, ChronoUnit.DAYS))
+                .creationDate(LocalDate.now())
                 .reservationStatus(ReservationStatus.DRAFT)
-                .reservationDate(reservationReq.getReservationStartingDate())
+                .reservationDate(reservationReq.getReservationStartingDate().plus(1, ChronoUnit.DAYS))
                 .externalServiceDTOS(externalServiceDTOS)
                 .reservationRemarks(reservationRemarksDTOS)
                 .reservationOwnerDTO(new ReservationOwnerDTO(reservationOwnerRequest))
@@ -158,8 +160,8 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
 
         ReservationDTO userReservationDTO = new ReservationDTO(userReservation);
 
-        userReservationDTO.setReservationDate(reservationReq.getReservationStartingDate());
-        userReservationDTO.setReservationEndingDate(reservationReq.getReservationEndingDate());
+        userReservationDTO.setReservationDate(reservationReq.getReservationStartingDate().plus(1, ChronoUnit.DAYS));
+        userReservationDTO.setReservationEndingDate(reservationReq.getReservationEndingDate().plus(1, ChronoUnit.DAYS));
         userReservationDTO.setReservationOwnerDTO(new ReservationOwnerDTO(reservationOwnerRequest));
         userReservationDTO.setReservationName(reservationReq.getReservationName());
         userReservationDTO.setUser(loginDetails.getUser());
@@ -267,7 +269,7 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
         ReservationRemarks reservationRemarks = ReservationRemarks.builder()
                 .reservation(reservation)
                 .author(SYSTEM_AUTHOR)
-                .creationDate(Date.from(Instant.now()))
+                .creationDate(LocalDate.now())
                 .topic(STATUS_CHANGED)
                 .description(String.format("Reservation set to %s", reservationStatus))
                 .build();

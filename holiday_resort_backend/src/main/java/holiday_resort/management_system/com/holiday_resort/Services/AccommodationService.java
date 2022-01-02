@@ -21,8 +21,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -95,7 +94,7 @@ public class AccommodationService implements CrudOperations<AccommodationDTO, Lo
             List<Event> commonProduct = resortObject.getEventList().stream().filter(userChosenEvents::contains).collect(Collectors.toList());
 
             commonProduct.forEach(events -> {
-                events.setStartingDate(Date.from(Instant.now()));
+                events.setStartingDate(LocalDate.now());
                 events.setPriority(3);
             });
             userAccommodation.setUserEventList(commonProduct);

@@ -5,8 +5,7 @@ import holiday_resort.management_system.com.holiday_resort.Interfaces.Converter;
 import holiday_resort.management_system.com.holiday_resort.Requests.ReservationRemarksRequest;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Component
 public class ReservationRemarksConverter implements Converter<ReservationRemarksDTO, Object> {
@@ -25,7 +24,7 @@ public class ReservationRemarksConverter implements Converter<ReservationRemarks
 
     private ReservationRemarksDTO convertReservationRequestToDto(ReservationRemarksRequest reservationRemarksRequest){
         ReservationRemarksDTO reservationRemarksDTO = ReservationRemarksDTO.builder()
-                .creationDate(Date.from(Instant.now()))
+                .creationDate(LocalDate.now())
                 .description(reservationRemarksRequest.getDescription())
                 .topic(reservationRemarksRequest.getTopic())
                 .author("SYSTEM")

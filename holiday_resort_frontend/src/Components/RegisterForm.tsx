@@ -9,6 +9,11 @@ import { pink } from '@mui/material/colors';
 import { useTranslation } from "react-i18next";
 
 import {Link} from "react-router-dom";
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import OutlinedInput from '@mui/material/OutlinedInput';
 
 import Button from '@material-ui/core/Button';
 import Alert from '@mui/material/Alert';
@@ -16,6 +21,7 @@ import Typography from '@mui/material/Typography';
 import Fade from '@mui/material/Fade';
 import Checkbox from '@mui/material/Checkbox';
 import { Redirect } from "react-router-dom";
+import { useState } from 'react';
 
 interface FuncProps{
     sendRegisterReq : (registerModel : RegisterActionPayloadInterface) => void,
@@ -27,6 +33,16 @@ const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq, isEmailSent, isEma
 
     const classes = useStyles();
     const { t } = useTranslation();
+
+    interface PasswordVisibile {
+        passwordVisible : boolean,
+        confirmPasswordVisible : boolean,
+    }
+
+    const [passwordVisible, setPasswordVisbile] = useState<PasswordVisibile>({
+        passwordVisible : false,
+        confirmPasswordVisible : false,
+    })
 
     const formik = useFormik({
         initialValues : {
@@ -150,26 +166,49 @@ const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq, isEmailSent, isEma
                     <label className={classes.fieldLabels} htmlFor="password">
                         {t(`registerForm.password`)}   
                     </label>
+
                     <div className={classes.validationContainer}>
-                        <input
+                    <OutlinedInput 
                             className={classes.userInput}
                             id="password"
-                            type="password"
+                            type={passwordVisible.passwordVisible ? 'text' : 'password'}
                             {...formik.getFieldProps('password')}
-                        />
-                        {showValidationAlert(formik.errors.password, formik.touched.password)}
+                        endAdornment={
+                            <InputAdornment position="end">
+                            <IconButton
+                                aria-label="passwordVisible"
+                                edge="end"
+                                onClick={() => setPasswordVisbile(passwords => ({...passwords, passwordVisible : !passwordVisible.passwordVisible}))}
+                            >
+                                {passwordVisible.passwordVisible ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                            </InputAdornment>
+                        }
+                    />
+                    {showValidationAlert(formik.errors.password, formik.touched.password)}
                     </div>
 
                     <label className={classes.fieldLabels} htmlFor="passwordConfirmation">
                         {t(`registerForm.password-confirm`)}  
                     </label>
                     <div className={classes.validationContainer}>
-                        <input
+                    <OutlinedInput 
                             className={classes.userInput}
                             id="passwordConfirmation"
-                            type="password"
+                            type={passwordVisible.confirmPasswordVisible ? 'text' : 'password'}
                             {...formik.getFieldProps('passwordConfirmation')}
-                        />
+                        endAdornment={
+                            <InputAdornment position="end">
+                            <IconButton
+                                aria-label="passwordVisible"
+                                edge="end"
+                                onClick={() => setPasswordVisbile(passwords => ({...passwords, confirmPasswordVisible : !passwordVisible.confirmPasswordVisible}))}
+                            >
+                                {passwordVisible.confirmPasswordVisible ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                            </InputAdornment>
+                        }
+                    />
                         {showValidationAlert(formik.errors.passwordConfirmation, formik.touched.passwordConfirmation)}
                     </div>
 
@@ -270,6 +309,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
     userInput : {
         display: 'block',
+        background : 'white',
         minWidth : '14vw',
         height: '3.3Vh',
         marginBottom : '1vh',
