@@ -13,5 +13,6 @@
     "GET_AVAILALBE_EXTERNAL_SERVICES" : "/v1/externalService/all",
     "POST_RESERVATION" : "/v1/reservation/user",
     "DELETE_RESERVATION" : "/v1/reservation/user",
-    "PATCH_RESERVATION" : "/v1/reservation/user"
+    "PATCH_RESERVATION" : "/v1/reservation/user",
+    "GET_USERS" : "/v1/users/all"
 }

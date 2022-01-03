@@ -5,6 +5,7 @@ import holiday_resort.management_system.com.holiday_resort.Dto.UserDTO;
 import holiday_resort.management_system.com.holiday_resort.Entities.LoginDetails;
 import holiday_resort.management_system.com.holiday_resort.Entities.User;
 import holiday_resort.management_system.com.holiday_resort.Responses.UserInfoResponse;
+import holiday_resort.management_system.com.holiday_resort.Responses.UserResponse;
 import holiday_resort.management_system.com.holiday_resort.Services.UserService;
 import io.swagger.annotations.Api;
 import lombok.*;
@@ -38,11 +39,11 @@ public class UserController extends Throwable{
 
     @PreAuthorize(ROLE_ADMIN)
     @RequestMapping(value = "/users/all", method = RequestMethod.GET)
-    public ResponseEntity<List<UserDTO>> getUsers() {
+    public ResponseEntity<List<UserResponse>> getUsers() {
         List<User> users = userService.getAll();
         if(users.size() == 0) return ResponseEntity.noContent().build();
 
-        return ResponseEntity.ok(users.stream().map(UserDTO::new).collect(Collectors.toList()));
+        return ResponseEntity.ok(users.stream().map(UserDTO::new).map(UserResponse::new).collect(Collectors.toList()));
     }
 
     @PreAuthorize(ROLE_ADMIN)

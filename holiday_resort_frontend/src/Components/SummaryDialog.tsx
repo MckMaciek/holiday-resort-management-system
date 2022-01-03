@@ -78,10 +78,19 @@ const SummaryDialog : React.FC<IProps> = ({
             >
             <DialogContentText id="alert-dialog-slide-description">
 
-            <Typography
+                
+                <Typography
                     variant="h5"
                     component="div"
-                    style={{marginBottom : '1vh'}}
+                    style={{marginBottom : '1%', marginTop : '0.5%'}}
+                >
+                    <strong> Reservation Owner : </strong> {`${reservation.reservationOwnerRequest.firstName} ${reservation.reservationOwnerRequest.lastName} ${reservation.reservationOwnerRequest.phoneNumber}`}
+                </Typography>
+
+                <Typography
+                    variant="h5"
+                    component="div"
+                    style={{marginBottom : '0.2vh'}}
                 >
                     <strong> Reservation Status </strong> : {reservation.reservationStatus}
                 </Typography>
@@ -104,7 +113,7 @@ const SummaryDialog : React.FC<IProps> = ({
                     style={{marginTop : '2%'}}
                 >
                     Total of days : <strong>{ Math.ceil((new Date(reservation.reservationEndingDate).getTime() - new Date(reservation.reservationDate).getTime())
-                    / (1000 * 3600 * 24))} </strong>
+                    / (1000 * 3600 * 24) + 1)} </strong>
                 </Typography>
 
                 <Typography

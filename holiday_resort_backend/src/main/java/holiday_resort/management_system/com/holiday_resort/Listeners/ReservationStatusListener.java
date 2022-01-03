@@ -55,9 +55,7 @@ public class ReservationStatusListener implements ApplicationListener<Reservatio
 
             logger.info(String.format("Reservation status changed mail sent status for user: %s - %s", reservationUser.getEmail(), flag));
 
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (MessagingException | IOException e) {
             e.printStackTrace();
         }
     }

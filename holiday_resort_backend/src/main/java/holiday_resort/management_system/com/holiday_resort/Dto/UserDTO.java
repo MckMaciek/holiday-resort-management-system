@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Builder
 @Getter
 @Setter
@@ -17,6 +20,8 @@ public class UserDTO {
     private String lastName;
     private String email;
 
+    private List<ReservationDTO> reservationDTO;
+
     private UserDTO(){
     }
 
@@ -25,5 +30,7 @@ public class UserDTO {
         this.firstname = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
+
+        this.reservationDTO = user.getReservation().stream().map(ReservationDTO::new).collect(Collectors.toList());
     }
 }

@@ -155,7 +155,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 },
     inputField: {
         display: 'block',
-        minWidth : '14vw',
+        minWidth : '16vw',
         minHeight: '3vh',
         marginBottom : '5%',
         background : 'white'

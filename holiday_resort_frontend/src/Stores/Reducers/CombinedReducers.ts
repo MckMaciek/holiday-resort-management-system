@@ -6,6 +6,7 @@ import UserOperationsReducer from './UserOperationsReducer';
 import ReservationReducer from './ReservationReducer';
 import ResortObjectsReducer from './ResortObjectsReducer';
 import ResortObjectEventsReducer from './ResortObjectEventsReducer';
+import ManageUsersReducer from './ManageUsersReducer';
 
 const CombinedReducers = combineReducers({
     LoginReducer : LoginReducer,
@@ -15,6 +16,7 @@ const CombinedReducers = combineReducers({
     ReservationReducer : ReservationReducer,
     ResortObjectsReducer : ResortObjectsReducer,
     ResortObjectEventsReducer : ResortObjectEventsReducer,
+    ManageUsersReducer : ManageUsersReducer,
 });
 
 

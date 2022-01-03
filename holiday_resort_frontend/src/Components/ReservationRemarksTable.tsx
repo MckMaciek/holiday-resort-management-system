@@ -26,7 +26,7 @@ const ReservationRemarksTable : React.FC<IProps> = ({
                 <TableRow>
                     <TableCell  align="left"> Topic</TableCell>
                     <TableCell  align="left"> Description </TableCell>
-                    <TableCell  align="left"> Creation Date</TableCell>
+                    <TableCell  align="left"> Date </TableCell>
                     <TableCell  align="left"> Author </TableCell>
                 </TableRow>
             </TableHead>

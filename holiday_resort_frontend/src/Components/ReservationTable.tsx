@@ -89,8 +89,6 @@ const Row = ({row} : any) => {
   const classes = useStyles();
   const TableContextImp = React.useContext(TableContext);
 
-  console.log(row);
-
   return (
 
     (TableContextImp !== undefined && TableContextImp !== null ? (
@@ -422,8 +420,6 @@ const classes = useStyles();
     setPage(0);
   };
 
-
-  console.log(reservationList);
   return (
     <div className={classes.table}>
         <TableContainer component={Paper}>

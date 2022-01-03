@@ -46,9 +46,7 @@ public class VerificationTokenListener implements ApplicationListener<TokenEvent
             );
             logger.info(String.format("Activation mail sent status for user: %s - %s", userEmail, flag));
 
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (MessagingException | IOException e) {
             e.printStackTrace();
         }
     }

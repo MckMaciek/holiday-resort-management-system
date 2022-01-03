@@ -166,7 +166,6 @@ public class ResortObjectService implements CrudOperations<ResortObjectDTO, Long
     @Override
     public boolean validate(ResortObjectDTO resortObjectDTO) {
         return resortObjectDTO.getIsReserved() != null &&
-                resortObjectDTO.getObjectName() != null &&
                 resortObjectDTO.getObjectName() != null;
     }
 }
