@@ -1,5 +1,6 @@
 import {ReservationOperationTypes} from '../../Stores/ActionTypes/ReservationOperationTypes';
 import { ReservationInterface } from '../Reservation';
+import {ReservationStatus} from "../../Enums/SetReservationStatus";
 
 export type FetchReservationInterface =  {
     type : typeof ReservationOperationTypes.RESERVATION_FETCH,
@@ -26,7 +27,15 @@ export type DeleteAccommodationFetching = {
     isFetching : boolean,
 }
 
+export type ReservationStatusChange = {
+    type : typeof ReservationOperationTypes.RESERVATION_CHANGE_STATUS,
+    reservationChanged : {
+        id : number,
+        status : ReservationStatus
+    }
+}
+
 
 export type ReservationGenericAction = 
     FetchReservationInterface | IsFetchingReservationInterface | ErrorWhileFetchingReservation
-    | DeleteAccommodation | DeleteAccommodationFetching;
+    | DeleteAccommodation | DeleteAccommodationFetching | ReservationStatusChange;

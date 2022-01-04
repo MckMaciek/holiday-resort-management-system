@@ -9,6 +9,8 @@ import {
 
 } from '../Actions/ResortObjectEventsOperation';
 
+import {ReservationStatus} from "../../Enums/SetReservationStatus";
+
 import {objectModified} from '../Actions/UserOperations';
 
 import {
@@ -16,6 +18,7 @@ import {
     setFetching, 
     setReservationError,
     setRemoveAccommodationFetching,
+    changeReservationStatus
 
 } from "../Actions/ReservationOperations";
 import {NewReservationRequest} from '../../Interfaces/NewReservationRequest';
@@ -23,6 +26,8 @@ import {NewReservationRequest} from '../../Interfaces/NewReservationRequest';
 import { ThunkDispatch } from 'redux-thunk';
 import Axios from 'axios';
 import { EventInterface } from "../../Interfaces/Event";
+
+import {setUserReservationStatus} from "../Actions/ManageUsersOperations";
 
 
 const getUserReservationsRequest = async (jwtToken : string) : Promise<Array<ReservationInterface>> => {
@@ -81,7 +86,6 @@ export const deleteAccommodationApi = (jwtToken : string, accommodationId : numb
             const deleteAccommodationStatus = await deleteAccommodationRequest(jwtToken, accommodationId);
             if(deleteAccommodationStatus === 200){
                 dispatch(objectModified(true));
-                console.log("registerResponse 200");
             }
 
             console.log(deleteAccommodationStatus);
@@ -301,6 +305,40 @@ export const markReservationStarted =  (jwtToken : string, reservationId : numbe
             if(statusChanged === 200){
                 dispatch(objectModified(true));
             }
+        }
+        catch (err){
+        }
+        finally{
+            dispatch(objectModified(false));
+        } 
+    }
+}
+
+const changeReservationStatusApi = async (jwtToken : string, reservationId : number,  status : ReservationStatus)  => {
+
+    const config = {
+        headers: { Authorization: `Bearer ${jwtToken}` },
+        'Content-Type': 'application/json',
+    };
+
+    const reservationChangedStatus = await Axios.get(
+        `${API_URL.SERVER_URL}${API_URL.CHANGE_RESERVATION_STATUS}${reservationId}/change-status-adm?status=${status.toString()}`, config);
+        console.log(`${API_URL.SERVER_URL}${API_URL.CHANGE_RESERVATION_STATUS}${reservationId}/change-status-adm`);
+    
+    return reservationChangedStatus.status;
+}
+
+export const ChangeReservationStatus =  (jwtToken : string, reservationId : number, userId : number,  status : ReservationStatus) => {
+
+    return async (dispatch : ThunkDispatch<{}, {}, any> ) => {
+          
+        try{
+            const statusChanged = await changeReservationStatusApi(jwtToken, reservationId, status);
+            console.log("TUMUSI");
+            dispatch(setUserReservationStatus(reservationId, userId, status));
+            //dispatch(changeReservationStatus(reservationId, status));
+            dispatch(objectModified(true));
+            
         }
         catch (err){
             //todo

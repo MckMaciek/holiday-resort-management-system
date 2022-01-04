@@ -88,7 +88,7 @@ const Row = ({row} : any) => {
   
   const classes = useStyles();
   const TableContextImp = React.useContext(TableContext);
-
+  {console.log(row)}
   return (
 
     (TableContextImp !== undefined && TableContextImp !== null ? (
@@ -195,7 +195,6 @@ const Row = ({row} : any) => {
                     <strong> {`${row.reservationOwnerRequest.firstName} ${row.reservationOwnerRequest.lastName}`} </strong>
                   </span>
                   <p> User Contact : <strong> {row.reservationOwnerRequest.phoneNumber} </strong> </p>
-
                 </div>
               
                 <Button
@@ -283,44 +282,44 @@ const Row = ({row} : any) => {
                   </TableCell>
 
                   <TableCell>
-                  <div style={{marginLeft : '1.3vw', display : 'flex', flexDirection : 'row'}}>
-                    <Button
-                    color="primary" 
-                    type="submit"
-                    variant="outlined"
-                    disabled={(row.reservationStatus !== "DRAFT")} //&& !TableContextImp?.roles_.includes(RolesTypes.ADMIN)
-                    className={classes.editButton}
-                    onClick={() => {
-                      setEditDialog({
-                        isSet : true,
-                        id : innerRow.id,
-                        propertyName : innerRow.resortObject.objectName,
-                        editType : OperationType.ACCOMMODATION,
-                      });
-                    }}
-                    startIcon={<ModeEditIcon/>}
-                    >
-                        EDIT
-                    </Button>
+                  <div style={{marginLeft : '1.3vw', display : 'flex', flexDirection : 'row', marginBottom : '2%', marginTop : 'auto'}}>
+                      <Button
+                      color="primary" 
+                      type="submit"
+                      variant="outlined"
+                      disabled={(row.reservationStatus !== "DRAFT")} //&& !TableContextImp?.roles_.includes(RolesTypes.ADMIN)
+                      className={classes.editButton}
+                      onClick={() => {
+                        setEditDialog({
+                          isSet : true,
+                          id : innerRow.id,
+                          propertyName : innerRow.resortObject.objectName,
+                          editType : OperationType.ACCOMMODATION,
+                        });
+                      }}
+                      startIcon={<ModeEditIcon/>}
+                      >
+                          EDIT
+                      </Button>
 
-                    <Button 
-                    color="secondary"
-                    variant="outlined"
-                    type="submit"
-                    className={classes.deleteButton}
-                    disabled={(row.reservationStatus !== "DRAFT")} //&& !TableContextImp?.roles_.includes(RolesTypes.ADMIN)
-                    onClick={() => { 
-                      setDeleteDialog({
-                        isSet : true,
-                        id : innerRow.id,
-                        propertyName : innerRow.resortObject.objectName,
-                        deleteType : OperationType.ACCOMMODATION,
-                      });
-                    }}
-                    startIcon={<DeleteIcon/>}
-                    >
-                        DELETE
-                    </Button>
+                      <Button 
+                      color="secondary"
+                      variant="outlined"
+                      type="submit"
+                      className={classes.deleteButton}
+                      disabled={(row.reservationStatus !== "DRAFT")} //&& !TableContextImp?.roles_.includes(RolesTypes.ADMIN)
+                      onClick={() => { 
+                        setDeleteDialog({
+                          isSet : true,
+                          id : innerRow.id,
+                          propertyName : innerRow.resortObject.objectName,
+                          deleteType : OperationType.ACCOMMODATION,
+                        });
+                      }}
+                      startIcon={<DeleteIcon/>}
+                      >
+                          DELETE
+                      </Button>
                   </div>
                   </TableCell>
 

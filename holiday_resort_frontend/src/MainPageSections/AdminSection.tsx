@@ -13,10 +13,14 @@ import UserTable from "../Components/UserTable";
 import CircularProgress from '@mui/material/CircularProgress';
 
 import {GetAllUsers} from "../Stores/ApiRequests/ManageUsersApiRequest";
+import {ChangeReservationStatus} from "../Stores/ApiRequests/ReservationApiRequest";
+
+import {ReservationStatus} from "../Enums/SetReservationStatus";
 
 interface MapDispatcherToProps {
-    getUsers : (jwtToken : string) => void
-}
+    getUsers : (jwtToken : string) => void,
+    changeReservationStatus : (jwtToken : string, reservationId : number, userId : number, status : ReservationStatus) => void,
+} 
 
 interface MapStateToProps {
 
@@ -28,6 +32,7 @@ interface MapStateToProps {
 
 const mapDispatchToProps = (dispatch : ThunkDispatch<{}, {}, any>) : MapDispatcherToProps => ({
     getUsers : (jwtToken : string) => dispatch(GetAllUsers(jwtToken)),
+    changeReservationStatus : (jwtToken : string, reservationId : number, userId : number, status : ReservationStatus) => dispatch(ChangeReservationStatus(jwtToken, reservationId, userId, status))
 });
 
 const mapStateToProps = (state : any) : MapStateToProps => ({
@@ -41,12 +46,22 @@ const mapStateToProps = (state : any) : MapStateToProps => ({
 const connector =  connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+
+interface AdminContextInterface {
+    jwtToken_: string,
+    changeReservationStatus_  : (jwtToken : string, reservationId : number, userId : number, status : ReservationStatus) => void,
+}
+
+export const AdminOperationsContext = React.createContext<AdminContextInterface | null> (null);
+
+
 const AdminSection : React.FC<PropsFromRedux> = ({
     users,
     isFetching,
     jwtToken,
 
-    getUsers
+    getUsers,
+    changeReservationStatus
 })  => {
 
     let history = useHistory();
@@ -59,17 +74,26 @@ const AdminSection : React.FC<PropsFromRedux> = ({
         }
     }, [])
 
-    {console.log(isFetching)}
+    const TableContextImp : AdminContextInterface = { 
+        jwtToken_ : jwtToken,
+        changeReservationStatus_ : changeReservationStatus,
+    } 
+
+
     return(
         <div className={classes.root}>
 
-            {!isFetching ? (
+            {!isFetching && users ? (
                 <>
                     <h1 className={classes.reservationHeader}> User List View </h1>
                     <div className={classes.table}>
-                        <UserTable
-                            userList={users}
-                        />
+                        <AdminOperationsContext.Provider
+                                value={TableContextImp}
+                        >
+                            <UserTable
+                                userList={users}
+                            />
+                        </AdminOperationsContext.Provider>
                     </div>
                 </>
             ) : (

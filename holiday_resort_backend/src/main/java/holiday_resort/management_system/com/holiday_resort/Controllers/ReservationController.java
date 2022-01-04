@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static holiday_resort.management_system.com.holiday_resort.Enums.Access.ROLE_ADMIN;
 import static holiday_resort.management_system.com.holiday_resort.Enums.Access.ROLE_USER;
 
 @RestController
@@ -111,5 +112,19 @@ public class ReservationController {
 
         return ResponseEntity.ok().build();
     }
+
+    @PreAuthorize(ROLE_ADMIN)
+    @RequestMapping(value = "/reservation/{reservationId}/change-status-adm", method = RequestMethod.GET)
+    public ResponseEntity<?> changeReservationStatus(@NotNull @PathVariable(name = "reservationId", required = true) Long reservationId,
+                                                     @RequestParam(name="status", required = true) String status)
+            throws IllegalArgumentException, UnsupportedOperationException
+    {
+
+        LoginDetails contextUser = userContext.getAssociatedUser();
+        reservationService.changeReservationStatus(ReservationStatus.valueOf(status), contextUser, reservationId);
+
+        return ResponseEntity.ok().build();
+    }
+
 
 }

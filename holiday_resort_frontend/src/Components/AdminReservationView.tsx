@@ -7,12 +7,16 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Button from '@material-ui/core/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import SendIcon from '@mui/icons-material/Send';
 
 import * as React from 'react';
+import {ReservationStatus} from "../Enums/SetReservationStatus";
 
 import SummaryDialog from "../Components/SummaryDialog";
 import {ReservationInterface} from "../Interfaces/Reservation";
+
+import {AdminOperationsContext} from "../MainPageSections/AdminSection";
 
 interface DialogProps {
     isOpen : boolean,
@@ -44,6 +48,30 @@ const AdminReservationView : React.FC<DialogProps> = ({
 
     const [openSummary, setOpenSummary] = React.useState<OpenSummary>(OPEN_SUMMARY_DEFAULT);
 
+    interface SetReservationStatus {
+        reservationId : number,
+        status : ReservationStatus,
+        toSent : boolean,
+    }
+
+    const RESERVATION_STATUS_CHANGE_DEFAULT : SetReservationStatus = {
+        reservationId : -1,
+        status : ReservationStatus.NONE,
+        toSent : false,
+    }
+
+    const [reservationStatusChange, setReservationStatusChange] = React.useState<SetReservationStatus>(RESERVATION_STATUS_CHANGE_DEFAULT);
+    const AdminOperationsContextImp = React.useContext(AdminOperationsContext);
+
+
+    React.useEffect(() => {
+        if(reservationStatusChange && AdminOperationsContextImp && reservationStatusChange.toSent){
+            AdminOperationsContextImp.changeReservationStatus_(AdminOperationsContextImp.jwtToken_, reservationStatusChange.reservationId, userId, reservationStatusChange.status);
+        }
+
+    }, [reservationStatusChange])
+
+
     return (
         <Dialog
             fullWidth
@@ -63,7 +91,13 @@ const AdminReservationView : React.FC<DialogProps> = ({
                 </Typography>
                 {reservationList.length !== 0 ? reservationList.map(reservation => (
                     <>
-                        <Button variant="outlined" size="medium" color="secondary" endIcon={<SendIcon />}
+                    <Divider style={{width:'100%', marginTop : '0.3%' ,marginBottom : '0.3%'}} />  
+                        <Button 
+                            variant="outlined" 
+                            size="medium" 
+                            color="secondary" 
+                            style={{display : 'block', marginTop : '8%', marginBottom : '8%'}}
+                            endIcon={<SendIcon />}
                             onClick={() => setOpenSummary(
                             {
                                 isOpen : true,
@@ -71,9 +105,68 @@ const AdminReservationView : React.FC<DialogProps> = ({
                             }              
                             )}
                             >
-                            {`Reservation ${reservation.id}`}
+                            {`Reservation id ${reservation.id} `}
                         </Button>
 
+                        <p> Set status :</p>
+
+                        <ButtonGroup 
+                            aria-label="outlined primary button group"
+                            style={{minWidth : '75%', marginTop : '0.3%'}}
+                        >
+                            <Button 
+                                size="medium" 
+                                variant="outlined"
+                                color="primary"
+                                style={{display : 'block', marginBottom : '5%', marginRight : '7%', width : '100%'}}
+                                onClick={() => {
+                                    setReservationStatusChange({
+                                        reservationId : reservation.id,
+                                        status : ReservationStatus.ACCEPTED,
+                                        toSent : true,
+                                    });
+                                    
+                                }}
+                                >
+                                Accepted
+                            </Button>
+
+                            <Button 
+                                size="medium" 
+                                variant="outlined"
+                                color="primary"
+                                style={{display : 'block', marginBottom : '5%', marginRight : '7%', width : '100%'}}
+                                onClick={() => {
+                                    setReservationStatusChange({
+                                        reservationId : reservation.id,
+                                        status : ReservationStatus.ARCHIVED,
+                                        toSent : true,
+                                    });
+                                    
+                                }}
+                                >
+                                Archived
+                            </Button>
+
+                            <Button 
+                                variant="outlined"
+                                color="secondary"
+                                size="medium" 
+                                style={{display : 'block', marginBottom : '5%', width : '100%'}}
+                                onClick={() => {
+                                    setReservationStatusChange({
+                                        reservationId : reservation.id,
+                                        status : ReservationStatus.CANCELLED,
+                                        toSent : true,
+                                    });
+                                    
+                                }}
+                                >
+                                Cancelled
+                            </Button>
+
+                        </ButtonGroup>
+                        
                         {openSummary.isOpen && openSummary.reservationId === reservation.id ? (
                             <SummaryDialog
                                 open={openSummary.isOpen}

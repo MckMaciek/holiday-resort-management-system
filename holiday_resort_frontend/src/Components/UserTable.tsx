@@ -13,7 +13,6 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 import AdminReservationView from "../Components/AdminReservationView";
-import SummaryDialog from "../Components/SummaryDialog";
 
 interface UserTable {
     userList : Array<User>,

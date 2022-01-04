@@ -14,5 +14,6 @@
     "POST_RESERVATION" : "/v1/reservation/user",
     "DELETE_RESERVATION" : "/v1/reservation/user",
     "PATCH_RESERVATION" : "/v1/reservation/user",
-    "GET_USERS" : "/v1/users/all"
+    "GET_USERS" : "/v1/users/all",
+    "CHANGE_RESERVATION_STATUS" :  "/v1/reservation/"
 }

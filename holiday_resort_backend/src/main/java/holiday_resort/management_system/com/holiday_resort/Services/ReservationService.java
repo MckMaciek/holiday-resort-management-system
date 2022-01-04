@@ -226,6 +226,8 @@ public class ReservationService implements CrudOperations<ReservationDTO, Long>,
     @Transactional
     public void changeReservationStatus(ReservationStatus reservationStatus, LoginDetails loginDetails, Long reservationId){
 
+        if(reservationStatus == null) throw new IllegalArgumentException("Invalid reservation status!");
+
         Pair<LoginDetails, Reservation> reservationOwnerPair =
                 reservationContext.getAssociatedUser(reservationRepository, reservationId);
 
