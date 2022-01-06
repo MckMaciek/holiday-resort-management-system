@@ -9,16 +9,22 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { Calendar } from 'react-date-range';
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
+
 
 interface ExternalServicesCheckBox extends ExternalServiceResponse {
     isSet : boolean,
     amountOfPeople : number,
     remarks : string,
-    date : Date,
+    date : Date | null,
 }
 
 interface ExternalServiceRemarksInt {
@@ -53,7 +59,7 @@ const SelectExternalService : React.FC<ComponentProps> = ({
                     amountOfPeople : 0,
                     remarks : '',
                     isNumberOfPeopleIrrelevant : externalService.isNumberOfPeopleIrrelevant,
-                    date : new Date(),
+                    date : null,
                 }]);
             });
         }
@@ -61,9 +67,9 @@ const SelectExternalService : React.FC<ComponentProps> = ({
     }, [])
 
     
-    const sendValue = (index : any, operation : string) => {
+    const sendValue = (index : number, operation : string) => {
 
-        let selectedCheckBox = externalServicesCheckboxValues.filter(checkbox => checkbox.id === parseInt(index));
+        let selectedCheckBox = externalServicesCheckboxValues.filter(checkbox => checkbox.id === index);
         let checkboxIndex = externalServicesCheckboxValues.indexOf(selectedCheckBox[0]);
 
         setExternalServicesCheckboxValues(ext => [...ext.slice(0, checkboxIndex),{
@@ -72,15 +78,25 @@ const SelectExternalService : React.FC<ComponentProps> = ({
             }, ...ext.slice(++checkboxIndex)]);
      }
 
-     const changeDate = (index : any, item : any) => {
+     const changeDate = (index : number, item : Date) => {
 
-        let selectedCheckBox = externalServicesCheckboxValues.filter(checkbox => checkbox.id === parseInt(index));
+        let selectedCheckBox = externalServicesCheckboxValues.filter(checkbox => checkbox.id === index);
         let checkboxIndex = externalServicesCheckboxValues.indexOf(selectedCheckBox[0]);
 
         setExternalServicesCheckboxValues(ext => [...ext.slice(0, checkboxIndex),{
                 ...selectedCheckBox[0],
                 date : item,
             }, ...ext.slice(++checkboxIndex)]);
+     }
+
+     const getSelectedDate = (index : number) : string => {
+
+        let selectedCheckBox = externalServicesCheckboxValues.filter(checkbox => checkbox.id === index);
+
+        if(!!!selectedCheckBox[0].date) return "none"
+        
+        let fullDate = selectedCheckBox[0].date;
+        return fullDate.toLocaleDateString();
      }
 
 
@@ -107,6 +123,18 @@ const SelectExternalService : React.FC<ComponentProps> = ({
         }
     }
 
+    interface PickDateDialog {
+        eventId : number,
+        isOpen : boolean;
+    }
+
+    const PICK_DATE_DEFAULT : PickDateDialog = {
+        eventId : -1,
+        isOpen : false
+    }
+
+    const [pickDateDialog, setPickDateDialog] = React.useState<PickDateDialog>(PICK_DATE_DEFAULT);
+
     return(
         <div>
             {externalServicesCheckboxValues && externalServicesCheckboxValues.length === externalServices.length ? (
@@ -122,7 +150,7 @@ const SelectExternalService : React.FC<ComponentProps> = ({
                         >
                             <Typography
                             >
-                                Available External Services :
+                                Available Services :
                             </Typography>  
                     </FormLabel>
                     <FormGroup>
@@ -130,6 +158,7 @@ const SelectExternalService : React.FC<ComponentProps> = ({
                         {externalServicesCheckboxValues.map((externalServicesChkbx) => (
                             <>
                             {console.log(externalServicesChkbx)}   
+                            <Divider style={{width:'100%', marginTop : '1.5%' ,marginBottom : '1%'}} />  
                             <FormControlLabel
                             control={
                                 <Switch 
@@ -146,45 +175,87 @@ const SelectExternalService : React.FC<ComponentProps> = ({
                             />
 
                             {externalServicesChkbx.isSet ? (
+                                <>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        aria-label="increase"
+                                        style={{width : '50%', marginBottom : '2%', marginTop : '1%'}}
+                                        onClick={() => setPickDateDialog({
+                                            eventId : externalServicesChkbx.id,
+                                            isOpen : true
+                                        })}
+                                    >
+                                        {`Choosen date ${getSelectedDate(externalServicesChkbx.id)}`}   
+                                    </Button>
+                                    
+                                    
+                                    {pickDateDialog && pickDateDialog.isOpen && pickDateDialog.eventId === externalServicesChkbx.id ? (
 
-                                <Calendar 
-                                    onChange={item => changeDate(externalServicesChkbx.id, item)}
-                                    date={externalServicesChkbx.date} 
-                                />
+                                    <Dialog
+                                        open={pickDateDialog.isOpen}
+                                        onClose={() => setPickDateDialog(PICK_DATE_DEFAULT)}
+                                    >
+                                        <DialogTitle> Pick Date </DialogTitle>    
+                                            <Calendar 
+                                                onChange={item => changeDate(externalServicesChkbx.id, item)}
+                                                date={externalServicesChkbx.date} 
+                                            />
+                                        <DialogContent>
+                                            
+                                        </DialogContent>
+                                        
+                                        <DialogActions>
+                                            <Button 
+                                                onClick={() => setPickDateDialog(PICK_DATE_DEFAULT)} 
+                                                autoFocus
+                                            >
+                                                Ok
+                                            </Button>
+                                    </DialogActions>
 
+                                    </Dialog>
+
+                                    ): null}
+                                </>
                             ) : null}
 
                             {!externalServicesChkbx.isNumberOfPeopleIrrelevant && externalServicesChkbx.isSet ? (
-                                
-                                <ButtonGroup
-                                disabled={!externalServicesChkbx.isSet}
-                                >  
+                                <>
+                                    <ButtonGroup
+                                    disabled={!externalServicesChkbx.isSet}
+                                    >  
 
-                                    <Button
-                                        aria-label="reduce"
-                                        onClick={() => {
-                                            sendValue(externalServicesChkbx.id, 'sub');
-                                        }}
-                                    >
-                                        <RemoveIcon fontSize="small" />
-                                    </Button>
-                                    <Button
-                                        aria-label="increase"
-                                        onClick={() => {
-                                            sendValue(externalServicesChkbx.id, 'add');
-                                        }}
-                                    >
-                                        <AddIcon fontSize="small" />
-                                    </Button>
+                                        <Button
+                                            aria-label="reduce"
+                                            onClick={() => {
+                                                sendValue(externalServicesChkbx.id, 'sub');
+                                            }}
+                                        >
+                                            <RemoveIcon fontSize="small" />
+                                        </Button>
+                                        <Button
+                                            aria-label="increase"
+                                            onClick={() => {
+                                                sendValue(externalServicesChkbx.id, 'add');
+                                            }}
+                                        >
+                                            <AddIcon fontSize="small" />
+                                        </Button>
 
-                                    <span
-                                        style={{marginLeft : '5%'}}
-                                    >   
-                                        {externalServicesChkbx.amountOfPeople}  People 
-                                    </span> 
-
-                                </ButtonGroup>
+                                        <span
+                                            style={{marginLeft : '5%'}}
+                                        >   
+                                            {externalServicesChkbx.amountOfPeople}  People 
+                                        </span> 
+                                    
+                                    </ButtonGroup>
+                                    <Divider style={{width:'100%', marginTop : '1.5%' ,marginBottom : '1%'}} /> 
+                                </>
                             ) : null}
+
+                            {externalServicesChkbx.isSet && externalServicesChkbx.isNumberOfPeopleIrrelevant ? 
+                            (<span> You cannot choose amount of people in this event</span>) : null}
                             </>     
                         ))}
                     </>

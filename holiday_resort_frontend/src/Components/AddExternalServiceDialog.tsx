@@ -62,7 +62,7 @@ const AddExternalServiceDialog : React.FC<ComponentProps> = ({
         isSet : boolean,
         remarks : string,
         amountOfPeople : number,
-        date : Date,
+        date : Date | null,
     }
 
         
