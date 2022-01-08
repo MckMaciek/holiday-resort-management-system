@@ -17,7 +17,7 @@ import SummaryDialog from "../Components/SummaryDialog";
 import {ReservationInterface} from "../Interfaces/Reservation";
 import { useTranslation } from "react-i18next";
 
-import {AdminOperationsContext} from "../MainPageSections/AdminSection";
+import {AdminOperationsContext} from "../Pages/AdminSection";
 
 interface DialogProps {
     isOpen : boolean,

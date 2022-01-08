@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 
-import {TableContext} from '../MainPageSections/ReservationSection';
+import {TableContext} from '../Pages/ReservationSection';
 
 import DialogConfirm from "./DialogConfirm";
 import {ReservationInterface} from "../Interfaces/Reservation";

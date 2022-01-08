@@ -10,10 +10,10 @@ import {useRouteMatch } from 'react-router';
 import {Link} from "react-router-dom";
 
 
-import AdminSection from "../MainPageSections/AdminSection";
-import ReservationSection from '../MainPageSections/ReservationSection';
-import DefaultMiddleSection from '../MainPageSections/DefaultMiddleSection';
-import AccountProfile from "../MainPageSections/AccoutProfile";
+import AdminSection from "../Pages/AdminSection";
+import ReservationSection from '../Pages/ReservationSection';
+import DefaultMiddleSection from '../Pages/DefaultMiddleSection';
+import AccountProfile from "../Pages/AccoutProfile";
 
 interface MapStateToProps {
     isAuthenticated : boolean,
