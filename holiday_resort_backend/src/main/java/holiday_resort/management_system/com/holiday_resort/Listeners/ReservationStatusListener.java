@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
@@ -33,6 +34,7 @@ public class ReservationStatusListener implements ApplicationListener<Reservatio
         this.sendMailAboutStatus(reservationStatusChangedEvent);
     }
 
+    @Async
     private void sendMailAboutStatus(ReservationStatusChangedEvent reservationStatusChangedEvent){
 
         ReservationDTO reservationDTO = reservationStatusChangedEvent.getReservationDTO();

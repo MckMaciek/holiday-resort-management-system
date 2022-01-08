@@ -15,6 +15,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import {AccommodationInterface} from '../Interfaces/Accommodation';
 import {ReservationInterface} from '../Interfaces/Reservation';
 
+import { useTranslation } from "react-i18next";
+
 import DialogConfirm from "./DialogConfirm";
 
 interface IProps {
@@ -32,7 +34,10 @@ const ListComponent : React.FC<IProps> = ({
 
     sendDialogCloseHandler,
     sendDialogAcceptHandler,
-}) => {
+
+}) : JSX.Element => {
+
+  const { t } = useTranslation();
 
   const getDetailedPrice = (accommodation : AccommodationInterface) => {
 
@@ -79,15 +84,15 @@ const ListComponent : React.FC<IProps> = ({
                     </Avatar>
                 </ListItemAvatar>
                 <ListItemText
-                    primary={`Object Name : ${accommodation.resortObject.objectType}`}
+                    primary={`${t(`listComponent.objectName`)} ${accommodation.resortObject.objectType}`}
                     secondary={
                       <div>
-                        <p> Amount of people : {accommodation.numberOfPeople} </p>
-                        <p> Object Name : {accommodation.resortObject.objectName} </p>
-                        <p> Price per person : {accommodation.resortObject.pricePerPerson} zł </p>
-                        <p> Price per unused space : {accommodation.resortObject.unusedSpacePrice} zł </p>
-                        <p> Max amount of People : {accommodation.resortObject.maxAmountOfPeople} </p>
-                        <p> <strong> Detailed price with services included : {getDetailedPrice(accommodation)} zł </strong> </p>
+                        <p> {t(`listComponent.amountOfPeople`)} {accommodation.numberOfPeople} </p>
+                        <p> {t(`listComponent.objectName`)} {accommodation.resortObject.objectName} </p>
+                        <p> {t(`listComponent.pricePerPerson`)} {accommodation.resortObject.pricePerPerson} {t(`currency.symbol`)} </p>
+                        <p> {t(`listComponent.pricePerUnusedSpace`)} {accommodation.resortObject.unusedSpacePrice} {t(`currency.symbol`)} </p>
+                        <p> {t(`listComponent.maxAmountOfPeople`)} {accommodation.resortObject.maxAmountOfPeople} </p>
+                        <p> <strong> {t(`listComponent.detailedPrice`)} {getDetailedPrice(accommodation)} {t(`currency.symbol`)} </strong> </p>
                       </div>
                     }
                 />
@@ -97,28 +102,28 @@ const ListComponent : React.FC<IProps> = ({
                   expandIcon={<ExpandMoreIcon />}
                 >
                   <Typography sx={{ width: '33%', flexShrink: 0 }}>
-                    Additional services
+                  {t(`listComponent.additionalServices`)}
                   </Typography>
 
                   <DialogConfirm
                     isOpen={sendDialog.isSet}
                     closeHandler={sendDialogCloseHandler}
                     onAcceptHandler={sendDialogAcceptHandler}
-                    dialogTitle={"Are you sure?"}
-                    dialogDescription={`By clicking send The reservation ${reservation.reservationName} 
-                    will change status from ${reservation.reservationStatus} to in progress and you won't be able to edit it`}
-                    disagreeText={"Take me back"}
-                    agreeText={"Send"}
+                    dialogTitle={t(`listComponent.changeReservationStatusDialog.dialogTitle`)}
+                    dialogDescription={`${t(`listComponent.changeReservationStatusDialog.dialogStatusDescription.firstPart`)} ${reservation.reservationName} 
+                    ${t(`listComponent.changeReservationStatusDialog.dialogStatusDescription.secondPart`)} ${reservation.reservationStatus} ${t(`listComponent.changeReservationStatusDialog.dialogStatusDescription.thirdPart`)}`}
+                    disagreeText={t(`listComponent.changeReservationStatusDialog.disagreeText`)}
+                    agreeText={t(`listComponent.changeReservationStatusDialog.agreeText`)}
                 />
 
                 </AccordionSummary>
                 <AccordionDetails>
                 {accommodation.eventResponseList.length !== 0 ? (
                   accommodation.eventResponseList.map(eventResponse => (
-                    <p> {eventResponse.eventType.toLowerCase()} - {eventResponse.price} zł </p>
+                    <p> {eventResponse.eventType.toLowerCase()} - {eventResponse.price} {t(`currency.symbol`)} </p>
                     ))
                 ) : (
-                  <p> Not choosen </p>
+                  <p> {t(`listComponent.additionalServicesNotChoosen`)} </p>
                 )}
                 </AccordionDetails>
               </Accordion>

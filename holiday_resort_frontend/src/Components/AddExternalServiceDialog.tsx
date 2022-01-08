@@ -14,6 +14,7 @@ import Button from '@mui/material/Button';
 import { Dispatch, SetStateAction } from "react";
 import {NewReservationRequest} from '../Interfaces/NewReservationRequest';
 import {ExternalServiceRequest} from '../Interfaces/ExternalServiceRequest';
+import { useTranslation } from "react-i18next";
 
 import SelectExternalService from './SelectExternalService';
 
@@ -45,7 +46,8 @@ const AddExternalServiceDialog : React.FC<ComponentProps> = ({
     closeHandler,
     acceptHandler,
     modifyReservation,
-})  => {
+    
+}) : JSX.Element => {
 
     React.useEffect(() => {
         if(jwtToken && jwtToken !== ""){
@@ -57,6 +59,7 @@ const AddExternalServiceDialog : React.FC<ComponentProps> = ({
     }, [])
 
     const [externalServices, setExternalServices] = React.useState<Array<ExternalServiceResponse>>([]);
+    const { t } = useTranslation();
 
     interface ExternalServicesCheckBox extends ExternalServiceResponse {
         isSet : boolean,
@@ -116,7 +119,7 @@ const AddExternalServiceDialog : React.FC<ComponentProps> = ({
                     style={{textAlign : 'center', marginBottom : '1%'}}
             >
 
-                 Select External Service 
+                {t(`addExternalServiceDialog.title`)}
             </Typography>
             <Divider />
         </DialogTitle>
@@ -153,7 +156,7 @@ const AddExternalServiceDialog : React.FC<ComponentProps> = ({
                     }
                     }
                 >
-                    Ok
+                    {t(`addExternalServiceDialog.dialogActions.approve`)}
                 </Button>
             ) : null}
 

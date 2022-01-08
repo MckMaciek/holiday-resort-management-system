@@ -26,6 +26,81 @@
         "already-have-an-account" : "Already have an account?"
     },
 
+    "navbar" : {
+        "loggedAs" : "Logged as",
+        "managerPanel" : "Manager Panel",
+        "contactUs" : "Contact Us",
+
+        "LogOut" : "Logout",
+        "LogIn" : "Login",
+        "profile" : "Profile",
+        "myAccount" : "My account"
+
+    },
+
+    "accommodationDialogEdit" : {
+        "title" : "You are currently editing: ",
+        "formControl-maxPeople" : {
+            "maxPeople" : "Max People :",
+            "in" : "in"
+        },
+        "people" : "People",
+
+        "dialogActions" : {
+            "approve" : "Approve",
+            "cancel" : "Cancel"
+        }
+    },
+
+    "addExternalServiceDialog" : {
+        "title" : "Select External Service",
+        "dialogActions" : {
+            "approve" : "ok"
+        }
+    },
+
+    "listComponent" : {
+        "objectName" : "Object Name:",
+        "amountOfPeople" : "Amount of people:",
+        "pricePerPerson" : "Price per person:",
+        "pricePerUnusedSpace" : "Price per unused space:",
+        "maxAmountOfPeople" : "Max amount of People:",
+        "detailedPrice" : "Detailed price with services included",
+
+        "additionalServices" : "Additional services",
+        "changeReservationStatusDialog" : {
+            "dialogTitle" : "Are you sure?",
+            "dialogStatusDescription" : {
+                "firstPart" : "By clicking send The reservation",
+                "secondPart" : "will change status from",
+                "thirdPart" : "to in progress and you won't be able to edit it"
+            },
+            "disagreeText" : "Disagree",
+            "agreeText" : "Send"
+        },
+        "additionalServicesNotChoosen" : "None"
+    },
+
+    "currency" : {
+        "symbol" : "zł"
+    },
+
+    "adminReservationView" : {
+        "title" : "Reservation List for User Id",
+        "reservationList" : "Reservations:",
+        "buttons" : {
+            "reservationId" : "Reservation id",
+            "status" : {
+                "setStatus" : "Set status:",
+
+                "accepted" : "Accepted",
+                "archived" : "Archived",
+                "cancelled" : "Cancelled"
+            }
+        },
+        "NoReservations" : "None"
+    },
+
     "formValidations" : {
         "username-min-characters" : "Username must be 6 characters or more",
         "username-max-characters" : "Username must be 15 characters or less",

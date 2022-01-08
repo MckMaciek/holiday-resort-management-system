@@ -22,6 +22,7 @@ import {Link} from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { ThunkDispatch } from 'redux-thunk';
 import { connect, ConnectedProps, useDispatch } from 'react-redux';
+import { useTranslation } from "react-i18next";
 
 
 interface MapStateToProps {
@@ -53,8 +54,9 @@ const Navbar : React.FC<PropsFromRedux> = ({
 
     let { path, url } = useRouteMatch();
     let history = useHistory();
-
+    const { t } = useTranslation();
     const dispatch = useDispatch();
+
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
     const handleHamburger = (event: React.MouseEvent<HTMLElement>) => setAnchorHamburger(event.currentTarget);
@@ -123,7 +125,7 @@ const Navbar : React.FC<PropsFromRedux> = ({
                 </Menu>
 
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    Logged as: {username} !
+                    {t(`navbar.loggedAs`)} {username}
                 </Typography>
 
                 {roles.includes(RolesTypes.ADMIN) ? (
@@ -136,7 +138,7 @@ const Navbar : React.FC<PropsFromRedux> = ({
                         type="submit"
                         color="primary"
                         >
-                        Manager Panel
+                        {t(`navbar.managerPanel`)}
                     </Button>
                 </Link>
 
@@ -149,7 +151,7 @@ const Navbar : React.FC<PropsFromRedux> = ({
                     onClick={onLogout}
                     style={{marginRight : '0.7%'}}
                     >
-                    Contact Us
+                    {t(`navbar.contactUs`)}
                 </Button>
 
                 <Button 
@@ -158,7 +160,7 @@ const Navbar : React.FC<PropsFromRedux> = ({
                     color="inherit"
                     onClick={onLogout}
                     >
-                    {isAuthenticated ? 'Logout' : 'Login'}
+                    {isAuthenticated ? t(`navbar.LogOut`) : t(`navbar.LogIn`)}
                 </Button>
 
                 {isAuthenticated && (
@@ -184,8 +186,8 @@ const Navbar : React.FC<PropsFromRedux> = ({
                         open={Boolean(anchorEl)}
                         onClose={handleClose}
                     >
-                        <MenuItem onClick={handleClose}>Profile</MenuItem>
-                        <MenuItem onClick={redirectToProfile}>My account</MenuItem>
+                        <MenuItem onClick={handleClose}> {t(`navbar.profile`)} </MenuItem>
+                        <MenuItem onClick={redirectToProfile}> {t(`navbar.myAccount`)} </MenuItem>
                     </Menu>
                     </div>
                 )}

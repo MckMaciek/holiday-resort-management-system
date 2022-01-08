@@ -15,6 +15,7 @@ import {ReservationStatus} from "../Enums/SetReservationStatus";
 
 import SummaryDialog from "../Components/SummaryDialog";
 import {ReservationInterface} from "../Interfaces/Reservation";
+import { useTranslation } from "react-i18next";
 
 import {AdminOperationsContext} from "../MainPageSections/AdminSection";
 
@@ -63,6 +64,8 @@ const AdminReservationView : React.FC<DialogProps> = ({
     const [reservationStatusChange, setReservationStatusChange] = React.useState<SetReservationStatus>(RESERVATION_STATUS_CHANGE_DEFAULT);
     const AdminOperationsContextImp = React.useContext(AdminOperationsContext);
 
+    const { t } = useTranslation();
+
 
     React.useEffect(() => {
         if(reservationStatusChange && AdminOperationsContextImp && reservationStatusChange.toSent){
@@ -78,7 +81,7 @@ const AdminReservationView : React.FC<DialogProps> = ({
             open={isOpen}
             onClose={closeHandler}
         >
-            <DialogTitle style={{textAlign : 'center'}}> Reservation List for User Id {userId} ({userName}) </DialogTitle>
+            <DialogTitle style={{textAlign : 'center'}}> {t(`adminReservationView.title`)} {userId} ({userName}) </DialogTitle>
             <Divider style={{width:'100%', marginTop : '0.3%' ,marginBottom : '0.3%'}} />  
             <DialogContent style ={{marginTop : '2.5%'}}>
                 <DialogContentText>
@@ -87,7 +90,7 @@ const AdminReservationView : React.FC<DialogProps> = ({
                         style={{marginBottom : '1%'}}
                     >
 
-                    Reservations :
+                    {t(`adminReservationView.reservationList`)}
                 </Typography>
                 {reservationList.length !== 0 ? reservationList.map(reservation => (
                     <>
@@ -105,10 +108,10 @@ const AdminReservationView : React.FC<DialogProps> = ({
                             }              
                             )}
                             >
-                            {`Reservation id ${reservation.id} `}
+                            {`${t(`adminReservationView.buttons.reservationId`)} ${reservation.id} `}
                         </Button>
 
-                        <p> Set status :</p>
+                        <p> {t(`adminReservationView.buttons.status.setStatus`)} </p>
 
                         <ButtonGroup 
                             aria-label="outlined primary button group"
@@ -128,7 +131,7 @@ const AdminReservationView : React.FC<DialogProps> = ({
                                     
                                 }}
                                 >
-                                Accepted
+                               {t(`adminReservationView.buttons.status.accepted`)}
                             </Button>
 
                             <Button 
@@ -145,7 +148,7 @@ const AdminReservationView : React.FC<DialogProps> = ({
                                     
                                 }}
                                 >
-                                Archived
+                                {t(`adminReservationView.buttons.status.archived`)}
                             </Button>
 
                             <Button 
@@ -162,7 +165,7 @@ const AdminReservationView : React.FC<DialogProps> = ({
                                     
                                 }}
                                 >
-                                Cancelled
+                                {t(`adminReservationView.buttons.status.cancelled`)}
                             </Button>
 
                         </ButtonGroup>
@@ -180,7 +183,7 @@ const AdminReservationView : React.FC<DialogProps> = ({
                     
                     </>
                 )) : (
-                    <p> None </p>
+                    <p> {t(`adminReservationView.NoReservations`)} </p>
                 )}
 
 

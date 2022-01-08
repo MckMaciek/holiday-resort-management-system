@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
@@ -32,6 +33,7 @@ public class VerificationTokenListener implements ApplicationListener<TokenEvent
         this.provideRegistrationToken(tokenEvent);
     }
 
+    @Async
     private void provideRegistrationToken(TokenEvent tokenEvent){
 
         VerificationToken verificationToken = tokenEvent.getVerificationToken();

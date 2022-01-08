@@ -13,6 +13,7 @@ import FormControl from '@mui/material/FormControl';
 import { AccommodationRequest } from '../Interfaces/AccommodationRequest';
 import {EventRequest} from '../Interfaces/EventRequest';
 
+import { useTranslation } from "react-i18next";
 import { ThunkDispatch } from 'redux-thunk';
 import { connect } from 'react-redux';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -80,17 +81,17 @@ const AccommodationDialogEdit : React.FC<Props> = ({
     resortObjectEvents,
     propertyName,
     closeHandler,
-    onAcceptHandler,
-}) => {
+    
+}) : JSX.Element => {
 
     const [choosenResortObjectId, setChoosenResortObjectId] = React.useState('');    
-    const handleChange = (event: SelectChangeEvent) => setChoosenResortObjectId(event.target.value as string);
     const [eventType, setEventType] = React.useState<string[]>([]);
     const [chosenEvents, setChosenEvents] = React.useState<Array<EventRequest>>([{
         id : -1,
         price : -1,
     }])
     const [numberOfPeople, setNumberOfPeople] = React.useState<number>(0);
+    const { t } = useTranslation();
 
     const handleChangeEvent = (event: any) => {
         const {
@@ -150,7 +151,7 @@ const AccommodationDialogEdit : React.FC<Props> = ({
                 fullWidth
                 maxWidth='md'
                 >
-                <DialogTitle> You are currently editing {propertyName}</DialogTitle>
+                <DialogTitle> {t(`accommodationDialogEdit.title`)} {propertyName}</DialogTitle>
                 <DialogContent
                     style={{height:'20vh', marginTop:'3%'}}
                 >
@@ -170,7 +171,7 @@ const AccommodationDialogEdit : React.FC<Props> = ({
                         <p
                             style={{marginTop : '3%'}}
                         > 
-                            Max People : {maxAmountOfPeople} in {propertyName}
+                            {t(`accommodationDialogEdit.formControl-maxPeople.maxPeople`)} {maxAmountOfPeople} {t(`accommodationDialogEdit.formControl-maxPeople.in`)} {propertyName}
                         </p>
 
                         <ButtonGroup
@@ -196,7 +197,7 @@ const AccommodationDialogEdit : React.FC<Props> = ({
                             <span
                                 style={{marginLeft : '20%'}}
                             >   
-                                {numberOfPeople}  People
+                                {numberOfPeople} {t(`accommodationDialogEdit.formControl-maxPeople.people`)}
                             </span>
 
                         </ButtonGroup>
@@ -205,7 +206,7 @@ const AccommodationDialogEdit : React.FC<Props> = ({
                 
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={closeHandler}>Cancel</Button>
+                    <Button onClick={closeHandler}>{t(`accommodationDialogEdit.dialogActions.cancel`)}</Button>
                     <Button 
                     
                     disabled={!!!numberOfPeople || numberOfPeople === -1}
@@ -218,7 +219,7 @@ const AccommodationDialogEdit : React.FC<Props> = ({
                         
                         sendAccommodationPut(jwtToken, propertyId, putRequest);
                         closeHandler();
-                    }}>Approve</Button>
+                    }}>{t(`accommodationDialogEdit.dialogActions.approve`)}</Button>
                 </DialogActions>
             </Dialog> 
             )}
