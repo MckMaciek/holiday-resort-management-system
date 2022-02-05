@@ -5,7 +5,7 @@ const Footer = () => {
     const classes = useStyles();
 
     return(
-        <div className={classes.root}> Stopka taka szczególna dla harcerzy </div>
+        <div className={classes.root}> Holiday Web Resort </div>
     );
 }
 

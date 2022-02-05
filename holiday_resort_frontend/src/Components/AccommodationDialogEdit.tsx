@@ -197,7 +197,7 @@ const AccommodationDialogEdit : React.FC<Props> = ({
                             <span
                                 style={{marginLeft : '20%'}}
                             >   
-                                {numberOfPeople} {t(`accommodationDialogEdit.formControl-maxPeople.people`)}
+                                {numberOfPeople} {t(`accommodationDialogEdit.people`)}
                             </span>
 
                         </ButtonGroup>

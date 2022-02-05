@@ -95,21 +95,42 @@ public class Startup implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
 
-
+    /*
         ServiceRequestDTO serviceRequestDTO = ServiceRequestDTO.builder()
                 .serviceName("Kajaki")
                 .isNumberOfPeopleIrrelevant(false)
-                .cost(BigDecimal.TEN)
+                .cost(new BigDecimal("25.99"))
                 .build();
 
         ServiceRequestDTO serviceRequestDTO2 = ServiceRequestDTO.builder()
                 .serviceName("Ognisko")
                 .isNumberOfPeopleIrrelevant(true)
-                .cost(BigDecimal.TEN)
+                .cost(new BigDecimal("30.29"))
+                .build();
+
+        ServiceRequestDTO serviceRequestDTO3 = ServiceRequestDTO.builder()
+                .serviceName("Obiad")
+                .isNumberOfPeopleIrrelevant(false)
+                .cost(new BigDecimal("20.50"))
+                .build();
+
+        ServiceRequestDTO serviceRequestDTO4 = ServiceRequestDTO.builder()
+                .serviceName("Kolacja")
+                .isNumberOfPeopleIrrelevant(false)
+                .cost(new BigDecimal("10.50"))
+                .build();
+
+        ServiceRequestDTO serviceRequestDTO5 = ServiceRequestDTO.builder()
+                .serviceName("Sniadanie")
+                .isNumberOfPeopleIrrelevant(false)
+                .cost(new BigDecimal("7.50"))
                 .build();
 
         serviceRequestService.add(serviceRequestDTO);
         serviceRequestService.add(serviceRequestDTO2);
+        serviceRequestService.add(serviceRequestDTO3);
+        serviceRequestService.add(serviceRequestDTO4);
+        serviceRequestService.add(serviceRequestDTO5);
 
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setEmail("mckmusial@gmail.com");
@@ -117,17 +138,19 @@ public class Startup implements CommandLineRunner {
         registerRequest.setLastName("Musial");
         registerRequest.setPhoneNumber("+48666666666");
 
-        registerRequest.setUsername("123123123a");
-        registerRequest.setPassword("123123123a");
+        registerRequest.setUsername("Maciej12345");
+        registerRequest.setPassword("Maciej12345");
 
         authController.registerUser(registerRequest);
 
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setUsername("123123123a");
-        loginRequest.setPassword("123123123a");
+        loginRequest.setUsername("Maciej12345");
+        loginRequest.setPassword("Maciej12345");
 
 
         setReservations(loginRequest);
+
+     */
     }
 
 
@@ -169,7 +192,7 @@ public class Startup implements CommandLineRunner {
                 .durationDate(LocalDate.now())
                 .startingDate(LocalDate.now())
                 .priority(3)
-                .price(BigDecimal.TEN)
+                .price(new BigDecimal("50.50"))
                 .build();
 
         EventDTO eventDTO2 = EventDTO.builder()
@@ -177,10 +200,18 @@ public class Startup implements CommandLineRunner {
                 .durationDate(LocalDate.now())
                 .startingDate(LocalDate.now())
                 .priority(3)
-                .price(BigDecimal.TEN)
+                .price(new BigDecimal("25.50"))
                 .build();
 
-        resortObjectController.postResortObject(resortObjectDTO, List.of(eventDTO, eventDTO2));
+        EventDTO eventDTO3 = EventDTO.builder()
+                .eventType(EventEnum.WODA)
+                .durationDate(LocalDate.now())
+                .startingDate(LocalDate.now())
+                .priority(3)
+                .price(new BigDecimal("35.50"))
+                .build();
+
+        resortObjectController.postResortObject(resortObjectDTO, List.of(eventDTO, eventDTO2, eventDTO3));
     }
 
     private void setReservation(LoginDetails loginDetails) throws IOException {
@@ -200,32 +231,32 @@ public class Startup implements CommandLineRunner {
         List<ServiceRequestDTO> externalServiceDTOS = externalServiceController.getAvailableServices().getBody();
 
 
-        setResortObjectService("Domek letniskowy", "Dom", true, 11l, BigDecimal.ONE, BigDecimal.TEN);
-        setResortObjectService("Namiot XXL", "Namiot", true, 43l, BigDecimal.ONE, BigDecimal.TEN);
-        setResortObjectService("Domek", "Dom", true, 11l, BigDecimal.ONE, BigDecimal.TEN);
-        setResortObjectService("Maly namiot", "Namiot", true, 55l, BigDecimal.ONE, BigDecimal.TEN);
+        setResortObjectService(String.format("Domek letniskowy-%s",new Random().nextInt(100)), "Dom", true, 9l, new BigDecimal("25.99"), new BigDecimal("0.90"));
+        setResortObjectService(String.format("Duzy namiot grupowy-%s", new Random().nextInt(100)), "Namiot", true, 15l, new BigDecimal("50.99"), new BigDecimal("0.95"));
+        setResortObjectService(String.format("Domek letniskowy-%s", new Random().nextInt(100)), "Dom", true, 8l, new BigDecimal("23.99"), new BigDecimal("0.85"));
+        setResortObjectService(String.format("Maly namiot nauczycielski-%s", new Random().nextInt(100)) , "Namiot", true, 3l, new BigDecimal("15.99"), new BigDecimal("0.90"));
 
         List<ResortObject> resortObjectList = resortObjectRepository.findAll();
 
         AccommodationRequest accommodationRequest = new AccommodationRequest();
-        accommodationRequest.setNumberOfPeople(11l);
+        accommodationRequest.setNumberOfPeople((long) new Random().nextInt(resortObjectList.get(0).getMaxAmountOfPeople().intValue()));
         accommodationRequest.setResortObjectId(resortObjectList.get(0).getId());
 
         AccommodationRequest accommodationRequest1 = new AccommodationRequest();
-        accommodationRequest1.setNumberOfPeople(43l);
+        accommodationRequest1.setNumberOfPeople((long) new Random().nextInt(resortObjectList.get(1).getMaxAmountOfPeople().intValue()));
         accommodationRequest1.setResortObjectId(resortObjectList.get(1).getId());
 
         AccommodationRequest accommodationRequest2 = new AccommodationRequest();
-        accommodationRequest2.setNumberOfPeople(11l);
+        accommodationRequest2.setNumberOfPeople((long) new Random().nextInt(resortObjectList.get(2).getMaxAmountOfPeople().intValue()));
         accommodationRequest2.setResortObjectId(resortObjectList.get(2).getId());
 
         AccommodationRequest accommodationRequest3 = new AccommodationRequest();
-        accommodationRequest3.setNumberOfPeople(55l);
+        accommodationRequest3.setNumberOfPeople((long) new Random().nextInt(resortObjectList.get(3).getMaxAmountOfPeople().intValue()));
         accommodationRequest3.setResortObjectId(resortObjectList.get(3).getId());
 
-        setResortObjectService("NIEZAREZERWOWANE1", "Namiot", false, 33l, BigDecimal.ONE, BigDecimal.TEN);
-        setResortObjectService("NIEZAREZERWOWANE2", "Namiot", false, 5l, BigDecimal.ONE, BigDecimal.TEN);
-        setResortObjectService("NIEZAREZERWOWANE3", "Namiot", false, 22l, BigDecimal.ONE, BigDecimal.TEN);
+        setResortObjectService(String.format("Duzy namiot grupowy-%s", new Random().nextInt(100)), "Namiot", false, 15l, new BigDecimal("50.99"), new BigDecimal("0.80"));
+        setResortObjectService(String.format("Duzy namiot grupowy-%s", new Random().nextInt(100)), "Namiot", false, 16l, new BigDecimal("53.99"), new BigDecimal("0.87"));
+        setResortObjectService(String.format("Duzy namiot grupowy-%s", new Random().nextInt(100)), "Namiot", false, 17l, new BigDecimal("56.99"), new BigDecimal("0.86"));
 
         reservationRequest.setAccommodationRequestList(List.of(accommodationRequest, accommodationRequest1, accommodationRequest2, accommodationRequest3));
 
@@ -245,7 +276,7 @@ public class Startup implements CommandLineRunner {
             ExternalServicesRequest externalServicesRequest = new ExternalServicesRequest();
             Long id = externalServiceDTOS1.getId();
                 externalServicesRequest.setServiceRequestId(id);
-                externalServicesRequest.setAmountOfPeople(11l);
+                externalServicesRequest.setAmountOfPeople((long) new Random().nextInt(20));
                 externalServicesRequest.setRemarks("");
                 externalServicesRequest.setDate(LocalDate.now());
 

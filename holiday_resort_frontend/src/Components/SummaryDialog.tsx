@@ -167,14 +167,14 @@ const SummaryDialog : React.FC<IProps> = ({
                             component="th" 
                             scope="row"
                             >
-                                {!externalService.isNumberOfPeopleIrrelevant ? `${externalService.cost} zł` : 'N/A'}
+                                {!externalService.isNumberOfPeopleIrrelevant ? `${externalService.cost.toFixed(2)} zł` : 'N/A'}
                             </TableCell>
                             <TableCell 
                             align="center"
                             component="th" 
                             scope="row"
                             >
-                                {!externalService.isNumberOfPeopleIrrelevant ? (externalService.amountOfPeople * externalService.cost) : externalService.cost} zł
+                                {!externalService.isNumberOfPeopleIrrelevant ? (externalService.amountOfPeople * externalService.cost).toFixed(2) : externalService.cost} zł
                             </TableCell>
                             <TableCell 
                             align="center"

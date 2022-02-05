@@ -1,9 +1,9 @@
 {
     "loginForm" : {
-        "header" : "Log-In",
+        "header" : "Sign in",
         "form-username" : "Username",
         "form-password" : "Password",
-        "form-submit" : "Log-In",
+        "form-submit" : "Sign in",
         "no-account-link" : "No account? Sign up!"
     },
 

@@ -89,10 +89,10 @@ const ListComponent : React.FC<IProps> = ({
                       <div>
                         <p> {t(`listComponent.amountOfPeople`)} {accommodation.numberOfPeople} </p>
                         <p> {t(`listComponent.objectName`)} {accommodation.resortObject.objectName} </p>
-                        <p> {t(`listComponent.pricePerPerson`)} {accommodation.resortObject.pricePerPerson} {t(`currency.symbol`)} </p>
-                        <p> {t(`listComponent.pricePerUnusedSpace`)} {accommodation.resortObject.unusedSpacePrice} {t(`currency.symbol`)} </p>
+                        <p> {t(`listComponent.pricePerPerson`)} {accommodation.resortObject.pricePerPerson.toFixed(2)} {t(`currency.symbol`)} </p>
+                        <p> {t(`listComponent.pricePerUnusedSpace`)} {accommodation.resortObject.unusedSpacePrice.toFixed(2)} {t(`currency.symbol`)} </p>
                         <p> {t(`listComponent.maxAmountOfPeople`)} {accommodation.resortObject.maxAmountOfPeople} </p>
-                        <p> <strong> {t(`listComponent.detailedPrice`)} {getDetailedPrice(accommodation)} {t(`currency.symbol`)} </strong> </p>
+                        <p> <strong> {t(`listComponent.detailedPrice`)} {getDetailedPrice(accommodation).toFixed(2)} {t(`currency.symbol`)} </strong> </p>
                       </div>
                     }
                 />
@@ -120,7 +120,7 @@ const ListComponent : React.FC<IProps> = ({
                 <AccordionDetails>
                 {accommodation.eventResponseList.length !== 0 ? (
                   accommodation.eventResponseList.map(eventResponse => (
-                    <p> {eventResponse.eventType.toLowerCase()} - {eventResponse.price} {t(`currency.symbol`)} </p>
+                    <p> {eventResponse.eventType.toLowerCase()} - {eventResponse.price.toFixed(2)} {t(`currency.symbol`)} </p>
                     ))
                 ) : (
                   <p> {t(`listComponent.additionalServicesNotChoosen`)} </p>

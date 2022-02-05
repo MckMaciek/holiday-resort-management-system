@@ -277,7 +277,7 @@ const RegisterForm : React.FC<FuncProps> = ({sendRegisterReq, isEmailSent, isEma
                               }}
                             {...formik.getFieldProps('acceptTerms')}
                             />
-                                {t(`registerForm.acceptTermsAndConditions`)}
+                                {t(`registerForm.accept-terms-and-conditions`)}
                         </div>
                         {showValidationAlert(formik.errors.acceptTerms, formik.touched.acceptTerms)}
                     </div>

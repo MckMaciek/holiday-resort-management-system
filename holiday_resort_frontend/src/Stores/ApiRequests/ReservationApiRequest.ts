@@ -334,7 +334,6 @@ export const ChangeReservationStatus =  (jwtToken : string, reservationId : numb
           
         try{
             const statusChanged = await changeReservationStatusApi(jwtToken, reservationId, status);
-            console.log("TUMUSI");
             dispatch(setUserReservationStatus(reservationId, userId, status));
             //dispatch(changeReservationStatus(reservationId, status));
             dispatch(objectModified(true));

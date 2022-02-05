@@ -171,7 +171,7 @@ const SelectExternalService : React.FC<ComponentProps> = ({
                                     color="secondary"
                                 />
                             }
-                            label={!externalServicesChkbx.isNumberOfPeopleIrrelevant ? `${externalServicesChkbx.serviceName} - costs ${externalServicesChkbx.cost} zł per person` : `${externalServicesChkbx.serviceName}`}
+                            label={!externalServicesChkbx.isNumberOfPeopleIrrelevant ? `${externalServicesChkbx.serviceName} - costs ${externalServicesChkbx.cost.toFixed(2)} zł per person` : `${externalServicesChkbx.serviceName}`}
                             />
 
                             {externalServicesChkbx.isSet ? (

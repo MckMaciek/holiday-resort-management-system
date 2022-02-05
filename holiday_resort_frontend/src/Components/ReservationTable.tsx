@@ -372,7 +372,7 @@ const Row = ({row} : any) => {
               }}
               variant='h5'
               >
-                  Historia zmian
+                  Status History
               </Typography>
               </IconButton>
             <Collapse in={remarksTableOpen} timeout="auto" unmountOnExit>

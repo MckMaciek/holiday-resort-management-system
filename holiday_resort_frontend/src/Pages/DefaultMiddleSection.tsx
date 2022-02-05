@@ -2,6 +2,8 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Image from 'material-ui-image'
 
+import HBO from '../HBO.png';
+
 import { useRouteMatch } from "react-router";
 import {Link} from "react-router-dom";
 
@@ -13,7 +15,7 @@ const DefaultMiddleSection = () => {
 
     return(
         <div className={classes.root}>
-            <h1 className={classes.mainHeader}> DEFAULT MIDDLE SECTION ! </h1>
+            <img src={HBO} alt="HBO" width="500" height="500"/> 
             <Link 
             style={{ textDecoration: 'none', color : 'white', marginTop : '4vh' }} 
             to={`${path}reservations`}
